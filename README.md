@@ -1,0 +1,2 @@
+# My nix configuration
+
