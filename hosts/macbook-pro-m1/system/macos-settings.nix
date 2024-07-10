@@ -2,6 +2,10 @@
 
   system = {
 
+    # Used for backwards compatibility, please read the changelog before changing.
+    # $ darwin-rebuild changelog
+    stateVersion = 4;
+
     defaults = {
       #   NSGlobalDomain = {
       #     "com.apple.mouse.tapBehavior" = 1;
@@ -68,9 +72,6 @@
     #   ];
     # };
 
-    # Used for backwards compatibility, please read the changelog before changing.
-    # $ darwin-rebuild changelog
-    stateVersion = 4;
 
     # activationScripts.postActivation.text = ''
     #   # TODO: Rewrite as much of these as possible using nix-darwin

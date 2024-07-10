@@ -4,8 +4,7 @@
   imports = [
     # Setup users 
     # See the var/default.nix for the default configured users
-    ../../home/users
-    ../../home/users/bcb-developer
+    ../../home/users/Nico.Swan/macbook-pro-m1.nix
 
 
     # All user manditory configuration and packages
@@ -13,9 +12,8 @@
 
     # Optional packages and configiration for this host
     ../../home/common/optional/sops.nix
-    ../../home/common/optional/fonts.nix
-    ../../home/common/optional/starship.nix
-    ../../home/common/optional/google-cloud-sdk.nix
+    ../../home/common/optional/desktop/fonts.nix
+    ../../home/common/optional/development/google-cloud-sdk.nix
 
   ];
 
