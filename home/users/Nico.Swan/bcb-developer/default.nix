@@ -3,7 +3,7 @@
 
   imports = [
     ./ssh.nix
-    ../../../common/optional/ternminal/lazygit.nix
+    ../../../common/optional/terminal/lazygit.nix
     ../../../common/optional/desktop/terminals
     ../../../common/optional/terminal/lunarvim.nix
     ../../../common/optional/development/node/node_20.nix

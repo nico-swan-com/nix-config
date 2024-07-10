@@ -4,7 +4,7 @@
   imports = [
     # Setup users 
     # See the var/default.nix for the default configured users
-    ../../home/users/Nico.Swan/macbook-pro-m1.nix
+    ../../home/users/${configVars.username}
 
 
     # All user manditory configuration and packages

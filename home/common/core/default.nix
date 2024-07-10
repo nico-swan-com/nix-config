@@ -40,7 +40,7 @@
     eza # A modern replacement for ‘ls’
     fzf # A command-line fuzzy finder
     bat # a cat replacement
-    ncdu # disk usage uitls   
+    # ncdu # disk usage uitls   
     tldr # man page replacement
     dust # disk utilization tool
     #rmlint # remove duplicate file

@@ -15,16 +15,16 @@
     };
 
     distributedBuilds = true;
-    buildMachines = [{
-      hostName = "localhost";
-      sshUser = "builder";
-      sshKey = "/etc/nix/builder_ed25519";
-      system = "aarch64-darwin";
-      maxJobs = 4;
-      supportedFeatures = [ "kvm" "benchmark" "big-parallel" ];
-    }];
+    # buildMachines = [{
+    #   hostName = "localhost";
+    #   sshUser = "builder";
+    #   sshKey = "/etc/nix/builder_ed25519";
+    #   system = "aarch64-darwin";
+    #   maxJobs = 4;
+    #   supportedFeatures = [ "kvm" "benchmark" "big-parallel" ];
+    # }];
 
-    # # Run the linux-builder as a background service
+    # Run the linux-builder as a background service
     linux-builder = {
       enable = true;
       ephemeral = true;
