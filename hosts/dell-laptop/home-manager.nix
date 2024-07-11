@@ -7,5 +7,6 @@
     ../../home/common/optional/sops.nix
     ../../home/common/optional/desktop/fonts.nix
 
+    #../../packages/custom/read-aloud/home-manager-module.nix
   ];
 }

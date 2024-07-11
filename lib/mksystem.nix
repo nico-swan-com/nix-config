@@ -28,8 +28,8 @@ let
   configLib = import ../lib { inherit lib; };
 
   # Custom modifications/overrides to upstream packages.
-  overlays = import ../overlays { inherit inputs outputs; };
-
+  overlays =  import ../overlays { inherit inputs outputs; };
+  
   specialArgs = { inherit inputs outputs configVars configLib nixpkgs darwin hardware isWSL; };
 
 in

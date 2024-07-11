@@ -4,5 +4,5 @@ let
   pkgs = import nixpkgs { config = { }; overlays = [ ]; };
 in
 {
-  read-aloud = pkgs.callPackage ./read-aloud.nix { };
+  cygnus-labs.read-aloud = pkgs.callPackage ./read-aloud.nix { };
 }

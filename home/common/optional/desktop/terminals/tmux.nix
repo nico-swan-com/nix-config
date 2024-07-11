@@ -25,7 +25,9 @@
       tmuxPlugins.yank
     ];
 
-  extraConfig = '' 
+  extraConfig = ''
+
+     
 
     unbind %
     bind | split-window -h 

@@ -12,5 +12,6 @@
     nixfmt-classic
     sops
     just
+    nil
   ];
 }
