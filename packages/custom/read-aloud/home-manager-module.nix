@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
 
   options = {
@@ -6,7 +6,8 @@
     read-aloud = {
       model = lib.mkOption {
         default = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/joe/medium/en_US-joe-medium.onnx?download=true";
-        type = lib.
+        type = lib.types.string;
+        
 
       }
     }

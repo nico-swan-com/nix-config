@@ -64,13 +64,13 @@
 
     # tpm plugin
     set -g @plugin 'tmux-plugins/tpm'
-    set -g @plugin_path '~/.tmux/plugins'
+    set -g @plugin_path '~/.config/tmux/plugins'
 
     # list of tmux plugins
     set -g @plugin 'fabioluciano/tmux-tokyo-night'
 
     # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-    run '~/.tmux/plugins/tpm/tpm'
+    run '~/.config/tmux/plugins/tpm/tpm'
       
  '';
 

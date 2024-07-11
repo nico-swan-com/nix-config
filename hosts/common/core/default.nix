@@ -13,5 +13,6 @@
     sops
     just
     nil
+    nixd
   ];
 }
