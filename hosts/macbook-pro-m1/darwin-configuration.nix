@@ -7,6 +7,7 @@
   ];
   # List system packages only for MacOS 
   environment.systemPackages = with pkgs; [
+    bash
     terminal-notifier # send notification from the terminal
   ];
 
