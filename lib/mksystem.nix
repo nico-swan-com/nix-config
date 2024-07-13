@@ -1,5 +1,5 @@
 # This function creates a NixOS system based 
-{ nixpkgs, lib, outputs, inputs, hardware, ... }:
+{ nixpkgs, nixpkgs-unstable, lib, outputs, inputs, hardware, ... }:
 
 name:
 { system
@@ -30,7 +30,7 @@ let
   # Custom modifications/overrides to upstream packages.
   overlays =  import ../overlays { inherit inputs outputs; };
   
-  specialArgs = { inherit inputs outputs configVars configLib nixpkgs darwin hardware isWSL; };
+  specialArgs = { inherit inputs outputs configVars configLib nixpkgs nixpkgs-unstable darwin hardware isWSL; };
 
 in
 systemFunc rec {
@@ -64,6 +64,7 @@ systemFunc rec {
         users.${configVars.username} = import userHMConfig {
           inherit configVars;
           pkgs = nixpkgs;
+          nixpkgs-unstable = nixpkgs-unstable;
           isWSL = isWSL;
           inputs = inputs;
         };

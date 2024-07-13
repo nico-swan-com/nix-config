@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, nixpkgs-unstable, inputs, ... }: {
   programs.tmux = {
     enable = true;
     clock24 = true;
@@ -23,7 +23,26 @@
       }
       tmuxPlugins.resurrect
       tmuxPlugins.yank
+      {
+        plugin = tmuxPlugins.dracula;
+        extraConfig = ''
+          set -g @dracula-plugins "git weather, kubernetes-context, spotify-tui, playerctl, synchronize-panes, ram-usage, time, battery"
+          set -g @dracula-show-battery true
+          set -g @dracula-show-powerline true
+          # for left
+          set -g @dracula-show-left-sep 
+
+          # for right symbol (can set any symbol you like as separator)
+          set -g @dracula-show-right-sep 
+
+          set -g @dracula-show-flags true
+        '';
+      }
     ];
+
+    # ++ (with nixpkgs-unstable; [
+    #   tmuxPlugins.tokyo-night-tmux
+    # ]);
 
   extraConfig = ''
     unbind %
@@ -61,23 +80,23 @@
 
     # tpm plugin
     # set -g @plugin_path '~/.tmux/plugins/'
-    set -g @plugin 'tmux-plugins/tpm'
+    # set -g @plugin 'tmux-plugins/tpm'
 
     # list of tmux plugins
-    set -g @plugin 'tmux-plugins/tmux-pain-control'
+    # set -g @plugin 'tmux-plugins/tmux-pain-control'
     # set -g @plugin 'tmux-plugins/tmux-sensible'
-    set -g @plugin 'tmux-plugins/tmux-logging'
+    # set -g @plugin 'tmux-plugins/tmux-logging'
 
-    set -g @plugin 'fabioluciano/tmux-tokyo-night'
+    # set -g @plugin 'fabioluciano/tmux-tokyo-night'
 
     ### Tokyo Night Theme configuration
-    set -g @theme_variation 'moon'
-    set -g @theme_left_separator ''
-    set -g @theme_right_separator ''
-    set -g @theme_plugins 'datetime,weather,playerctl,yay'
+    # set -g @theme_variation 'moon'
+    # set -g @theme_left_separator ''
+    # set -g @theme_right_separator ''
+    # set -g @theme_plugins 'datetime,weather,playerctl,yay'
 
     # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-    run '~/.config/tmux/plugins/tpm/tpm'
+    # run '~/.config/tmux/plugins/tpm/tpm'
       
  '';
 
