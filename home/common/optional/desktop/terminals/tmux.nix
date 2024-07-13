@@ -1,7 +1,7 @@
 { pkgs, nixpkgs-unstable, inputs, ... }: {
   programs.tmux = {
     enable = true;
-    clock24 = true;
+    clock24 = false;
     prefix = "C-a";
     terminal = "tmux-256color"; # screen-256color
     escapeTime = 10;
@@ -23,19 +23,22 @@
       }
       tmuxPlugins.resurrect
       tmuxPlugins.yank
+      tmuxPlugins.logging
       {
         plugin = tmuxPlugins.dracula;
         extraConfig = ''
-          set -g @dracula-plugins "git weather, kubernetes-context, spotify-tui, playerctl, synchronize-panes, ram-usage, time, battery"
-          set -g @dracula-show-battery true
-          set -g @dracula-show-powerline true
+          set -g @dracula-plugins "git time"
+          # set -g @dracula-show-battery true
+          # set -g @dracula-show-powerline true
+          # set -g @dracula-military-time true
+          # set -g @dracula-show-fahrenheit false
+          # set -g @dracula-fixed-location "Johannesburg"
+
           # for left
           set -g @dracula-show-left-sep 
-
-          # for right symbol (can set any symbol you like as separator)
           set -g @dracula-show-right-sep 
 
-          set -g @dracula-show-flags true
+          # set -g @dracula-show-flags true
         '';
       }
     ];
