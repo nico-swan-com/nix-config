@@ -2,15 +2,15 @@
 {
 
   options = {
-
     read-aloud = {
       model = lib.mkOption {
         default = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/joe/medium/en_US-joe-medium.onnx?download=true";
         type = lib.types.string;
-        
-
-      }
-    }
+        description = ''
+          The voice onnx download url
+        '';
+      };
+    };
 
   };
 
@@ -55,18 +55,18 @@
       in
       "${readAloud}/bin/read-aloud";
 
-    # dconf.settings = {
-    #   "org/gnome/settings-daemon/plugins/media-keys" = {
-    #     custom-keybindings = [
-    #       "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-    #     ];
-    #   };
-    #   "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-    #     name = "read-aloud";
-    #     command = "read-aloud";
-    #     binding = "<Ctrl><Esc>";
-    #   };
-    # };
+    dconf.settings = {
+      "org/gnome/settings-daemon/plugins/media-keys" = {
+        custom-keybindings = [
+          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+        ];
+      };
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+        name = "read-aloud";
+        command = "read-aloud";
+        binding = "<Ctrl><Esc>";
+      };
+    };
   };
 
 }

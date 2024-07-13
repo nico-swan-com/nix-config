@@ -26,9 +26,6 @@
     ];
 
   extraConfig = ''
-
-     
-
     unbind %
     bind | split-window -h 
 
@@ -63,11 +60,21 @@
     # bind - n M-L next-window
 
     # tpm plugin
+    # set -g @plugin_path '~/.tmux/plugins/'
     set -g @plugin 'tmux-plugins/tpm'
-    set -g @plugin_path '~/.config/tmux/plugins'
 
     # list of tmux plugins
+    set -g @plugin 'tmux-plugins/tmux-pain-control'
+    # set -g @plugin 'tmux-plugins/tmux-sensible'
+    set -g @plugin 'tmux-plugins/tmux-logging'
+
     set -g @plugin 'fabioluciano/tmux-tokyo-night'
+
+    ### Tokyo Night Theme configuration
+    set -g @theme_variation 'moon'
+    set -g @theme_left_separator ''
+    set -g @theme_right_separator ''
+    set -g @theme_plugins 'datetime,weather,playerctl,yay'
 
     # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
     run '~/.config/tmux/plugins/tpm/tpm'
