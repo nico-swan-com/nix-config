@@ -25,7 +25,6 @@
   home.packages = with pkgs; [
     # terminal file managers
     mc
-    nnn
 
     # archives
     zip
