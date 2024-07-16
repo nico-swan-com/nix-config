@@ -42,7 +42,7 @@ let
     in
     mkSettings [
       {
-        name = "read-aloud";
+        name = "Read aloud";
         command = "read-aloud";
         binding = "<Control>Escape";
       }
