@@ -28,7 +28,8 @@ let
   configLib = import ../lib { inherit lib; };
 
   # Custom modifications/overrides to upstream packages.
-  overlays =  import ../overlays { inherit inputs outputs; };
+  pkgs = nixpkgs;
+  overlays =  import ../overlays { inherit pkgs inputs outputs; };
   
   specialArgs = { inherit inputs outputs configVars configLib nixpkgs nixpkgs-unstable darwin hardware isWSL; };
 
@@ -43,6 +44,8 @@ systemFunc rec {
     # to go through and apply our system type. We do this first so
     # the overlays are available globally.
     #{ nixpkgs.overlays = overlays; }
+    { nixpkgs.overlays = [  overlays.modifications overlays.unstable-packages (import ../overlays/read-aloud.nix) ]; }
+
 
     # Bring in WSL if this is a WSL build
     (if isWSL then inputs.nixos-wsl.nixosModules.wsl else { })

@@ -1,8 +1,5 @@
 # default.nix
-let
-  nixpkgs = fetchTarball "https://github.com/NixOS/nixpkgs/tarball/nixos-24.05";
-  pkgs = import nixpkgs { config = { }; overlays = [ ]; };
-in
+final: prev:
 {
-  cygnus-labs.read-aloud = pkgs.callPackage ./read-aloud.nix { };
+  read-aloud = prev.callPackage ./read-aloud.nix { };
 }

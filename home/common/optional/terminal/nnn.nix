@@ -6,6 +6,7 @@
     package = pkgs.nnn.override ({ withNerdIcons = true; });
     # plugins = {
     # };
+    };
 
 
 }
