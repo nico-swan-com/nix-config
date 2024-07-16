@@ -81,7 +81,6 @@ in
     programs.dconf.enable = true;
 
     home-manager.users."${config.gnome-read-aloud.user}" = { lib, ... }: {
-      home.stateVersion = "24.05";
       dconf.settings = with lib.gvariant; gnome-settings; 
     };
   };
