@@ -1,5 +1,5 @@
 { config, pkgs, ... }:
-let 
+let
   vectorConfig = (builtins.readFile ./vector.yaml);
 in
 {

@@ -14,12 +14,12 @@
     terminal-notifier
   ];
 
-    programs.nnn.bookmarks =
-      {
-        D = "~/Documents";
-        d = "~/Developer/src";
-        h = "~/";
-      };
+  programs.nnn.bookmarks =
+    {
+      D = "~/Documents";
+      d = "~/Developer/src";
+      h = "~/";
+    };
 
 
   programs.zsh = {

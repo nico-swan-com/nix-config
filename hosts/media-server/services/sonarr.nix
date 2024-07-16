@@ -9,6 +9,6 @@
   };
 
   system.activationScripts.sonarrdatalink.text = ''
-      ln -sfn "/mnt/media_storage/Media/Sonarr" /data/media/sonarr
-    '';
+    ln -sfn "/mnt/media_storage/Media/Sonarr" /data/media/sonarr
+  '';
 }

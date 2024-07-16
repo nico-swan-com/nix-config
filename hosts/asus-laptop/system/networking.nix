@@ -7,7 +7,7 @@
   networking = {
     hostName = "asus-laptop";
     domain = "nicoswan.com";
-    
+
     # Enable networking
     networkmanager.enable = true;
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.

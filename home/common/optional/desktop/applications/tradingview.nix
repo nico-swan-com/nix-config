@@ -1,7 +1,7 @@
 {
-   # Desktop applications
+  # Desktop applications
   home.packages = with pkgs; [
-     # Trading
-     tradingview
+    # Trading
+    tradingview
   ];
 }

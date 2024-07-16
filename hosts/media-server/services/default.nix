@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   imports = [
-    ../../common/optional/services/security/fail2ban.nix 
+    ../../common/optional/services/security/fail2ban.nix
 
     # Media services
     ./plex.nix

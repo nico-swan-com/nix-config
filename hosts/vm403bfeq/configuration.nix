@@ -12,7 +12,7 @@
       ./services
 
       ./extra-users.nix
-  
+
     ];
 
   system.stateVersion = configVars.stateVersion;

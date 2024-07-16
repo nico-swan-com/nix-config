@@ -56,8 +56,8 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Read aloud - Reads selected text aloud for the user. (Ctl-Esc)";
     longDescription = ''
-    A TTS script that reads the clibboard and reads it aloud for the user. I uses the
-    xclip, xsel to grab the text and then send it to piper-tts for text to speach conversion.
+      A TTS script that reads the clibboard and reads it aloud for the user. I uses the
+      xclip, xsel to grab the text and then send it to piper-tts for text to speach conversion.
     '';
     homepage = "https://github.com/cygnus-labs-com/gnome-read-aloud";
     license = licenses.mit;

@@ -2,7 +2,7 @@
 let
   secretsDirectory = builtins.toString inputs.nix-secrets;
   secretsFile = "${secretsDirectory}/cygnus-labs.com.vm403bfeq.yaml";
-  
+
   # FIXME: Switch to a configLib function
   # this is some stuff for distinguishing linux from darwin. Likely just remove it.
   homeDirectory =

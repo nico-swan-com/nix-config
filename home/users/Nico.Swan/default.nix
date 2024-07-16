@@ -1,7 +1,6 @@
-  
-  { 
-    imports = [
-       ../common.nix
-       ./bcb-developer
-    ];
-  }
+{
+  imports = [
+    ../common.nix
+    ./bcb-developer
+  ];
+}

@@ -1,9 +1,9 @@
-{pkgs, ...}:{
-   # Desktop applications
+{ pkgs, ... }: {
+  # Desktop applications
   home.packages = with pkgs; [
 
 
-     # GNOME Extentions
-     gnome.gnome-shell-extensions
+    # GNOME Extentions
+    gnome.gnome-shell-extensions
   ];
 }

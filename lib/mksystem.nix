@@ -29,8 +29,8 @@ let
 
   # Custom modifications/overrides to upstream packages.
   pkgs = nixpkgs;
-  overlays =  import ../overlays { inherit pkgs inputs outputs; };
-  
+  overlays = import ../overlays { inherit pkgs inputs outputs; };
+
   specialArgs = { inherit inputs outputs configVars configLib nixpkgs nixpkgs-unstable darwin hardware isWSL; };
 
 in
@@ -44,17 +44,17 @@ systemFunc rec {
     # to go through and apply our system type. We do this first so
     # the overlays are available globally.
     #{ nixpkgs.overlays = overlays; }
-    { nixpkgs.overlays = [  overlays.modifications overlays.unstable-packages (import ../overlays/read-aloud.nix) ]; }
+    { nixpkgs.overlays = [ overlays.modifications overlays.unstable-packages (import ../overlays/read-aloud.nix) ]; }
 
 
     # Bring in WSL if this is a WSL build
     (if isWSL then inputs.nixos-wsl.nixosModules.wsl else { })
 
     #Disk partitioning 
-    (if !darwin then inputs.disko.nixosModules.disko  else { })
+    (if !darwin then inputs.disko.nixosModules.disko else { })
 
     # Nix User Repository
-    (if !darwin then inputs.nur.nixosModules.nur  else { })
+    (if !darwin then inputs.nur.nixosModules.nur else { })
 
     hostConfig
     homeManagerModules.home-manager

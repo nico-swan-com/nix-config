@@ -5,7 +5,7 @@
     colima
   ];
 
-   # set colima vm as default
+  # set colima vm as default
   programs.zsh = {
     sessionVariables = {
       #COLIMA_VM="default";

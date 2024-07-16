@@ -12,8 +12,9 @@
     configurationLimit = lib.mkDefault 3;
     # pick the highest resolution for systemd-boot's console.
     consoleMode = lib.mkDefault "max";
-  };extraModules
-  boot.initrd.systemd.enable = true;
+  };
+  extraModules
+    boot.initrd.systemd.enable = true;
 
   networking = {
     # configures the network interface(include wireless) via `nmcli` & `nmtui`

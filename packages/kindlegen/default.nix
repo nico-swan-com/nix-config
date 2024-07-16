@@ -1,4 +1,4 @@
 final: prev:
 {
-    kindlegen = prev.callPackage ./kindlegen.nix { };
+  kindlegen = prev.callPackage ./kindlegen.nix { };
 }

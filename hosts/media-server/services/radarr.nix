@@ -7,7 +7,7 @@
     group = "media";
   };
 
-  system.activationScripts.radarrdatalink.text =''
-      ln -sfn "/mnt/media_storage/Media/Radarr" /data/media/radarr
-    '';
+  system.activationScripts.radarrdatalink.text = ''
+    ln -sfn "/mnt/media_storage/Media/Radarr" /data/media/radarr
+  '';
 }

@@ -1,7 +1,8 @@
-{ pkgs, ...}:
+{ pkgs, ... }:
 {
 
   home.packages = [
-    ../../../../packages/custom/read-aloud { inherit pkgs; }
+    ../../../../packages/custom/read-aloud
+    { inherit pkgs; }
   ];
 }

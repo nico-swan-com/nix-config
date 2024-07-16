@@ -11,6 +11,7 @@
 
   };
 
-  
+
 }
- nix build .#nixosConfigurations.exampleIso.config.system.build.isoImage
+  nix
+  build.#nixosConfigurations.exampleIso.config.system.build.isoImage
