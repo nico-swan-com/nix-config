@@ -50,10 +50,6 @@ let
 in
 {
 
-  imports = [
-    <home-manager/nixos>
-  ];
-
   options = {
     gnome-read-aloud = {
       enable = mkOption {
@@ -77,30 +73,6 @@ in
           Read-aloud package to use.
         '';
       };
-
-      #   device = mkOption {
-      #     type = types.path;
-      #     default = "/dev/video0";
-      #     description = ''
-      #       Device file connected to the IR sensor.
-      #     '';
-      #   };
-
-      #   certainty = mkOption {
-      #     type = types.int;
-      #     default = 4;
-      #     description = ''
-      #       The certainty of the detected face belonging to the user of the account. On a scale from 1 to 10, values above 5 are not recommended.
-      #     '';
-      #   };
-
-      #   dark-threshold = mkOption {
-      #     type = types.int;
-      #     default = 50;
-      #     description = ''
-      #       Because of flashing IR emitters, some frames can be completely unlit. Skip the frame if the lowest 1/8 of the histogram is above this percentage of the total. The lower this setting is, the more dark frames are ignored.
-      #     '';
-      #   };
     };
   };
 
@@ -109,38 +81,8 @@ in
     programs.dconf.enable = true;
 
     home-manager.users."${config.gnome-read-aloud.user}" = { lib, ... }: {
-      dconf.settings = {
-        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-            name = "read-aloud";
-            command = "read-aloud";
-            binding = "<Control>Escape";
-          };
-
-          "org/gnome/settings-daemon/plugins/media-keys" = {
-            custom-keybindings = [
-              "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-            ];
-          };
-      };
-
+      home.stateVersion = "24.05";
+      dconf.settings = with lib.gvariant; gnome-settings; 
     };
-    # programs.dconf.profiles = {
-    #   user.databases = [{
-    #     #settings = with lib.gvariant; gnome-settings; 
-    #     settings = {
-    #       "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-    #         name = "read-aloud";
-    #         command = "read-aloud";
-    #         binding = "<Control>Escape";
-    #       };
-
-    #       "org/gnome/settings-daemon/plugins/media-keys" = {
-    #         custom-keybindings = [
-    #           "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-    #         ];
-    #       };
-    #     };
-    #   }];
-    # };
   };
 }
