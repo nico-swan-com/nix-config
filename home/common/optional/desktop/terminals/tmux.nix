@@ -6,6 +6,7 @@
     terminal = "tmux-256color"; # screen-256color
     escapeTime = 10;
     baseIndex = 1;
+    mouse = true;
 
     tmuxinator = {
       enable = true;
@@ -49,6 +50,35 @@
 
     extraConfig = ''
       unbind %
+      # unbind Left
+      # unbind Up
+      # unbind Down
+      # unbind Right
+      unbind WheelUpPane
+      unbind WheelDownPane
+      unbind MouseDown1Pane
+      unbind MouseDrag1Pane
+      unbind MouseDragEnd1Pane
+      unbind WheelUpPane
+      unbind WheelDownPane
+      unbind DoubleClick1Pane
+      unbind TripleClick1Pane
+      unbind MouseDown1Pane
+      unbind MouseDrag1Pane
+      unbind MouseDragEnd1Pane
+      unbind WheelUpPane
+      unbind WheelDownPane
+      unbind DoubleClick1Pane
+      unbind TripleClick1Pane
+      unbind MouseDown1Pane
+      unbind MouseDown1Status
+      unbind MouseDown3Pane
+      unbind MouseDrag1Pane
+      unbind MouseDrag1Border
+      unbind WheelUpPane
+      unbind WheelUpStatus
+      unbind WheelDownStatus
+      
       bind | split-window -h 
 
       unbind '"'

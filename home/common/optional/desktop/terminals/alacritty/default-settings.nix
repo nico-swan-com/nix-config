@@ -4,11 +4,13 @@
   };
 
   selection.save_to_clipboard = true;
+  live_config_reload = true;
 
-  shell = {
-    program = "/run/current-system/sw/bin/zsh";
-    args = [ "-l" "-c" "tmux" ];
-  };
+
+  # shell = {
+  #   program = "/run/current-system/sw/bin/zsh";
+  #   args = [ "-l" "-c" "tmux" ];
+  # };
 
   mouse.bindings = [
     { mouse = "Right"; action = "Paste"; }
@@ -66,6 +68,25 @@
       mods = "Command|Shift";
       action = "DecreaseFontSize";
     }
+    # Use command + [ - to go to previous tmux window
+    {
+      key = "LBracket";
+      mods = "Command";
+      chars = "\x5c\x70";
+    }
+    # Use command + ] - to go to previous tmux window
+    {
+      key = "RBracket";
+      mods = "Command";
+      chars = "\x5c\x6e";
+    }
+    # ctrl-^ doesn't work in some terminals like alacritty
+    {
+      key = "Key6";
+      mods = "Control";
+      chars = "\x1e";
+    }
+
   ];
 
   colors = {
