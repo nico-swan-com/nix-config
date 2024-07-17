@@ -3,7 +3,7 @@
 with lib;
 
 let
-  normalUsers = builtins.filter (x: x.isNormalUser) config.users.users; 
+  normalUsers = builtins.filter (x: x.isNormalUser) config.users.users;
 
   cfg = config.gnome-read-aloud;
 
@@ -81,7 +81,7 @@ in
     programs.dconf.enable = true;
 
     home-manager.users."${config.gnome-read-aloud.user}" = { lib, ... }: {
-      dconf.settings = with lib.gvariant; gnome-settings; 
+      dconf.settings = with lib.gvariant; gnome-settings;
     };
   };
 }

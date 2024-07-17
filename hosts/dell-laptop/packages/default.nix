@@ -1,4 +1,4 @@
-{ pkgs,configVars, ... }:
+{ pkgs, configVars, ... }:
 {
   imports = [
     ./programs.nix
@@ -7,8 +7,8 @@
   ];
 
   gnome-read-aloud = {
-     enable = true;
-     user = configVars.username;
+    enable = true;
+    user = configVars.username;
   };
 
   environment.systemPackages = with pkgs; [
