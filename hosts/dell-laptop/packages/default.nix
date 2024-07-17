@@ -9,6 +9,7 @@
   gnome-read-aloud = {
     enable = true;
     user = configVars.username;
+    #model-voice = "/home/nicoswan/Downloads/en_GB-alan-medium.onnx";
   };
 
   environment.systemPackages = with pkgs; [

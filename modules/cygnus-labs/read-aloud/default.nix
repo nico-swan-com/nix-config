@@ -15,6 +15,13 @@ let
       path = "${globalPath}/custom-keybindings";
       mkPath = id: "${globalPath}/custom-keybindings/cygnus-labs/custom${toString id}";
       isEmpty = list: length list == 0;
+
+      cmd =
+        if ((cfg.model-voice != "") && ( cfg.model-config != ""))
+        then "read-aloud --voice=${cfg.model-voice} --voice-config=${cfg.model-config}"
+        else if ((cfg.model-voice != "") && (cfg.model-config == "")) then "read-aloud --voice=${cfg.model-voice}"
+        else "read-aloud";
+
       mkSettings = settings:
         let
           checkSettings = { name, command, binding }@this: this;
@@ -43,7 +50,7 @@ let
     mkSettings [
       {
         name = "Read aloud";
-        command = "read-aloud";
+        command = cmd;
         binding = "<Control>Escape";
       }
     ];
@@ -74,26 +81,26 @@ in
         '';
       };
 
-      model = {
-        config = lib.mkOption {
-          type = lib.types.string;
-          description = ''
-            The path to the model config json which can be downloaded from Huggingface
-            https://huggingface.co/rhasspy/piper-voices/tree/main
+      model-config = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = ''
+          The path to the model config json which can be downloaded from Huggingface
+          https://huggingface.co/rhasspy/piper-voices/tree/main
 
-            The default is en_US/joe/medium/en_US-john-medium.onnx.json
-          '';
-        };
+          The default is en_US/joe/medium/en_US-joe-medium.onnx.json
+        '';
+      };
 
-        model = lib.mkOption {
-          type = lib.types.string;
-          description = ''
-            The path to the model file which can be downloaded from Huggingface
-            https://huggingface.co/rhasspy/piper-voices/tree/main
+      model-voice = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = ''
+          The path to the model file which can be downloaded from Huggingface
+          https://huggingface.co/rhasspy/piper-voices/tree/main
 
-            The default is en_US/joe/medium/en_US-john-medium.onnx
-          '';
-        };
+          The default is en_US/joe/medium/en_US-joe-medium.onnx
+        '';
       };
     };
   };
