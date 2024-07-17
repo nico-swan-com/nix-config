@@ -73,6 +73,28 @@ in
           Read-aloud package to use.
         '';
       };
+
+      model = {
+        config = lib.mkOption {
+          type = lib.types.string;
+          description = ''
+            The path to the model config json which can be downloaded from Huggingface
+            https://huggingface.co/rhasspy/piper-voices/tree/main
+
+            The default is en_US/joe/medium/en_US-john-medium.onnx.json
+          '';
+        };
+
+        model = lib.mkOption {
+          type = lib.types.string;
+          description = ''
+            The path to the model file which can be downloaded from Huggingface
+            https://huggingface.co/rhasspy/piper-voices/tree/main
+
+            The default is en_US/joe/medium/en_US-john-medium.onnx
+          '';
+        };
+      };
     };
   };
 

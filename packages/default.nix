@@ -1,5 +1,5 @@
-final: prev:
+{pkgs, ... }:
 {
-  read-aloud = prev.callPackage ./custom/read-aloud/read-aloud.nix { };
-  kindlegen = prev.callPackage ./kindlegen/kindlegen.nix { };
+  read-aloud = pkgs.callPackage ../modules/cygnus-labs/read-aloud/read-aloud.nix { };
+  kindlegen = pkgs.callPackage ./kindlegen/kindlegen.nix { };
 }

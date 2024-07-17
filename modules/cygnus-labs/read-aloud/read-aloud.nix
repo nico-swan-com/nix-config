@@ -8,9 +8,9 @@ let
   };
 
   defaultVoiceConfig = pkgs.fetchurl {
-    url = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/john/medium/en_US-john-medium.onnx.json?download=true.json";
-    name = "en_US-john-medium.onnx.json";
-    sha256 = "sha256-r2Dxd7a1UPPXowJyDA+4nn+UqCtdykZHde9jscaboJo=";
+    url = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/joe/medium/en_US-joe-medium.onnx.json?download=true.json";
+    name = "en_US-joe-medium.onnx.json";
+    sha256 = "sha256-PW1UELN5XLGVBZUkfvjwYZBxnm/b+jojVtjsNo4arTM=";
   };
 
   readAloud = pkgs.writeShellScriptBin "read-aloud" ''
@@ -54,7 +54,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description = "Read aloud - Reads selected text aloud for the user. (Ctl-Esc)";
+    description = "Read aloud - Reads selected text aloud for the user.";
     longDescription = ''
       A TTS script that reads the clibboard and reads it aloud for the user. I uses the
       xclip, xsel to grab the text and then send it to piper-tts for text to speach conversion.

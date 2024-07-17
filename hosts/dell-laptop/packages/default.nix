@@ -3,7 +3,7 @@
   imports = [
     ./programs.nix
     #./ai.nix
-    ../../../modules/read-aloud/read-aloud.nix
+    ../../../modules/cygnus-labs/read-aloud
   ];
 
   gnome-read-aloud = {

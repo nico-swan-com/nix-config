@@ -44,7 +44,7 @@ systemFunc rec {
     # to go through and apply our system type. We do this first so
     # the overlays are available globally.
     #{ nixpkgs.overlays = overlays; }
-    { nixpkgs.overlays = [ overlays.modifications overlays.unstable-packages (import ../overlays/read-aloud.nix) ]; }
+    { nixpkgs.overlays = [ overlays.additions overlays.modifications overlays.unstable-packages ]; }
 
 
     # Bring in WSL if this is a WSL build
