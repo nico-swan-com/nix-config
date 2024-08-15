@@ -13,6 +13,8 @@
 
     # Server services
     #./traefik.nix
+    ./nginx-proxy.nix
+
   ];
 
   users.groups.media.gid = 1001;
