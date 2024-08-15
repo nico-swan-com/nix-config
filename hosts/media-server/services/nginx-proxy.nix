@@ -13,12 +13,12 @@
       };
     in
     {
+      "plex.home.nicoswan.com" = (SSL // {
+        locations."/".proxyPass = "http://127.0.0.1:32400";
+      });
+
       "radarr.home.nicoswan.com" = (SSL // {
         locations."/".proxyPass = "http://127.0.0.1:7878";
-
-        serverAliases = [
-          "radarr.home.nicoswan.com"
-        ];
       });
 
       "sonarr.home.nicoswan.com" = (SSL // {
