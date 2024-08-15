@@ -1,14 +1,14 @@
 {
   fileSystems."/mnt/media_storage" =
     {
-      device = "/dev/sdb2";
+      device = "/dev/sda2";
       fsType = "ntfs-3g";
       options = [ "rw" ];
     };
 
   fileSystems."/mnt/ntfs_drive" =
     {
-      device = "/dev/sda2";
+      device = "/dev/sdb2";
       fsType = "ntfs-3g";
       options = [ "rw" ];
     };

@@ -1,8 +1,8 @@
 {
 
   security.acme = {
+    defaults.email = "REDACTED";
     acceptTerms = true;
-    email = "REDACTED";
   };
 
   services.nginx.virtualHosts =
