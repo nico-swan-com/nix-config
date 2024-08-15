@@ -27,18 +27,21 @@
     # Run the linux-builder as a background service
     linux-builder = {
       enable = true;
-      ephemeral = true;
-      maxJobs = 4;
-      config = {
-        virtualisation = {
-          darwin-builder = {
-            diskSize = 40 * 1024;
-            memorySize = 8 * 1024;
-          };
-          cores = 6;
-        };
-      };
     };
+    # linux-builder = {
+    #   enable = true;
+    #   ephemeral = true;
+    #   maxJobs = 4;
+    #   config = {
+    #     virtualisation = {
+    #       darwin-builder = {
+    #         diskSize = 40 * 1024;
+    #         memorySize = 8 * 1024;
+    #       };
+    #       cores = 6;
+    #     };
+    #   };
+    # };
 
     # Automatic garbage collection to remove unused packages
     gc = {
