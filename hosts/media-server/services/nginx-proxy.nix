@@ -1,7 +1,7 @@
 {
 
   security.acme = {
-    defaults.email = "REDACTED";
+    defaults.email = "hi@nicoswan.com";
     acceptTerms = true;
   };
 
