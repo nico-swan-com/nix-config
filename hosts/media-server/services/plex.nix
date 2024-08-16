@@ -9,6 +9,10 @@
     group = "media";
   };
 
+  networking.firewall = {
+    allowedTCPPorts = [ 32400 1900 32469 8324 32410 32412 32413 32414 ];
+  };
+
   system.activationScripts.plexdatalink.text = ''
     ln -sfn "/mnt/media_storage/Media/Plex/plexmediaserver/Library/Application Support/Plex Media Server" "/data/media/plex"
   '';

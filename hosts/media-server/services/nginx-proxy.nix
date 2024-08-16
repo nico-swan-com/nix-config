@@ -40,6 +40,12 @@
         locations."/".proxyPass = "http://127.0.0.1:9117/";
       });
 
+      "tautulli.home.nicoswan.com" = (SSL // {
+        locations."/".proxyPass = "http://127.0.0.1:8181/";
+      });
+
+
+
     };
 }
 
