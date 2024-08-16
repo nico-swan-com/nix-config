@@ -5,17 +5,19 @@
     acceptTerms = true;
   };
 
-  services.nginx.enable = true;
+  services.nginx= {
+    enable = true;
+    recommendedGzipSettings = true;
+    recommendedOptimisation = true;
+    recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+  };
  
   services.nginx.virtualHosts =
     let
       COMMON = {
         enableACME = true;
         forceSSL = true;
-        recommendedGzipSettings = true;
-        recommendedOptimisation = true;
-        recommendedProxySettings = true;
-        recommendedTlsSettings = true;
       };
     in
     {
