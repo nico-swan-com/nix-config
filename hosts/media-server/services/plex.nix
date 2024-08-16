@@ -10,7 +10,7 @@
   };
 
   system.activationScripts.plexdatalink.text = ''
-    ln -sfn "/mnt/media_storage/Media/Plex/plexmediaserver/Library/Application Support/Plex Media Server" "/data/media/plex"
+    ln -sfn "/mnt/media_storage/Media/Plex/plexmediaserver/Library/Application Support/Plex Media Server" "/data/media/plex/Plex Media Server"
   '';
   # services.traefik.dynamicConfigOptions = {
   #   http = {
