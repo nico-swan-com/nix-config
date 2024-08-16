@@ -1,14 +1,14 @@
 {
   fileSystems."/mnt/media_storage" =
     {
-      device = "/dev/sda2";
+      device = "/dev/sdb2";
       fsType = "ntfs-3g";
       options = [ "rw" ];
     };
 
   fileSystems."/mnt/ntfs_drive" =
     {
-      device = "/dev/sdb2";
+      device = "/dev/sda2";
       fsType = "ntfs-3g";
       options = [ "rw" ];
     };
@@ -18,7 +18,7 @@
     disk = {
       main = {
         type = "disk";
-        device = "/dev/sde";
+        device = "/dev/sdc";
         content = {
           type = "gpt";
           partitions = {
