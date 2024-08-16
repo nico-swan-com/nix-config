@@ -47,6 +47,9 @@
     # Declarative partitioning and formatting
     disko.url = "github:nix-community/disko";
 
+    # kubernettes
+    # kubenix.url = "github:hall/kubenix";
+
 
     # authentik-nix = {
     #   url = "github:nix-community/authentik-nix";
