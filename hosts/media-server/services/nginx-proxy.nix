@@ -5,6 +5,8 @@
     acceptTerms = true;
   };
 
+  services.nginx.enable = true;
+ 
   services.nginx.virtualHosts =
     let
       SSL = {
