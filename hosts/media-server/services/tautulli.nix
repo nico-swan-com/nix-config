@@ -1,6 +1,5 @@
 {
 
-
   system.activationScripts.tautulliatalink.text = ''
     ln -sfn "/mnt/media_storage/Media/tautulli" "/data/media/tautulli"
   '';

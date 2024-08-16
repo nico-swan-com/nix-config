@@ -13,7 +13,10 @@
 
     # Server services
     #./traefik.nix
+    #./arion.nix
+
     ./nginx-proxy.nix
+    
 
   ];
 
