@@ -18,8 +18,6 @@
       COMMON = {
         enableACME = true;
         forceSSL = true;
-        # useACMEHost = "home.nicoswan.com";
-        quic = true;
       };
     in
     {
