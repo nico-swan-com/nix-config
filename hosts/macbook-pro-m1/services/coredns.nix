@@ -1,5 +1,5 @@
 {
-  services.coredns.enable = true;
+  services.coredns.enable = false;
   services.coredns.config =
     ''
       . {
