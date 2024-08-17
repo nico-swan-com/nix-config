@@ -101,6 +101,7 @@ add_helm_repos() {
    helm repo add metallb https://metallb.github.io/metallb
    helm repo add https://kubernetes.github.io/ingress-nginx 
    helm repo add openebs-internal https://openebs.github.io/charts
+   helm repo add jetstack https://charts.jetstack.io
    helm repo add portainer https://portainer.github.io/k8s/
    helm repo update
    echo "-------"
@@ -222,6 +223,46 @@ install_openebs() {
 
 }
 
+install_cert_manager() {
+   echo 	
+   echo "Extention - Installing NGINX Ingress controller"	 
+   helm install \
+    cert-manager jetstack/cert-manager \
+    --namespace cert-manager \
+    --create-namespace \
+    --version v1.10.1 \
+    --set installCRDs=true
+
+   local start_time=$(date +%s)
+   while true; do
+        pod_statuses=$(kubectl get pods -n "cert-manager" --no-headers -o custom-columns=":metadata.name,:status.phase")
+
+        all_running=true
+	    while read -r pod_name pod_status; do
+            if [[ "$pod_status" != "Running" ]]; then
+                echo "Waiting for Pod $pod_name be in a 'Running' state."
+                all_running=false
+                break
+            fi
+        done <<< "$pod_statuses"
+
+        if $all_running; then
+            echo "All pods are running."
+            return
+        fi
+        
+	current_time=$(date +%s)
+        elapsed_time=$((current_time - start_time))
+        if [[ $elapsed_time -ge $TIMEOUT ]]; then
+            echo "Timeout: cert-manager pods are not running after $TIMEOUT seconds."
+            exit 1
+        fi
+	sleep 5
+
+   done
+
+}
+
 install_portainer() {
    echo 	
    echo "Application - Installing Portainer"
@@ -275,4 +316,5 @@ add_helm_repos
 install_openebs
 install_metallb
 install_nginx_ingress
+install_cert_manager
 install_portainer
