@@ -51,13 +51,5 @@ in
   #   };
   # };
   # networking.nameservers = [ "10.10.0.1" ];
-  virtualisation.containers.enable = true;
-  virtualisation = {
-    podman = {
-      enable = true;
-      dockerCompat = true;
-      defaultNetwork.settings.dns_enabled = true;
-    };
-    oci-containers.backend = "podman";
-  };
+
 }

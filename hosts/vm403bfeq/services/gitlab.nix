@@ -1,10 +1,5 @@
 {
   services.nginx = {
-    enable = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
     virtualHosts."git.cygnus-labs.com" = {
       enableACME = true;
       forceSSL = true;
@@ -12,5 +7,5 @@
     };
   };
 
-  # nix-secrets
+  
 }

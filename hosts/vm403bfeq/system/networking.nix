@@ -16,4 +16,10 @@
   networking.nameservers = [ "1.1.1.1" "1.0.0.1" ];
   networking.hostName = "vm403bfeq"; # Define your hostname.
   networking.domain = "cygnus-labs.com";
+
+  # Enable NAT for containers
+  networking.nat.enable = true;
+  networking.nat.internalInterfaces = ["ve-+"];
+  networking.nat.externalInterface = "ens18";
+
 }
