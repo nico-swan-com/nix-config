@@ -12,12 +12,13 @@ in
     # These get placed into /etc/ssh/authorized_keys.d/<name> on nixos
     openssh.authorizedKeys.keys = lib.lists.forEach pubKeys (key: builtins.readFile key);
     extraGroups = [
-      "wheel"
-    ] ++ ifTheyExist [
-      "docker"
-      "git"
-      "networkmanager"
-    ];
+          "wheel"
+        ] ++ ifTheyExist [
+          "docker"
+          "podman"
+          "git"
+          "networkmanager"
+        ];
     shell = pkgs.zsh; # default shell
     packages = with pkgs; [ ];
   };
