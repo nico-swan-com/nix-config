@@ -18,7 +18,7 @@
     disk = {
       main = {
         type = "disk";
-        device = "/dev/sde";
+        device = "/dev/sdc";
         content = {
           type = "gpt";
           partitions = {

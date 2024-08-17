@@ -9,6 +9,6 @@
   };
 
   system.activationScripts.jackettdatalink.text = ''
-      ln -sfn "/mnt/media_storage/Media/jackett" /data/media/jackett
-    '';
+    ln -sfn "/mnt/media_storage/Media/jackett" /data/media/jackett
+  '';
 }

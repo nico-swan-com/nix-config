@@ -5,7 +5,7 @@
     ./hardware-configuration.nix
     ./boot-loader.nix
     ./networking.nix
-    
+
   ];
 
   # Enable the OpenSSH daemon.

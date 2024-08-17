@@ -3,7 +3,7 @@
   # Open ports in the firewall.
   networking.firewall = {
     allowedTCPPorts = [ 80 443 22 ];
-  }; 
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;

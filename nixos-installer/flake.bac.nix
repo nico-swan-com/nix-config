@@ -16,23 +16,23 @@
       mkSystem = import ./lib/mksystem.nix {
         inherit inputs outputs lib nixpkgs;
       };
-    
+
     in
     {
 
       nixosConfigurations = {
-        
-      # Media Server 
-      nixosConfigurations = {
-        media = mkSystem "media-server" {
-          system = "x86_64-linux";
-          username = "nicoswan";
-          fullName = "Nico Swan";
-          email = "hi@nicoswan.com";
+
+        # Media Server 
+        nixosConfigurations = {
+          media = mkSystem "media-server" {
+            system = "x86_64-linux";
+            username = "nicoswan";
+            fullName = "Nico Swan";
+            email = "hi@nicoswan.com";
+          };
         };
       };
-    };
-     
-    
+
+
     };
 }

@@ -6,7 +6,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ../../default.nix
     ];
@@ -24,7 +25,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
-  networking.enableIPv6  = false;
+  networking.enableIPv6 = false;
 
   # Set your time zone.
   time.timeZone = "Africa/Johannesburg";
@@ -76,7 +77,7 @@
     packages = with pkgs; [
       vim
       firefox
-    #  thunderbird
+      #  thunderbird
     ];
   };
 
@@ -86,8 +87,8 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
     unetbootin
     agenix.packages.x86_64-linux.default
   ];

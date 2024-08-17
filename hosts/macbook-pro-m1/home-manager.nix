@@ -14,6 +14,8 @@
     ../../home/common/optional/sops.nix
     ../../home/common/optional/desktop/fonts.nix
     ../../home/common/optional/development/google-cloud-sdk.nix
+    ../../home/common/optional/terminal/nnn.nix
+
 
   ];
 

@@ -58,6 +58,7 @@
   outputs =
     { self
     , nixpkgs
+    , nixpkgs-unstable
     , darwin
     , hardware
     , ...
@@ -77,7 +78,7 @@
         forAllSystems (system: import inputs.nixpkgs { inherit system; });
 
       mkSystem = import ./lib/mksystem.nix {
-        inherit inputs outputs lib nixpkgs darwin hardware;
+        inherit inputs outputs lib nixpkgs nixpkgs-unstable darwin hardware;
       };
 
     in

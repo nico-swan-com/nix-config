@@ -1,5 +1,5 @@
 { pkgs, ... }:
-{ 
+{
   # Set /etc/zshrc
   programs.zsh.enable = true;
 
@@ -12,5 +12,7 @@
     nixfmt-classic
     sops
     just
+    nil
+    nixd
   ];
 }

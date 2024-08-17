@@ -1,5 +1,5 @@
 # This function creates a NixOS system based 
-{ nixpkgs, lib, outputs, inputs, hardware, ... }:
+{ nixpkgs, nixpkgs-unstable, lib, outputs, inputs, hardware, ... }:
 
 name:
 { system
@@ -28,9 +28,10 @@ let
   configLib = import ../lib { inherit lib; };
 
   # Custom modifications/overrides to upstream packages.
-  overlays = import ../overlays { inherit inputs outputs; };
+  pkgs = nixpkgs;
+  overlays = import ../overlays { inherit pkgs inputs outputs; };
 
-  specialArgs = { inherit inputs outputs configVars configLib nixpkgs darwin hardware isWSL; };
+  specialArgs = { inherit inputs outputs configVars configLib nixpkgs nixpkgs-unstable darwin hardware isWSL; };
 
 in
 systemFunc rec {
@@ -42,16 +43,17 @@ systemFunc rec {
     # Apply our overlays. Overlays are keyed by system type so we have
     # to go through and apply our system type. We do this first so
     # the overlays are available globally.
-    #{ nixpkgs.overlays = overlays; }
+    { nixpkgs.overlays = [ overlays.additions overlays.modifications overlays.unstable-packages ]; }
+
 
     # Bring in WSL if this is a WSL build
     (if isWSL then inputs.nixos-wsl.nixosModules.wsl else { })
 
     #Disk partitioning 
-    (if !darwin then inputs.disko.nixosModules.disko  else { })
+    (if !darwin then inputs.disko.nixosModules.disko else { })
 
     # Nix User Repository
-    (if !darwin then inputs.nur.nixosModules.nur  else { })
+    (if !darwin then inputs.nur.nixosModules.nur else { })
 
     hostConfig
     homeManagerModules.home-manager
@@ -64,6 +66,7 @@ systemFunc rec {
         users.${configVars.username} = import userHMConfig {
           inherit configVars;
           pkgs = nixpkgs;
+          nixpkgs-unstable = nixpkgs-unstable;
           isWSL = isWSL;
           inputs = inputs;
         };

@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   imports = [
-    ../../common/optional/services/security/fail2ban.nix 
+    ../../common/optional/services/security/fail2ban.nix
 
     # Media services
     ./plex.nix
@@ -13,6 +13,11 @@
 
     # Server services
     #./traefik.nix
+    #./arion.nix
+
+    ./nginx-proxy.nix
+    
+
   ];
 
   users.groups.media.gid = 1001;

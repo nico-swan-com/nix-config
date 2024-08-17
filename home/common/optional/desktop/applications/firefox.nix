@@ -39,7 +39,7 @@
 
       userChrome = ''                         
         /* some css */                        
-      '';                                      
+      '';
 
       extensions = with inputs.firefox-addons.packages."x86_64-linux"; [
         bitwarden

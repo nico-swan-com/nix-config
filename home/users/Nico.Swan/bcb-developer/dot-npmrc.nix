@@ -1,6 +1,6 @@
 { config, ... }:
 let
-   accessTokenPath = "${config.sops.secrets."work/git-lab/access-token".path}";
+  accessTokenPath = "${config.sops.secrets."work/git-lab/access-token".path}";
 in
 {
   programs.zsh = {

@@ -4,7 +4,7 @@
   programs.alacritty = {
     enable = true;
     # custom settings
-    settings = lib.attrsets.recursiveUpdate (import ./default-settings.nix ) { } ;
+    settings = lib.attrsets.recursiveUpdate (import ./default-settings.nix) { };
 
   };
 

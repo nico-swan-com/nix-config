@@ -1,10 +1,9 @@
 { lib, ... }:
 {
   # Open ports in the firewall.
-  networking.firewall.enable = false;
-  #  networking.firewall = {
-  #    allowedTCPPorts = [ 80 443 22 32400 7878 8989 8080 ];
-  #  };
+  networking.firewall = {
+   allowedTCPPorts = [ 80 443 22 ];
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;
