@@ -225,7 +225,7 @@ install_openebs() {
 
 install_cert_manager() {
    echo 	
-   echo "Extention - Installing NGINX Ingress controller"	 
+   echo "Extention - Installing cert-manager"	 
    helm install \
     cert-manager jetstack/cert-manager \
     --namespace cert-manager \
