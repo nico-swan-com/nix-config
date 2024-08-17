@@ -1,4 +1,10 @@
 {
+
+  security.acme = {
+    defaults.email = "nico.swan@cygnus-labs.com";
+    acceptTerms = true;
+  };
+
   services.nginx = {
     enable = true;
     recommendedGzipSettings = true;
