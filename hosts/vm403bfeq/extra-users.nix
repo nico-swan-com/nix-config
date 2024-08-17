@@ -1,7 +1,7 @@
 { pkgs, config, lib, inputs, ... }:
 let
   ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
-  sopsHashedPasswordFile = lib.optionalString (lib.hasAttr "sops-nix" inputs) config.sops.secrets."users/root/password".path;
+  sopsHashedPasswordFile = lib.optionalString (lib.hasAttr "sops-nix" inputs) config.sops.secrets."users/vmbfeqcy/password".path;
   pubKeys = lib.filesystem.listFilesRecursive (../common/users/keys);
 in
 {

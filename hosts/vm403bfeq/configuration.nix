@@ -16,4 +16,10 @@
     ];
 
   system.stateVersion = configVars.stateVersion;
+
+  sops = {
+    secrets = {
+      "users/vmbfeqcy/password".neededForUsers = true;
+    };
+  };
 }

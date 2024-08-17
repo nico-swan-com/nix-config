@@ -45,6 +45,7 @@ in
 
       # extract username/password to /run/secrets-for-users/ so it can be used to create the user
       "users/root/password".neededForUsers = true;
+      "users/vmbfeqcy/password".neededForUsers = true;
       "users/${configVars.username}/password".neededForUsers = true;
 
       # TODO: work on password less sudo 
