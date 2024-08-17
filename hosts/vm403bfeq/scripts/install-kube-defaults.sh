@@ -231,12 +231,9 @@ install_portainer() {
     --set ingress.enabled=true \
     --set ingress.ingressClassName=nginx \
     --set ingress.annotations."nginx\.ingress\.kubernetes\.io/backend-protocol"=HTTPS \
-    --set ingress.hosts[0].host=portainer.localhost \
-    --set ingress.hosts[0].paths[0].path="/"\
-    --set ingress.hosts[1].host=portainer.local.com \
-    --set ingress.hosts[1].paths[0].path="/"
+    --set ingress.hosts[0].host=portainer.production.cygnus-labs.com \
+    --set ingress.hosts[0].paths[0].path="/"
 
-   
    local start_time=$(date +%s)
    while true; do
         pod_statuses=$(kubectl get pods -n "openebs" --no-headers -o custom-columns=":metadata.name,:status.phase")
