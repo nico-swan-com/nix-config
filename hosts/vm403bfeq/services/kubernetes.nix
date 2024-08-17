@@ -20,6 +20,7 @@ in
     argocd
     podman-tui
     docker-compose
+    kubernetes-helm
   ];
 
   services.kubernetes = {
