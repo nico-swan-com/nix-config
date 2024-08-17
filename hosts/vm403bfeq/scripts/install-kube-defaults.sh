@@ -19,24 +19,24 @@ prerequisite() {
 
 }
 
-perpare() {
-  mkdir -p $HOME/.config/k0s/etc
-  mkdir -p $HOME/.config/k0s/volumes 
-  mkdir -p $HOME/.config/k0s/registry 
-}
+# perpare() {
+#   mkdir -p $HOME/.config/k0s/etc
+#   mkdir -p $HOME/.config/k0s/volumes 
+#   mkdir -p $HOME/.config/k0s/registry 
+# }
 
-deploy_k0s() {
-    echo "Deploying k0s cluster to podman"
-    echo
-    podman run -d --name k0s --hostname k0s --privileged \
-    	--cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
-    	-v /var/lib/k0s \
-    	-v $HOME/.config/k0s/etc/config.yaml:/etc/k0s/config.yaml:rw \
-    	-v $HOME/.config/k0s/volumes:/var/openebs/local:z \
-    	-p 6443:6443  \
-    	docker.io/k0sproject/k0s:v1.29.2-k0s.0 k0s controller --enable-worker --no-taints --enable-dynamic-config
-    sleep 5 
-}
+# deploy_k0s() {
+#     echo "Deploying k0s cluster to podman"
+#     echo
+#     podman run -d --name k0s --hostname k0s --privileged \
+#     	--cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
+#     	-v /var/lib/k0s \
+#     	-v $HOME/.config/k0s/etc/config.yaml:/etc/k0s/config.yaml:rw \
+#     	-v $HOME/.config/k0s/volumes:/var/openebs/local:z \
+#     	-p 6443:6443  \
+#     	docker.io/k0sproject/k0s:v1.29.2-k0s.0 k0s controller --enable-worker --no-taints --enable-dynamic-config
+#     sleep 5 
+# }
 
 deploy_registry() {
     echo "Deploying local container registry to podman"
@@ -55,7 +55,7 @@ create_kube_config() {
     kube_config_file="$HOME/.kube/local-k0s"
     new_value="https://localhost:6443"
     sed_query="s/^(\\s*    server\\s*:\\s*).*/\\1 https:\/\/localhost:6443/"
-    podman exec k0s k0s kubeconfig admin | sed -r "$sed_query" | sed -r "s/Default/Local-cluster/g" > $kube_config_file
+    kubeconfig admin | sed -r "$sed_query" | sed -r "s/Default/Local-cluster/g" > $kube_config_file
     chmod 600 $kube_config_file 
     echo "------"
     return
@@ -69,11 +69,11 @@ check_nodes_ready() {
     while true; do
 	echo    
 	    echo "Pod status"    
-	    podman exec k0s k0s kubectl get pods -A
+	    kubectl get pods -A
         echo "-------"
 	    echo
         echo "Node status"	
-        nodes_status=$(podman exec k0s k0s kubectl get nodes -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}')
+        nodes_status=$(kubectl get nodes -o jsonpath='{.items[*].status.conditions[?(@.type=="Ready")].status}')
         if [[ "$nodes_status" == *"True"* ]]; then
             echo "Nodes are ready!"
             create_kube_config
@@ -86,8 +86,8 @@ check_nodes_ready() {
         if [[ $elapsed_time -ge $TIMEOUT ]]; then
             echo "Timeout: Nodes are not ready after $TIMEOUT seconds."
             echo " To monitor the pods and node status use the following commands"
-	    echo "podman exec k0s k0s kubectl get nodes" 
-            echo "podman exec k0s k0s kubectl get pods"
+	    echo "kubectl get nodes" 
+            echo "kubectl get pods"
             exit 1
         fi
         echo "Waiting 10 seconds"
@@ -114,7 +114,7 @@ install_metallb() {
 
    local start_time=$(date +%s)
    while true; do
-        pod_statuses=$(podman exec k0s k0s kubectl get pods -n "metallb-system" --no-headers -o custom-columns=":metadata.name,:status.phase")
+        pod_statuses=$(kubectl get pods -n "metallb-system" --no-headers -o custom-columns=":metadata.name,:status.phase")
 
         all_running=true
 	    while read -r pod_name pod_status; do
@@ -155,7 +155,7 @@ install_nginx_ingress() {
 
    local start_time=$(date +%s)
    while true; do
-        pod_statuses=$(podman exec k0s k0s kubectl get pods -n "ingress-nginx" --no-headers -o custom-columns=":metadata.name,:status.phase")
+        pod_statuses=$(kubectl get pods -n "ingress-nginx" --no-headers -o custom-columns=":metadata.name,:status.phase")
 
         all_running=true
 	    while read -r pod_name pod_status; do
@@ -194,7 +194,7 @@ install_openebs() {
    
    local start_time=$(date +%s)
    while true; do
-        pod_statuses=$(podman exec k0s k0s kubectl get pods -n "openebs" --no-headers -o custom-columns=":metadata.name,:status.phase")
+        pod_statuses=$(kubectl get pods -n "openebs" --no-headers -o custom-columns=":metadata.name,:status.phase")
 
         all_running=true
 	    while read -r pod_name pod_status; do
@@ -239,7 +239,7 @@ install_portainer() {
    
    local start_time=$(date +%s)
    while true; do
-        pod_statuses=$(podman exec k0s k0s kubectl get pods -n "openebs" --no-headers -o custom-columns=":metadata.name,:status.phase")
+        pod_statuses=$(kubectl get pods -n "openebs" --no-headers -o custom-columns=":metadata.name,:status.phase")
 
         all_running=true
 	    while read -r pod_name pod_status; do
