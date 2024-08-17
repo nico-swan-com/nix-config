@@ -1,4 +1,4 @@
-i#!/bin/bash
+#!/bin/bash
 # Set the timeout in seconds (e.g., 180 seconds for 3 minutes)
 TIMEOUT=180
 
