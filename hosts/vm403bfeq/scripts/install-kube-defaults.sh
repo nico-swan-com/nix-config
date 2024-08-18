@@ -103,6 +103,7 @@ add_helm_repos() {
    helm repo add openebs-internal https://openebs.github.io/charts
    helm repo add jetstack https://charts.jetstack.io
    helm repo add portainer https://portainer.github.io/k8s/
+   helm repo add traefik https://traefik.github.io/charts
    helm repo update
    echo "-------"
 }
@@ -145,6 +146,37 @@ install_metallb() {
    done
 
 }
+
+install_traefik_ingress() {
+   echo 	
+   echo "Extention - Installing Traefik proxy"	 
+   helm upgrade -i --create-namespace -n ingress-traefik traefik traefik/traefik --wait
+
+   local start_time=$(date +%s)
+   while true; do
+        pod_statuses=$(kubectl get pods -n "ingress-traefik" --no-headers -o custom-columns=":metadata.name,:status.phase")
+
+        all_running=true
+	    while read -r pod_name pod_status; do
+            if [[ "$pod_status" != "Running" ]]; then
+                echo "Waiting for Pod $pod_name be in a 'Running' state."
+                all_running=false
+                break
+            fi
+        done <<< "$pod_statuses"
+        
+	    current_time=$(date +%s)
+        elapsed_time=$((current_time - start_time))
+        if [[ $elapsed_time -ge $TIMEOUT ]]; then
+            echo "Timeout: Traefik Pods are not running after $TIMEOUT seconds."
+            exit 1
+        fi
+	sleep 5
+
+   done
+
+}
+
 install_nginx_ingress() {
    echo 	
    echo "Extention - Installing NGINX Ingress controller"	 
@@ -316,5 +348,6 @@ add_helm_repos
 install_openebs
 install_metallb
 install_nginx_ingress
+install_traefik_ingress
 install_cert_manager
 install_portainer
