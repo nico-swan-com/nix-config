@@ -12,7 +12,7 @@
       pgroonga
       wal2json
       pg_repack
-      pg-safeupdate
+      pg_safeupdate
       plpgsql-check
       pgjwt
       pgaudit
