@@ -255,15 +255,10 @@ install_openebs() {
 
 }
 
-install_cert_manager() {
+install_trust_manager() {
    echo 	
-   echo "Extention - Installing cert-manager"	 
-   helm install \
-    cert-manager jetstack/cert-manager \
-    --namespace cert-manager \
-    --create-namespace \
-    --version v1.10.1 \
-    --set installCRDs=true
+   echo "Extention - Installing trust-manager"	 
+   helm upgrade -i -n cert-manager trust-manager jetstack/trust-manager --wait
 
    local start_time=$(date +%s)
    while true; do
@@ -286,6 +281,45 @@ install_cert_manager() {
 	current_time=$(date +%s)
         elapsed_time=$((current_time - start_time))
         if [[ $elapsed_time -ge $TIMEOUT ]]; then
+            echo "Timeout: trust-manager pods are not running after $TIMEOUT seconds."
+            exit 1
+        fi
+	sleep 5
+
+   done
+
+}
+
+install_cert_manager() {
+   echo 	
+   echo "Extention - Installing cert-manager"	 
+   helm upgrade --install --create-namespace -n cert-manager cert-manager jetstack/cert-manager --set installCRDs=true --set webhook.networkPolicy.enabled=true --set webhook.securePort=10260 --wait  
+
+   local start_time=$(date +%s)
+   while true; do
+        pod_statuses=$(kubectl get pods -n "cert-manager" --no-headers -o custom-columns=":metadata.name,:status.phase")
+
+        all_running=true
+	    while read -r pod_name pod_status; do
+            if [[ "$pod_status" != "Running" ]]; then
+                echo "Waiting for Pod $pod_name be in a 'Running' state."
+                all_running=false
+                break
+            fi
+        done <<< "$pod_statuses"
+
+        if $all_running; then
+            echo "All pods are running."
+            install_trust_manager
+            echo "Applying issuers" 
+	        kubectl apply -f cert-manager-issuers.yaml
+	        echo "-------"
+            return
+        fi
+        
+	current_time=$(date +%s)
+        elapsed_time=$((current_time - start_time))
+        if [[ $elapsed_time -ge $TIMEOUT ]]; then
             echo "Timeout: cert-manager pods are not running after $TIMEOUT seconds."
             exit 1
         fi
@@ -294,6 +328,10 @@ install_cert_manager() {
    done
 
 }
+
+
+
+
 
 install_portainer() {
    echo 	
