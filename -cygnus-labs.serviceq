@@ -1,0 +1,212 @@
+[0;1;32m●[0m vm403bfeq
+    State: [0;1;32mrunning[0m
+    Units: 426 loaded (incl. loaded aliases)
+     Jobs: 0 queued
+   Failed: 0 units
+    Since: Tue 2024-06-25 10:54:09 SAST; 1 month 24 days ago
+  systemd: 255.9
+   CGroup: /
+           ├─init.scope
+           │ └─[0;38;5;245m1 /run/current-system/systemd/lib/systemd/systemd --system --deserialize=23[0m
+           ├─kubepods.slice
+           │ ├─kubepods-besteffort.slice
+           │ │ ├─kubepods-besteffort-pod05949bc3_c813_4052_aeff_b9c6fa9091b4.slice
+           │ │ │ ├─cri-containerd-66a624a905f3cdd5ed99c093110ddcb061bec6bcc835048e232fb5b790f098e6.scope
+           │ │ │ │ └─[0;38;5;245m2453469 /bin/pause[0m
+           │ │ │ └─cri-containerd-947571bc1459442f152f6356bb62770aa7eedcc62cf1f88313bee4d50e6e7fba.scope
+           │ │ │   └─[0;38;5;245m2453609 /usr/local/bin/ndo[0m
+           │ │ ├─kubepods-besteffort-pod25f646f8_8893_4dca_8f6a_1592f5e87157.slice
+           │ │ │ ├─cri-containerd-0bc4041edc9778eb8ce6b24cec3e4e709e0ebe0df21f05d7fcb1451717670be3.scope
+           │ │ │ │ └─[0;38;5;245m2907495 /app/cmd/controller/controller --v=2 --cluster-resource-namespace=cert-manager --leader-election-namespace=kube-system[0m
+           │ │ │ └─cri-containerd-a10fde1e01d836f916c2acf03d4a7a3161744638246861c4ae7aaf7a7e517cd1.scope
+           │ │ │   └─[0;38;5;245m2467592 /bin/pause[0m
+           │ │ ├─kubepods-besteffort-pod33d137c7_dec4_4df5_9366_8aaabd489570.slice
+           │ │ │ ├─cri-containerd-24bb3338f92b5113cf5329ec098c90649899707660879a344226249634dfb88d.scope
+           │ │ │ │ └─[0;38;5;245m2659561 traefik traefik --global.checknewversion --global.sendanonymoususage --entryPoints.metrics.address=:9100/tcp --entryPoints.traefik.address=:9000/tcp --entryPoints.web.address=:8000/tcp --entryPoints.websecure.address=:8443/tcp --api.dashboard=true --ping=true --metrics.prometheus=true --metrics.prometheus.entrypoint=metrics --providers.kubernetescrd --providers.kubernetesingress --entryPoints.websecure.http.tls=true --log.level=INFO[0m
+           │ │ │ └─cri-containerd-acb441330afa924641493a2cd1bd77c66e4a8dbf575fedebc274bf6f80244d30.scope
+           │ │ │   └─[0;38;5;245m2659494 /bin/pause[0m
+           │ │ ├─kubepods-besteffort-pod8112a608_7d07_4112_9a5a_517b5de2f0a7.slice
+           │ │ │ ├─cri-containerd-aa346b022e7f514547749332b2724fbbde53b07472c839d2e2bd708d29dba864.scope
+           │ │ │ │ └─[0;38;5;245m2467578 /bin/pause[0m
+           │ │ │ └─cri-containerd-dc91833c45f5fc200b21271337e8bb449522a8eb1ddd539609031114d923e37f.scope
+           │ │ │   └─[0;38;5;245m2467792 /app/cmd/webhook/webhook --v=2 --secure-port=10250 --dynamic-serving-ca-secret-namespace=cert-manager --dynamic-serving-ca-secret-name=cert-manager-webhook-ca --dynamic-serving-dns-names=cert-manager-webhook --dynamic-serving-dns-names=cert-manager-webhook.cert-manager --dynamic-serving-dns-names=cert-manager-webhook.cert-manager.svc[0m
+           │ │ ├─kubepods-besteffort-podc603d3ad_c39d_42e5_970a_4f158fe9aee9.slice
+           │ │ │ ├─cri-containerd-909ced28d58d3b31e746874a013359dd95e0b114edfdce2298816705a4dde99d.scope
+           │ │ │ │ └─[0;38;5;245m2907502 /app/cmd/cainjector/cainjector --v=2 --leader-election-namespace=kube-system[0m
+           │ │ │ └─cri-containerd-b60e932af303eb20823bd6dbbc5be93717a9602ae41e6e0a861c08e340b5ef59.scope
+           │ │ │   └─[0;38;5;245m2467602 /bin/pause[0m
+           │ │ ├─kubepods-besteffort-podd889f2d6_e3f0_4cae_83b3_5892a34428ef.slice
+           │ │ │ ├─cri-containerd-03b2537c2cb63e1d56efcc98592451273c9b23c13a1541583d7cfd0b66d94255.scope
+           │ │ │ │ └─[0;38;5;245m2907489 /usr/local/bin/provisioner-localpv --bd-time-out=12[0m
+           │ │ │ └─cri-containerd-380e9d33798bdb28f93ada67cc3b49c4eb7e947ad8c9b4b146035b834e8b56a5.scope
+           │ │ │   └─[0;38;5;245m2453462 /bin/pause[0m
+           │ │ ├─kubepods-besteffort-podf2935854_15e7_404b_bdb7_291e69ea50a0.slice
+           │ │ │ ├─cri-containerd-28e19f1a7e29cd7d3ecec196e4abd874b63d58ec9a4bdf598708fbbf62725eec.scope
+           │ │ │ │ └─[0;38;5;245m2453763 /bin/pause[0m
+           │ │ │ └─cri-containerd-4b6662d68bab850cd342800f7880f33d9c8244df1d7262f11dc78c47925c6bb2.scope
+           │ │ │   └─[0;38;5;245m2453815 /controller --port=7472 --log-level=info --tls-min-version=VersionTLS12[0m
+           │ │ └─kubepods-besteffort-podf38f2b42_f21c_453f_9968_af9c92bb0d03.slice
+           │ │   ├─cri-containerd-05971f14b24eab72e810783b1ec860bb47d25eddaf9bd2705ecf1316489b59e9.scope
+           │ │   │ └─[0;38;5;245m2454260 /speaker --port=7472 --log-level=info[0m
+           │ │   ├─cri-containerd-8b4ab8a23605141cac7c720775c034109514b6c72cbdecbba8a691f4f63696a8.scope
+           │ │   │ ├─[0;38;5;245m2454350 /bin/bash /etc/frr_reloader/frr-reloader.sh[0m
+           │ │   │ └─[0;38;5;245m2454476 sleep infinity[0m
+           │ │   ├─cri-containerd-9e0986b7528a122d3fc578bea6c5db1b5d1ca9e3487dc7795466afab5372ed08.scope
+           │ │   │ └─[0;38;5;245m2453930 /bin/pause[0m
+           │ │   ├─cri-containerd-b7e283a32d6e758e69f7b4f2b0dd7b02f3968051c1be8166c593b7dfb3f0a7e1.scope
+           │ │   │ ├─[0;38;5;245m2454299 /bin/sh -c "/sbin/tini -- /usr/lib/frr/docker-start &\nattempts=0\nuntil [[ -f /etc/frr/frr.log || \$attempts -eq 60 ]]; do\n  sleep 1\n  attempts=\$(( \$attempts + 1 ))\ndone\ntail -f /etc/frr/frr.log\n"[0m
+           │ │   │ ├─[0;38;5;245m2454312 /sbin/tini -- /usr/lib/frr/docker-start[0m
+           │ │   │ ├─[0;38;5;245m2454314 /bin/bash /usr/lib/frr/docker-start[0m
+           │ │   │ ├─[0;38;5;245m2454318 /usr/lib/frr/watchfrr zebra mgmtd bgpd staticd bfdd[0m
+           │ │   │ ├─[0;38;5;245m2454357 /usr/lib/frr/zebra -d -F traditional -A 127.0.0.1 -s 90000000[0m
+           │ │   │ ├─[0;38;5;245m2454375 /usr/lib/frr/mgmtd -d -F traditional[0m
+           │ │   │ ├─[0;38;5;245m2454403 /usr/lib/frr/bgpd -d -F traditional -A 127.0.0.1 -p 0[0m
+           │ │   │ ├─[0;38;5;245m2454417 /usr/lib/frr/staticd -d -F traditional -A 127.0.0.1[0m
+           │ │   │ ├─[0;38;5;245m2454420 /usr/lib/frr/bfdd -d -F traditional -A 127.0.0.1[0m
+           │ │   │ └─[0;38;5;245m2454445 tail -f /etc/frr/frr.log[0m
+           │ │   └─cri-containerd-d2d0149f1ce1e88e96c0c72287401ce9fc69e5edea05a53c2ef2bf4056619241.scope
+           │ │     └─[0;38;5;245m2454392 /etc/frr_metrics/frr-metrics --metrics-port=7473[0m
+           │ └─kubepods-burstable.slice
+           │   ├─kubepods-burstable-pod3f1451f6_0a2a_4320_9f47_a90efe632b65.slice
+           │   │ ├─cri-containerd-81ce5417e885a12fd1919d6dd2e804425d80a2e68c53feaa23ba6b0aac243b7e.scope
+           │   │ │ └─[0;38;5;245m192120 /bin/node_exporter --path.procfs=/host/proc --path.sysfs=/host/sys --path.rootfs=/host/root "--collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker|var/lib/containerd|var/lib/containers/.+)(\$|/)" "--collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)\$"[0m
+           │   │ └─cri-containerd-fecb5c61aac894d93ebc2f3d5dedea94e8fb4559f01d0a33dfeb6b7e854e46ab.scope
+           │   │   └─[0;38;5;245m191937 /bin/pause[0m
+           │   ├─kubepods-burstable-pod75a9ad91_6370_435d_8c5d_2ca4cf183c87.slice
+           │   │ ├─cri-containerd-8cc6aeef24ab1b98e5337134b51b2e577adbcb8efc2a29ad4d2eeba443fde3fa.scope
+           │   │ │ └─[0;38;5;245m191857 /bin/pause[0m
+           │   │ └─cri-containerd-f6077e4c65eb670528579745f8ce00038364b6fdec32d86452fe4289898145cb.scope
+           │   │   └─[0;38;5;245m192173 /bin/prometheus --web.listen-address=0.0.0.0:9090 --config.file=/etc/prometheus/prometheus.yaml --storage.tsdb.path=/var/lib/prometheus --storage.tsdb.retention.time=2d --storage.tsdb.retention.size=5GiB --storage.tsdb.min-block-duration=2h --storage.tsdb.max-block-duration=2h[0m
+           │   ├─kubepods-burstable-pod829c05ad_b148_4cd4_a78f_0cf9dde7f84a.slice
+           │   │ ├─cri-containerd-5f2555724198b90b0082896acea66b770a42b3aa381d75e97bcf3555cc80690c.scope
+           │   │ │ └─[0;38;5;245m6856 /coredns -conf /etc/coredns/Corefile[0m
+           │   │ └─cri-containerd-ee9562d5255aba8963547b5e83868a9ce0d8abf65ac9a673d8da4b22804a42d0.scope
+           │   │   └─[0;38;5;245m6783 /bin/pause[0m
+           │   ├─kubepods-burstable-poda2259acf_5d40_4069_aea9_ca05e0f96e56.slice
+           │   │ ├─cri-containerd-b8d20bb1b9b01a6c32b4b599a03a26f853fde6719b4e5d6176f982108167726e.scope
+           │   │ │ └─[0;38;5;245m191777 /bin/pause[0m
+           │   │ └─cri-containerd-eaf94751d0c02256a0b791b77131d3f3ccac59023f8df1f50e5bb966519f3d5c.scope
+           │   │   └─[0;38;5;245m191996 /kube-state-metrics --port=8080 --telemetry-port=8081[0m
+           │   ├─kubepods-burstable-podecb9808f_772d_4c73_b5c6_e7d2727404d5.slice
+           │   │ ├─cri-containerd-8d4798dca1d368f3cc7fc3b233d00aceba15cc16ae0ad4fe963894747aa22ca7.scope
+           │   │ │ ├─[0;38;5;245m2455237 /usr/bin/dumb-init -- /nginx-ingress-controller --publish-service=ingress-nginx/ingress-nginx-controller --election-id=ingress-nginx-leader --controller-class=k8s.io/ingress-nginx --ingress-class=nginx --configmap=ingress-nginx/ingress-nginx-controller --validating-webhook=:8443 --validating-webhook-certificate=/usr/local/certificates/cert --validating-webhook-key=/usr/local/certificates/key --enable-metrics=false[0m
+           │   │ │ ├─[0;38;5;245m2455249 /nginx-ingress-controller --publish-service=ingress-nginx/ingress-nginx-controller --election-id=ingress-nginx-leader --controller-class=k8s.io/ingress-nginx --ingress-class=nginx --configmap=ingress-nginx/ingress-nginx-controller --validating-webhook=:8443 --validating-webhook-certificate=/usr/local/certificates/cert --validating-webhook-key=/usr/local/certificates/key --enable-metrics=false[0m
+           │   │ │ ├─[0;38;5;245m2455266 "nginx: master process /usr/bin/nginx -c /etc/nginx/nginx.conf"[0m
+           │   │ │ ├─[0;38;5;245m2617222 "nginx: worker process"[0m
+           │   │ │ ├─[0;38;5;245m2617223 "nginx: worker process"[0m
+           │   │ │ ├─[0;38;5;245m2617224 "nginx: worker process"[0m
+           │   │ │ ├─[0;38;5;245m2617225 "nginx: worker process"[0m
+           │   │ │ └─[0;38;5;245m2617226 "nginx: cache manager process"[0m
+           │   │ └─cri-containerd-f99e424308603b4552a7af272eeba4313d0acc5279ec7ba4b55dc34697a59106.scope
+           │   │   └─[0;38;5;245m2454831 /bin/pause[0m
+           │   └─kubepods-burstable-podfd15d0a5_b7c8_484d_8e44_c04ef182214b.slice
+           │     ├─cri-containerd-6bd2083b86ec41c8b954fe6e87966652d99b060a1bc68de6b7a40cd4a5f8e64c.scope
+           │     │ └─[0;38;5;245m6781 /bin/pause[0m
+           │     └─cri-containerd-d7d6062f82d3db7098d9ffa9c4d33c1b10a07002f3a68e882f6624a0f92d6c67.scope
+           │       └─[0;38;5;245m6849 /coredns -conf /etc/coredns/Corefile[0m
+           ├─kubernetes.slice
+           │ ├─kube-addon-manager.service
+           │ │ ├─[0;38;5;245m2907573 /nix/store/wckka8fxv4h5hp74cbkhaw3fw7kbvcs1-bash-5.2p26/bin/bash /nix/store/7scp5ah2xljh86lgnahlwzlf3qfv1ncc-kubernetes-1.30.1/bin/.kube-addons-wrapped[0m
+           │ │ └─[0;38;5;245m2913185 sleep 57[0m
+           │ ├─kube-apiserver.service
+           │ │ └─[0;38;5;245m2907302 /nix/store/7scp5ah2xljh86lgnahlwzlf3qfv1ncc-kubernetes-1.30.1/bin/kube-apiserver --allow-privileged=false --authorization-mode=RBAC,Node --bind-address=0.0.0.0 --advertise-address=102.135.163.95 --client-ca-file=/var/lib/kubernetes/secrets/ca.pem --disable-admission-plugins= --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,ResourceQuota,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction --etcd-servers=https://etcd.local:2379 --etcd-cafile=/var/lib/kubernetes/secrets/ca.pem --etcd-certfile=/var/lib/kubernetes/secrets/kube-apiserver-etcd-client.pem --etcd-keyfile=/var/lib/kubernetes/secrets/kube-apiserver-etcd-client-key.pem --kubelet-certificate-authority=/var/lib/kubernetes/secrets/ca.pem --kubelet-client-certificate=/var/lib/kubernetes/secrets/kube-apiserver-kubelet-client.pem --kubelet-client-key=/var/lib/kubernetes/secrets/kube-apiserver-kubelet-client-key.pem --proxy-client-cert-file=/var/lib/kubernetes/secrets/kube-apiserver-proxy-client.pem --proxy-client-key-file=/var/lib/kubernetes/secrets/kube-apiserver-proxy-client-key.pem --runtime-config=authentication.k8s.io/v1beta1=true --secure-port=6443 --api-audiences=api,https://kubernetes.default.svc --service-account-issuer=https://kubernetes.default.svc --service-account-signing-key-file=/var/lib/kubernetes/secrets/service-account-key.pem --service-account-key-file=/var/lib/kubernetes/secrets/service-account.pem --service-cluster-ip-range=10.0.0.0/24 --storage-backend=etcd3 --tls-cert-file=/var/lib/kubernetes/secrets/kube-apiserver.pem --tls-private-key-file=/var/lib/kubernetes/secrets/kube-apiserver-key.pem[0m
+           │ ├─kube-controller-manager.service
+           │ │ └─[0;38;5;245m2907305 /nix/store/7scp5ah2xljh86lgnahlwzlf3qfv1ncc-kubernetes-1.30.1/bin/kube-controller-manager --allocate-node-cidrs=true --bind-address=127.0.0.1 --cluster-cidr=10.1.0.0/16 --kubeconfig=/nix/store/wajnwxgk6r1fg6jday1h8iz69bxad7ll-kube-controller-manager-kubeconfig --leader-elect=true --root-ca-file=/var/lib/kubernetes/secrets/ca.pem --secure-port=10252 --service-account-private-key-file=/var/lib/kubernetes/secrets/service-account-key.pem --use-service-account-credentials[0m
+           │ ├─kube-proxy.service
+           │ │ └─[0;38;5;245m2907306 /nix/store/7scp5ah2xljh86lgnahlwzlf3qfv1ncc-kubernetes-1.30.1/bin/kube-proxy --bind-address=0.0.0.0 --cluster-cidr=10.1.0.0/16 --hostname-override=vm403bfeq --kubeconfig=/nix/store/qq6x73by7gqrag0cm8f4s5wfr2lljb7n-kube-proxy-kubeconfig[0m
+           │ ├─kube-scheduler.service
+           │ │ └─[0;38;5;245m2907307 /nix/store/7scp5ah2xljh86lgnahlwzlf3qfv1ncc-kubernetes-1.30.1/bin/kube-scheduler --bind-address=127.0.0.1 --kubeconfig=/nix/store/p5bicz396d09ifl4ak8jdb26psh7908x-kube-scheduler-kubeconfig --leader-elect=true --secure-port=10251[0m
+           │ └─kubelet.service
+           │   └─[0;38;5;245m2907393 /nix/store/7scp5ah2xljh86lgnahlwzlf3qfv1ncc-kubernetes-1.30.1/bin/kubelet --config=/nix/store/kblp13gvyjkbpqsg8pj7r6z4sgzs5xrm-kubelet-config --hostname-override=vm403bfeq.cygnus-labs.com --kubeconfig=/nix/store/v2w0xq0wfh73qh2qyx9ayxsq4sjhkgnz-kubelet-kubeconfig --pod-infra-container-image=pause --root-dir=/var/lib/kubernetes --fail-swap-on=false[0m
+           ├─system.slice
+           │ ├─NetworkManager.service
+           │ │ └─[0;38;5;245m2428559 /nix/store/s244czqxs4v9d168mzgna9r713qw86m7-networkmanager-1.46.2/sbin/NetworkManager --no-daemon[0m
+           │ ├─certmgr.service
+           │ │ └─[0;38;5;245m2429085 /nix/store/378fjbp2f3rrjmaxwbbkll7pd3qs4kwj-certmgr-3.0.3/bin/certmgr -f /nix/store/3ilrlm8d4b2kjl1cjfhh8fvswbf79kyd-certmgr.yaml[0m
+           │ ├─cfssl.service
+           │ │ └─[0;38;5;245m2428618 /nix/store/93qig57q4c1wkilhhyp4g9c439gz1f3s-cfssl-1.6.5/bin/cfssl serve -address=0.0.0.0 -port=8888 -ca=/var/lib/cfssl/ca.pem -ca-key=/var/lib/cfssl/ca-key.pem -config=/nix/store/5rl4xhacwvzl1mfxxd7ysamhf4bgjcn0-cfssl-config.json -tls-key=/var/lib/cfssl/cfssl-key.pem -tls-cert=/var/lib/cfssl/cfssl.pem -loglevel=1[0m
+           │ ├─containerd.service
+           │ │ ├─[0;38;5;245m   6742 /nix/store/iv615vjcipyajbvshn5y65sfd5knwzkl-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id ee9562d5255aba8963547b5e83868a9ce0d8abf65ac9a673d8da4b22804a42d0 -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m   6747 /nix/store/iv615vjcipyajbvshn5y65sfd5knwzkl-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id 6bd2083b86ec41c8b954fe6e87966652d99b060a1bc68de6b7a40cd4a5f8e64c -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m 191750 /nix/store/iv615vjcipyajbvshn5y65sfd5knwzkl-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id b8d20bb1b9b01a6c32b4b599a03a26f853fde6719b4e5d6176f982108167726e -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m 191836 /nix/store/iv615vjcipyajbvshn5y65sfd5knwzkl-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id 8cc6aeef24ab1b98e5337134b51b2e577adbcb8efc2a29ad4d2eeba443fde3fa -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m 191916 /nix/store/iv615vjcipyajbvshn5y65sfd5knwzkl-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id fecb5c61aac894d93ebc2f3d5dedea94e8fb4559f01d0a33dfeb6b7e854e46ab -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m2428578 /nix/store/lpk4qi7gvdp423097d99h48ynfb526an-containerd-1.7.16/bin/containerd --config /nix/store/dciahxkvprscr9ck0ws9lc0h8g9yfpkl-containerd-config-checked.toml[0m
+           │ │ ├─[0;38;5;245m2453422 /nix/store/lpk4qi7gvdp423097d99h48ynfb526an-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id 66a624a905f3cdd5ed99c093110ddcb061bec6bcc835048e232fb5b790f098e6 -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m2453423 /nix/store/lpk4qi7gvdp423097d99h48ynfb526an-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id 380e9d33798bdb28f93ada67cc3b49c4eb7e947ad8c9b4b146035b834e8b56a5 -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m2453734 /nix/store/lpk4qi7gvdp423097d99h48ynfb526an-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id 28e19f1a7e29cd7d3ecec196e4abd874b63d58ec9a4bdf598708fbbf62725eec -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m2453910 /nix/store/lpk4qi7gvdp423097d99h48ynfb526an-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id 9e0986b7528a122d3fc578bea6c5db1b5d1ca9e3487dc7795466afab5372ed08 -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m2454810 /nix/store/lpk4qi7gvdp423097d99h48ynfb526an-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id f99e424308603b4552a7af272eeba4313d0acc5279ec7ba4b55dc34697a59106 -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m2467496 /nix/store/lpk4qi7gvdp423097d99h48ynfb526an-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id aa346b022e7f514547749332b2724fbbde53b07472c839d2e2bd708d29dba864 -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m2467512 /nix/store/lpk4qi7gvdp423097d99h48ynfb526an-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id a10fde1e01d836f916c2acf03d4a7a3161744638246861c4ae7aaf7a7e517cd1 -address /run/containerd/containerd.sock[0m
+           │ │ ├─[0;38;5;245m2467530 /nix/store/lpk4qi7gvdp423097d99h48ynfb526an-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id b60e932af303eb20823bd6dbbc5be93717a9602ae41e6e0a861c08e340b5ef59 -address /run/containerd/containerd.sock[0m
+           │ │ └─[0;38;5;245m2659461 /nix/store/lpk4qi7gvdp423097d99h48ynfb526an-containerd-1.7.16/bin/containerd-shim-runc-v2 -namespace k8s.io -id acb441330afa924641493a2cd1bd77c66e4a8dbf575fedebc274bf6f80244d30 -address /run/containerd/containerd.sock[0m
+           │ ├─dbus.service
+           │ │ └─[0;38;5;245m797 /nix/store/nn54yahdasinv9hyk1hjwpakw8sqqyq0-dbus-1.14.10/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only[0m
+           │ ├─etcd.service
+           │ │ └─[0;38;5;245m2429136 /nix/store/sp011d2zj6vbgc51h6cn90rgn9j6nx67-etcd-3.5.13/bin/etcd[0m
+           │ ├─flannel.service
+           │ │ └─[0;38;5;245m2429155 /nix/store/i2hirq0zbjxajymz19n4rvfc7lix3azl-flannel-0.25.1/bin/flannel[0m
+           │ ├─minio.service
+           │ │ └─[0;38;5;245m2428565 /nix/store/5j6yrx7vkrbqq3ysn78maxymryah54qx-minio-2024-05-10T01-41-38Z/bin/minio server --json --address :9000 --console-address :9001 --config-dir=/var/lib/minio/config /var/lib/minio/data[0m
+           │ ├─nix-daemon.service
+           │ │ └─[0;38;5;245m2428339 nix-daemon --daemon[0m
+           │ ├─nscd.service
+           │ │ └─[0;38;5;245m2428591 /nix/store/dq7mn0k54qswgxlc1h92yl2nlwx0sd0i-nsncd-unstable-2024-01-16/bin/nsncd[0m
+           │ ├─polkit.service
+           │ │ └─[0;38;5;245m2912606 /nix/store/n06sy1wxy3r5rs112xfvr4r3gvhpa9na-polkit-124/lib/polkit-1/polkitd --no-debug[0m
+           │ ├─postgresql.service
+           │ │ ├─[0;38;5;245m2912627 /nix/store/5lkls4vhn7c1b1qm6rrxxqw62a92rgzn-postgresql-and-plugins-16.3/bin/postgres[0m
+           │ │ ├─[0;38;5;245m2912663 "postgres: checkpointer "[0m
+           │ │ ├─[0;38;5;245m2912664 "postgres: background writer "[0m
+           │ │ ├─[0;38;5;245m2912669 "postgres: walwriter "[0m
+           │ │ ├─[0;38;5;245m2912670 "postgres: autovacuum launcher "[0m
+           │ │ └─[0;38;5;245m2912671 "postgres: logical replication launcher "[0m
+           │ ├─qemu-guest-agent.service
+           │ │ └─[0;38;5;245m2428673 /nix/store/w44imhmlwyqc784zdbc5m3h4p14lxi1h-qemu-host-cpu-only-8.2.6-ga/bin/qemu-ga --statedir /run/qemu-ga[0m
+           │ ├─redis-cygnus-labs.service
+           │ │ └─[0;38;5;245m2912632 "/nix/store/sc7sd4a2q7qgv8n8x9yfnqq3hfly2jm5-redis-7.2.4/bin/redis-server unixsocket:/run/redis-cygnus-labs/redis.sock"[0m
+           │ ├─sshd.service
+           │ │ └─[0;38;5;245m2428355 "sshd: /nix/store/47i9qhgf3c4lxd56f097gsix01dliqxv-openssh-9.7p1/bin/sshd -D -f /etc/ssh/sshd_config [listener] 0 of 10-100 startups"[0m
+           │ ├─system-getty.slice
+           │ │ └─getty@tty1.service
+           │ │   └─[0;38;5;245m1183 agetty --login-program /nix/store/3kgyqixfqf6vhq3cw41vgxv2i0x2fayz-shadow-4.14.6/bin/login --noclear --keep-baud tty1 115200,38400,9600 linux[0m
+           │ ├─systemd-journald.service
+           │ │ └─[0;38;5;245m2428365 /nix/store/ws3nzqfc8dhbibi9vb57zwvj6nlaky0p-systemd-255.9/lib/systemd/systemd-journald[0m
+           │ ├─systemd-logind.service
+           │ │ └─[0;38;5;245m835 /nix/store/d9ff8aqv537mlhpinncx6dwc7a5ky6gk-systemd-255.6/lib/systemd/systemd-logind[0m
+           │ ├─systemd-oomd.service
+           │ │ └─[0;38;5;245m2428607 /nix/store/ws3nzqfc8dhbibi9vb57zwvj6nlaky0p-systemd-255.9/lib/systemd/systemd-oomd[0m
+           │ ├─systemd-timesyncd.service
+           │ │ └─[0;38;5;245m2428776 /nix/store/ws3nzqfc8dhbibi9vb57zwvj6nlaky0p-systemd-255.9/lib/systemd/systemd-timesyncd[0m
+           │ └─systemd-udevd.service
+           │   └─udev
+           │     └─[0;38;5;245m2428701 /nix/store/ws3nzqfc8dhbibi9vb57zwvj6nlaky0p-systemd-255.9/lib/systemd/systemd-udevd[0m
+           └─user.slice
+             └─user-1000.slice
+               ├─session-49.scope
+               │ ├─[0;38;5;245m2830700 "sshd: nicoswan [priv]"[0m
+               │ ├─[0;38;5;245m2830773 "sshd: nicoswan@pts/0"[0m
+               │ ├─[0;38;5;245m2830785 -zsh[0m
+               │ ├─[0;38;5;245m2913239 bash /tmp/nix-shell-2913239-0/rc[0m
+               │ ├─[0;38;5;245m2914505 zsh[0m
+               │ ├─[0;38;5;245m2914668 systemctl status[0m
+               │ └─[0;38;5;245m2914669 less[0m
+               ├─session-51.scope
+               │ ├─[0;38;5;245m2831165 "sshd: nicoswan [priv]"[0m
+               │ ├─[0;38;5;245m2831193 "sshd: nicoswan@pts/1"[0m
+               │ ├─[0;38;5;245m2831195 -zsh[0m
+               │ ├─[0;38;5;245m2895894 /nix/store/w722q6hh7w7cqqma32f5w1lnr366558q-neovim-0.9.5/bin/nvim --cmd "lua vim.g.loaded_node_provider=0;vim.g.loaded_perl_provider=0;vim.g.loaded_python_provider=0;vim.g.python3_host_prog='/nix/store/w722q6hh7w7cqqma32f5w1lnr366558q-neovim-0.9.5/bin/nvim-python3';vim.g.ruby_host_prog='/nix/store/w722q6hh7w7cqqma32f5w1lnr366558q-neovim-0.9.5/bin/nvim-ruby'" -u /nix/store/26v691vc4914ydgx284z4vz9zkva7vsq-lunarvim-1.4.0/share/lvim/init.lua ./hosts/vm403bfeq/services/postgres.nix[0m
+               │ ├─[0;38;5;245m2895897 /nix/store/w722q6hh7w7cqqma32f5w1lnr366558q-neovim-0.9.5/bin/nvim --embed --cmd "lua vim.g.loaded_node_provider=0;vim.g.loaded_perl_provider=0;vim.g.loaded_python_provider=0;vim.g.python3_host_prog='/nix/store/w722q6hh7w7cqqma32f5w1lnr366558q-neovim-0.9.5/bin/nvim-python3';vim.g.ruby_host_prog='/nix/store/w722q6hh7w7cqqma32f5w1lnr366558q-neovim-0.9.5/bin/nvim-ruby'" -u /nix/store/26v691vc4914ydgx284z4vz9zkva7vsq-lunarvim-1.4.0/share/lvim/init.lua ./hosts/vm403bfeq/services/postgres.nix[0m
+               │ ├─[0;38;5;245m2895904 /run/current-system/sw/bin/nil[0m
+               │ └─[0;38;5;245m2910589 lazygit[0m
+               ├─session-52.scope
+               │ ├─[0;38;5;245m2851551 "sshd: nicoswan [priv]"[0m
+               │ ├─[0;38;5;245m2851577 "sshd: nicoswan@pts/3"[0m
+               │ ├─[0;38;5;245m2851579 -zsh[0m
+               │ ├─[0;38;5;245m2851695 su[0m
+               │ └─[0;38;5;245m2851707 bash[0m
+               └─user@1000.service
+                 └─init.scope
+                   ├─[0;38;5;245m2830754 /run/current-system/systemd/lib/systemd/systemd --user --deserialize=12[0m
+                   └─[0;38;5;245m2830758 "(sd-pam)"[0m

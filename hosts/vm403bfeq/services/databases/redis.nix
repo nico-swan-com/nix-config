@@ -4,7 +4,7 @@
       enable = true;
       #user = "nextcloud";
       #unixSocket = "/run/redis-nextcloud/redis.sock";
-      #port = 0;
+      port = 6379;
     };
   };
 }

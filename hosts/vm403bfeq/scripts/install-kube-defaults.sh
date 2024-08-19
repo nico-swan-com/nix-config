@@ -102,8 +102,9 @@ add_helm_repos() {
    helm repo add https://kubernetes.github.io/ingress-nginx 
    helm repo add openebs-internal https://openebs.github.io/charts
    helm repo add jetstack https://charts.jetstack.io
-   helm repo add portainer https://portainer.github.io/k8s/
+   helm repo add portainer https://portainer.github.io/k8s
    helm repo add traefik https://traefik.github.io/charts
+   helm repo add longhorn https://charts.longhorn.io
    helm repo update
    echo "-------"
 }
@@ -216,13 +217,50 @@ install_nginx_ingress() {
 
 }
 
+install_longhorn() {
+   echo 	
+   echo "Extention - Installing Longhorn Storage"
+   helm upgrade --install longhorn longhorn/longhorn --namespace longhorn-system --create-namespace --version 1.6.2
+
+   
+   local start_time=$(date +%s)
+   while true; do
+        pod_statuses=$(kubectl get pods -n "longhorn-system" --no-headers -o custom-columns=":metadata.name,:status.phase")
+
+        all_running=true
+	    while read -r pod_name pod_status; do
+            if [[ "$pod_status" != "Running" ]]; then
+                echo "Waiting for Pod $pod_name be in a 'Running' state."
+                all_running=false
+                break
+            fi
+        done <<< "$pod_statuses"
+
+        if $all_running; then
+            echo "All pods are running."
+            return
+        fi
+        
+	current_time=$(date +%s)
+        elapsed_time=$((current_time - start_time))
+        if [[ $elapsed_time -ge $TIMEOUT ]]; then
+            echo "Timeout: Longhorn Pods are not running after $TIMEOUT seconds."
+            exit 1
+        fi
+	sleep 5
+
+   done
+
+}
+
 install_openebs() {
    echo 	
    echo "Extention - Installing OpenEBS Storage"
-   helm  install openebs openebs-internal/openebs --namespace openebs --create-namespace --version 3.9.0 \
-    --set localprovisioner.hostpathClass.enabled="true" \
-    --set localprovisioner.hostpathClass.isDefaultClass="true" \
-    --set ndm.enabled="false"
+   helm  install openebs openebs-internal/openebs --namespace openebs --create-namespace --version 3.9.0 
+#   helm  install openebs openebs-internal/openebs --namespace openebs --create-namespace --version 3.9.0 \
+#    --set localprovisioner.hostpathClass.enabled="true" \
+#    --set localprovisioner.hostpathClass.isDefaultClass="true" \
+#    --set ndm.enabled="false"
 
    
    local start_time=$(date +%s)
@@ -378,14 +416,15 @@ install_portainer() {
    done
 
 }
-prerequisite
+#prerequisite
 #perpare
 #deploy_k0s
-check_nodes_ready
+#check_nodes_ready
 add_helm_repos
 install_openebs
-install_metallb
+install_longhorn
+#install_metallb
 install_nginx_ingress
-install_traefik_ingress
-install_cert_manager
-install_portainer
+#install_traefik_ingress
+#install_cert_manager
+#install_portainer
