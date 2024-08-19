@@ -2,7 +2,7 @@
 
   # Open ports in the firewall.
   networking.firewall = {
-    allowedTCPPorts = [ 80 443 22 6443 30779 ];
+    allowedTCPPorts = [ 80 443 22 6443 30779 5432 ];
   };
 
   # Enable networking

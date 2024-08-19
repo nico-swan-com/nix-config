@@ -1,11 +1,36 @@
 { config, pkgs, configVars, ... }:
+#let
+#  password = "${config.sops.secrets."hosts//".path}";
+#in
 {
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_16;
     enableTCPIP = true;
     dataDir = "/data/postgres/16";
-    port = 5432;
+    settings = {
+      port = 5432;
+      listen_addresses = "*";
+    };
+    ensureDatabases = [ "${configVars.username}" "test" ];
+    ensureUsers = [
+      {
+         name = configVars.username;
+         ensureDBOwnership = true;
+         ensureClauses = {
+           superuser = true;
+           replication = true;
+           login = true;
+ #          inherit = true;
+           createrole = true;
+           createdb = true;
+           bypassrls = true;
+        };
+      }
+      {
+         name = "test";
+      }
+    ];
     extraPlugins = ps: with ps; [
       rum
       timescaledb
@@ -13,7 +38,7 @@
       wal2json
       pg_repack
       pg_safeupdate
-      plpgsql-check
+      plpgsql_check
       pgjwt
       pgaudit
       postgis
@@ -24,7 +49,6 @@
       pg_net
       pgsodium
       pgvector
-      vault
       hypopg
       plv8
       # Missing supabase plugins
@@ -38,18 +62,21 @@
       #    pg_hashids
       #    pg_plan_filter
       #    pg_backtrace
+      #    vault
       
     ];
-    # initialScript = pkgs.writeText "init-sql-script" ''
-    #   alter user postgres with password 'password';
-    # '';
+#     initialScript = pkgs.writeText "init-sql-script" ''
+#       alter user test with password 'password';
+#     '';
     authentication = pkgs.lib.mkOverride 10 ''
-      #...
-      #type database DBuser origin-address auth-method
+      #type    database DBuser  origin-address auth-methoda
+      local    all      all                    trust
       # ipv4
-      host  all      all     127.0.0.1/32   trust
+      host     all      all     127.0.0.1/32   trust
+      host     all      all     0.0.0.0/0      md5
       # ipv6
-      host all       all     ::1/128        trust
+      host     all      all     ::1/128        trust
+      host     all      all     ::1/0          md5
     '';
     identMap = ''
       # ArbitraryMapName systemUser DBUser
@@ -60,5 +87,12 @@
       superuser_map      /^(.*)$   \1
     '';
 
+  };
+
+
+  services.postgresqlBackup = {
+    enable = true;
+    location = "/data/postgres/backup";
+    backupAll = true;
   };
 }
