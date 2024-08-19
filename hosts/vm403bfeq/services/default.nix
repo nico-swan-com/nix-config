@@ -6,7 +6,8 @@
     ./minio.nix
     #./gitlab.nix
     ./kubernetes.nix
-    ./postgres.nix
+    ./databases/postgres.nix
+    ./databases/redis.nix
   ];
 
 }
