@@ -22,6 +22,9 @@ in
     docker-compose
     kubernetes-helm
     openiscsi
+    nfs-utils
+    cryptsetup
+    lvm2
   ];
 
   system.activationScripts.usrlocalbin = ''

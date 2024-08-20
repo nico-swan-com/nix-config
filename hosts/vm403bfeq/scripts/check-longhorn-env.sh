@@ -93,6 +93,10 @@ set_packages_and_check_cmd() {
     CHECK_CMD='pacman -Q'
     PACKAGES=(nfs-utils open-iscsi cryptsetup device-mapper)
     ;;
+  *"nixos"* )
+    CHECK_CMD='nix-store -q --references /run/current-system/sw | grep -w'
+    PACKAGES=(nfs-utils open-iscsi cryptsetup lvm2)
+    ;;
   *"gentoo"* )
     CHECK_CMD='qlist -I'
     PACKAGES=(net-fs/nfs-utils sys-block/open-iscsi sys-fs/cryptsetup sys-fs/lvm2)

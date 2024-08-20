@@ -185,7 +185,7 @@ install_nginx_ingress() {
    helm  upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace \
    --set controller.hostNetwork=true \
    --set rbac.create=true \
-   --set controller.service.type=NodePort \
+   --set controller.service.type=ClusterIP \
    --set controller.kind=DaemonSet
 
    local start_time=$(date +%s)
@@ -390,8 +390,11 @@ install_portainer() {
     --set ingress.enabled=true \
     --set ingress.ingressClassName=nginx \
     --set ingress.annotations."nginx\.ingress\.kubernetes\.io/backend-protocol"=HTTPS \
-    --set ingress.hosts[0].host=portainer.production.cygnus-labs.com \
-    --set ingress.hosts[0].paths[0].path="/"
+    --set ingress.annotations."cert-manager\.io/cluster-issuer"="letsencrypt-nginx-prod" \
+    --set ingress.hosts[0].host="portainer.production.cygnus-labs.com" \
+    --set ingress.hosts[0].paths[0].path="/" \
+    --set ingress.tls[0].hosts[0]="portainer.production.cygnus-labs.com" \
+    --set ingress.tls[0].secretName="portainer.production.cygnus-labs.com"  
 
    local start_time=$(date +%s)
    while true; do
@@ -431,10 +434,10 @@ install_portainer() {
 #deploy_k0s
 #check_nodes_ready
 #add_helm_repos
-install_openebs
+#install_openebs
 #install_longhorn
 #install_metallb
-#install_nginx_ingress
+install_nginx_ingress
 #install_traefik_ingress
 #install_cert_manager
-install_portainer
+#install_portainer
