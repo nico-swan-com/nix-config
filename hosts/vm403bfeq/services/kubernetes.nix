@@ -21,7 +21,18 @@ in
     podman-tui
     docker-compose
     kubernetes-helm
+    openiscsi
   ];
+
+  system.activationScripts.usrlocalbin = ''
+    mkdir -m 0755 -p /usr/local
+    ln -nsf /run/current-system/sw/bin /usr/local/
+  '';
+  services.openiscsi = {
+    enable = true;
+    #name = "iqn.2024-08.com.open-iscsi:${config.networking.hostName}";
+    name = "iqn.2024-08.com.cygnus-labs.iscsi:${config.networking.hostName}";
+  };
 
   services.kubernetes = {
     roles = [ "master" "node" ];
@@ -31,6 +42,7 @@ in
     apiserver = {
       securePort = kubeMasterAPIServerPort;
       advertiseAddress = kubeMasterIP;
+      allowPrivileged = true;
     };
 
     # Addons
