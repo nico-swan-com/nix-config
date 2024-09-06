@@ -12,6 +12,8 @@
 
   home.packages = with pkgs; [
     terminal-notifier
+    kail
+    ktop
   ];
 
   programs.nnn.bookmarks =
@@ -39,7 +41,6 @@
       NVM_DIR = "$HOME/.nvm";
     };
 
-
     # This is added for when you have nvm install via homebrew
     # Also the manual install for iterm2
     initExtra = ''
@@ -47,6 +48,7 @@
       [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
       test -e "~/.iterm2_shell_integration.zsh" && source "~/.iterm2_shell_integration.zsh"
+
     '';
   };
 }

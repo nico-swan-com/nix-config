@@ -6,7 +6,6 @@
     # See the var/default.nix for the default configured users
     ../../home/users/${configVars.username}
 
-
     # All user manditory configuration and packages
     ../../home/common/core
 
@@ -16,7 +15,10 @@
     ../../home/common/optional/development/google-cloud-sdk.nix
     ../../home/common/optional/terminal/nnn.nix
 
+    # BCB Services
+    ./services/home-manager/bcb
 
+    #./services/home/colima.nix
   ];
 
   home.username = configVars.username;

@@ -45,8 +45,13 @@
 
     # Automatic garbage collection to remove unused packages
     gc = {
+      user = "root";
       automatic = true;
-      #dates = "weekly";
+      interval = {
+        Weekday = 1;
+        Hour = 0;
+        Minute = 0;
+      };
       options = "--delete-older-than 30d";
     };
   };
