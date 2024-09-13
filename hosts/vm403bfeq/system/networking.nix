@@ -1,10 +1,10 @@
 {
 
   # Open ports in the firewall.
-  #networking.firewall.enable = false;
-  networking.firewall = {
-    allowedTCPPorts = [ 80 443 22 6443 5432 ];
-  };
+  networking.firewall.enable = false;
+  # networking.firewall = {
+  #   allowedTCPPorts = [ 80 443 22 6443 5432 8888 ];
+  # };
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -19,8 +19,8 @@
   networking.domain = "cygnus-labs.com";
 
   # Enable NAT for containers
-  networking.nat.enable = true;
-  networking.nat.internalInterfaces = ["ve-+"];
-  networking.nat.externalInterface = "ens18";
+  #networking.nat.enable = true;
+  #networking.nat.internalInterfaces = ["ve-+"];
+  #networking.nat.externalInterface = "ens18";
 
 }

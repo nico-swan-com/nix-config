@@ -5,7 +5,7 @@
     ./virtualisation.nix
     ./minio.nix
     #./gitlab.nix
-    ./kubernetes.nix
+    ./kubernetes
     ./databases/postgres.nix
     ./databases/redis.nix
   ];

@@ -100,7 +100,7 @@ add_helm_repos() {
    echo "Add Helm repositories"	 
    helm repo add metallb https://metallb.github.io/metallb
    helm repo add https://kubernetes.github.io/ingress-nginx 
-   helm repo add openebs https://openebs.github.io/openebsa
+   helm repo add openebs https://openebs.github.io/openebs
    #helm repo add openebs-internal https://openebs.github.io/charts
    helm repo add jetstack https://charts.jetstack.io
    helm repo add portainer https://portainer.github.io/k8s

@@ -1,0 +1,32 @@
+repositories:
+  - name: traefik 
+    url: https://traefik.github.io/charts 
+
+releases: 
+  - name: traefik  
+    namespace: traefik
+    chart: traefik/traefik
+    # version: 3.1.2
+    atomic: true
+    timeout: 300
+    labels:
+      app: traefik
+      tier: infrastructure
+    values:
+      - values-traefik.yaml  
+    hooks:
+    # - events: ["presync"]
+    #   showlogs: true
+    #   command: kubectl
+    #   args:
+    #     - apply
+    #     - -f
+    #     - presync.yaml
+    # - events: ["postsync"]
+    #   showlogs: true
+    #   command: kubectl
+    #   args:
+    #     - apply
+    #     - -f
+    #     - expose-dashboard.yaml        
+          

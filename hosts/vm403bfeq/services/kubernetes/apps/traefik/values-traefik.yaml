@@ -1,0 +1,13 @@
+ingressRoute:
+  dashboard:
+    # -- Create an IngressRoute for the dashboard
+    enabled: true
+    # -- Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
+    healthcheck:
+    # -- Create an IngressRoute for the healthcheck probe
+    enabled: true
+    # -- Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
+
+  # kubernetesGateway:
+  #   # -- Enable Traefik Gateway provider for Gateway API
+  #   enabled: true
