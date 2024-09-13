@@ -15,16 +15,16 @@
         name = "admin-console-services";
         procs = [
           {
-            name = "entitlements";
+            name = "sandbox-entitlements";
             autostart = true;
             autorestart = true;
             shell = "kubectl -n sandbox port-forward service/entitlements-grpc 50051:50051 --address='0.0.0.0'";
           }
           {
             name = "admin-api";
-            shell = "npm run start:dev";
+            shell = "direnv exec . npm run start:dev";
             cwd = "${config.home.homeDirectory}/Developer/src/admin-api";
-            autostart = false;
+            autostart = true;
             autorestart = true;
             env = {
               NODE_ENV="local";
@@ -32,10 +32,10 @@
           }
           {
             name= "services";
-            autostart = true;
+            autostart = false;
             autorestart = false;
             cwd = "${config.home.homeDirectory}/Developer/src/bcb-services";
-            shell = "npm run start:local";
+            shell = "direnv exec . npm run start:local";
             env = {
               NODE_ENV="local";
               NODE_VERSION_PREFIX="v";
@@ -45,7 +45,7 @@
             };
           }
           {
-            name = "heimdall";
+            name = "sandbox-heimdall";
             autostart = true;
             autorestart = true;
             shell = "kubectl -n sandbox port-forward service/heimdall 8080:8080 --address='0.0.0.0'";

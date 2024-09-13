@@ -1,4 +1,8 @@
 {
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
   nix = {
     settings = {
       # Necessary for using flakes on this system.

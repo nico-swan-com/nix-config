@@ -14,6 +14,7 @@
     terminal-notifier
     kail
     ktop
+    dooit
   ];
 
   programs.nnn.bookmarks =
@@ -34,8 +35,12 @@
       nstart = "nest start --watch";
       dstart = "nest start --watch --debug";
       ngs = "ng serve";
+      kube-sandbox-context = "kubectl config use-context gke_bcb-group-sandbox_europe-west2_sandbox";
+      ksandbox = "kubectl --context gke_bcb-group-sandbox_europe-west2_sandbox -n sandbox";
 
     };
+
+
 
     sessionVariables = {
       NVM_DIR = "$HOME/.nvm";
@@ -49,6 +54,18 @@
 
       test -e "~/.iterm2_shell_integration.zsh" && source "~/.iterm2_shell_integration.zsh"
 
+      klogs-sandbox () {
+        pod = "$(kubectl --context gke_bcb-group-sandbox_europe-west2_sandbox -n sandbox get po -o wide|tail -n+2|fzf -n1 --reverse --tac --preview='kubectl --context gke_bcb-group-sandbox_europe-west2_sandbox -n sandbox logs --tail=20 --all-containers=true {1} |jq' --preview-window=down:50%:hidden --bind=ctrl-p:toggle-preview --header="^P: Preview Logs "|awk '{print $1}' | jq)"
+          if [[ -n $pod ]];
+          then
+            kubectl --context gke_bcb-group-sandbox_europe-west2_sandbox logs --all-containers = true $pod
+          fi
+      }
+
+
     '';
   };
+
+
+
 }
