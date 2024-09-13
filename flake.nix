@@ -47,6 +47,16 @@
     # Declarative partitioning and formatting
     disko.url = "github:nix-community/disko";
 
+    # Kubernetes
+    nixhelm = {
+      url = "github:farcaller/nixhelm";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    kubenix = {
+      url = "github:hall/kubenix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
 
     # authentik-nix = {
     #   url = "github:nix-community/authentik-nix";
@@ -61,6 +71,8 @@
     , nixpkgs-unstable
     , darwin
     , hardware
+    , kubenix
+    , nixhelm
     , ...
     } @inputs:
     let
@@ -78,7 +90,7 @@
         forAllSystems (system: import inputs.nixpkgs { inherit system; });
 
       mkSystem = import ./lib/mksystem.nix {
-        inherit inputs outputs lib nixpkgs nixpkgs-unstable darwin hardware;
+        inherit inputs outputs lib nixpkgs nixpkgs-unstable darwin hardware kubenix nixhelm;
       };
 
     in
@@ -150,4 +162,5 @@
         };
       };
     };
+          
 }

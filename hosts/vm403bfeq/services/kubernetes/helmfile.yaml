@@ -1,0 +1,21 @@
+#repositories:
+#   # Ingress  
+#   # - name: ingress-nginx
+#   #   url: https://kubernetes.github.io/ingress-nginx
+#   # - name: mojo2600
+#   #   url: https://mojo2600.github.io/pihole-kubernetes/
+#   # - name: portainer 
+#   #   url: https://portainer.github.io/k8s
+
+
+helmfiles:
+  - apps/openebs/helmfile.yaml
+  - apps/metallb/helmfile.yaml
+  - apps/traefik/helmfile.yaml
+  - apps/cert-manager/helmfile.yaml
+  - apps/trust-manager/helmfile.yaml
+  
+environments:
+  default:
+    values:
+    - values.yaml
