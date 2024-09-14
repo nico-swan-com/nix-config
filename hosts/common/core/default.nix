@@ -1,7 +1,13 @@
 { pkgs, ... }:
 {
   # Set /etc/zshrc
-  programs.zsh.enable = true;
+  programs.zsh = {
+    enable = true;
+    # enableFzfCompletion = true;
+    # enableFzfGit = true;
+    # enableFzfHistory = true;
+  };
+
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -14,5 +20,6 @@
     just
     nil
     nixd
+    
   ];
 }

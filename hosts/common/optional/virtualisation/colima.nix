@@ -1,9 +1,9 @@
 { config, pkgs, ... }:
 {
 
-  environment.systemPackages = with pkgs; [
-    colima
-  ];
+  # environment.systemPackages = with pkgs; [
+  #   colima
+  # ];
 
   # set colima vm as default
   programs.zsh = {

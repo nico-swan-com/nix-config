@@ -37,29 +37,29 @@ prerequisite() {
 #     	docker.io/k0sproject/k0s:v1.29.2-k0s.0 k0s controller --enable-worker --no-taints --enable-dynamic-config
 #     sleep 5 
 # }
-
-deploy_registry() {
-    echo "Deploying local container registry to podman"
-    echo
-    podman run --privileged -d --name registry --hostname registry \
-    -p 5000:5000 \
-    -v $HOME/.config/k0s/registry:/var/lib/registry \
-    --restart=always registry:2
-    sleep 5 
-}
+#
+#deploy_registry() {
+#    echo "Deploying local container registry to podman"
+#    echo
+#    podman run --privileged -d --name registry --hostname registry \
+#    -p 5000:5000 \
+#    -v $HOME/.config/k0s/registry:/var/lib/registry \
+#    --restart=always registry:2
+#    sleep 5 
+#}
 
 #Add kube config for local cluster
-create_kube_config() {
-    echo
-    echo "Updating kube config"	
-    kube_config_file="$HOME/.kube/local-k0s"
-    new_value="https://localhost:6443"
-    sed_query="s/^(\\s*    server\\s*:\\s*).*/\\1 https:\/\/localhost:6443/"
-    kubeconfig admin | sed -r "$sed_query" | sed -r "s/Default/Local-cluster/g" > $kube_config_file
-    chmod 600 $kube_config_file 
-    echo "------"
-    return
-}
+#create_kube_config() {
+#    echo
+#    echo "Updating kube config"	
+#    kube_config_file="$HOME/.kube/local-k0s"
+#    new_value="https://localhost:6443"
+#    sed_query="s/^(\\s*    server\\s*:\\s*).*/\\1 https:\/\/localhost:6443/"
+#    kubeconfig admin | sed -r "$sed_query" | sed -r "s/Default/Local-cluster/g" > $kube_config_file
+#    chmod 600 $kube_config_file 
+#    echo "------"
+#    return
+#}
 
 # Check if nodes are ready
 check_nodes_ready() {
@@ -100,7 +100,8 @@ add_helm_repos() {
    echo "Add Helm repositories"	 
    helm repo add metallb https://metallb.github.io/metallb
    helm repo add https://kubernetes.github.io/ingress-nginx 
-   helm repo add openebs-internal https://openebs.github.io/charts
+   helm repo add openebs https://openebs.github.io/openebs
+   #helm repo add openebs-internal https://openebs.github.io/charts
    helm repo add jetstack https://charts.jetstack.io
    helm repo add portainer https://portainer.github.io/k8s
    helm repo add traefik https://traefik.github.io/charts
@@ -131,7 +132,7 @@ install_metallb() {
         if $all_running; then
             echo "All pods are running."
             echo "Applying pool" 
-	        kubectl apply -f metallb-pool.yaml
+	        kubectl apply -f $PWD/charts/metallb-pool.yaml
 	        echo "-------"
             return
         fi
@@ -184,7 +185,7 @@ install_nginx_ingress() {
    helm  upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace \
    --set controller.hostNetwork=true \
    --set rbac.create=true \
-   --set controller.service.type=NodePort \
+   --set controller.service.type=ClusterIP \
    --set controller.kind=DaemonSet
 
    local start_time=$(date +%s)
@@ -256,7 +257,14 @@ install_longhorn() {
 install_openebs() {
    echo 	
    echo "Extention - Installing OpenEBS Storage"
-   helm  install openebs openebs-internal/openebs --namespace openebs --create-namespace --version 3.9.0 
+   helm  install openebs openebs/openebs --namespace openebs --create-namespace --version 4.1.0 \
+    --set engines.replicated.mayastor.enabled=false \
+    --set engines.local.zfs.enabled=false \
+    --set engines.local.lvm.enabled=false \
+    --set zfs-localpv.enabled=false \
+    --set lvm-localpv.enabled=false \
+    --set localpv-provisioner.hostpathClass.basePath="/data/openebs/local" \
+    --set localpv-provisioner.hostpathClass.isDefaultClass="true" 
 #   helm  install openebs openebs-internal/openebs --namespace openebs --create-namespace --version 3.9.0 \
 #    --set localprovisioner.hostpathClass.enabled="true" \
 #    --set localprovisioner.hostpathClass.isDefaultClass="true" \
@@ -278,6 +286,8 @@ install_openebs() {
 
         if $all_running; then
             echo "All pods are running."
+            echo "Applying PVC" 
+	    kubectl apply -f $PWD/charts/local-hostpath-pvc.yaml
             return
         fi
         
@@ -350,7 +360,7 @@ install_cert_manager() {
             echo "All pods are running."
             install_trust_manager
             echo "Applying issuers" 
-	        kubectl apply -f cert-manager-issuers.yaml
+	        kubectl apply -f $PWD/charts/cert-manager-issuers.yaml
 	        echo "-------"
             return
         fi
@@ -380,8 +390,11 @@ install_portainer() {
     --set ingress.enabled=true \
     --set ingress.ingressClassName=nginx \
     --set ingress.annotations."nginx\.ingress\.kubernetes\.io/backend-protocol"=HTTPS \
-    --set ingress.hosts[0].host=portainer.production.cygnus-labs.com \
-    --set ingress.hosts[0].paths[0].path="/"
+    --set ingress.annotations."cert-manager\.io/cluster-issuer"="letsencrypt-nginx-prod" \
+    --set ingress.hosts[0].host="portainer.production.cygnus-labs.com" \
+    --set ingress.hosts[0].paths[0].path="/" \
+    --set ingress.tls[0].hosts[0]="portainer.production.cygnus-labs.com" \
+    --set ingress.tls[0].secretName="portainer.production.cygnus-labs.com"  
 
    local start_time=$(date +%s)
    while true; do
@@ -420,9 +433,9 @@ install_portainer() {
 #perpare
 #deploy_k0s
 #check_nodes_ready
-add_helm_repos
-install_openebs
-install_longhorn
+#add_helm_repos
+#install_openebs
+#install_longhorn
 #install_metallb
 install_nginx_ingress
 #install_traefik_ingress

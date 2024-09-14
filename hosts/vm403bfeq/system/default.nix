@@ -5,6 +5,7 @@
     ./hardware-configuration.nix
     ./boot-loader.nix
     ./networking.nix
+    ./nfs-server.nix
 
   ];
 

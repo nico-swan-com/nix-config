@@ -5,7 +5,7 @@
     ./podman.nix
 
     # Added colima to run VM on make
-    ./colima.nix
+    #./colima.nix
   ];
   # Useful development tools
   environment.systemPackages = with pkgs; [

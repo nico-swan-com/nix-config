@@ -13,15 +13,37 @@ in
 
   # packages for administration tasks
   environment.systemPackages = with pkgs; [
-    kompose
     kubectl
     kubernetes
-    k9s
-    argocd
-    podman-tui
-    docker-compose
     kubernetes-helm
+    openiscsi
+    nfs-utils
+    cifs-utils
+    cryptsetup
+    lvm2
+    helmfile
+
+    (wrapHelm kubernetes-helm {
+        plugins = with pkgs.kubernetes-helmPlugins; [
+          helm-secrets
+          helm-diff
+          helm-s3
+          helm-git
+        ];
+      }) 
   ];
+
+  # Fixes for longhorn
+  systemd.tmpfiles.rules = [
+    "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
+    "d /data/openebs/local 0755 root root"
+  ];
+  virtualisation.docker.logDriver = "json-file";
+
+  services.openiscsi = {
+    enable = true;
+    name = "iqn.2016-04.com.open-iscsi:${config.networking.hostName}";
+  };
 
   services.kubernetes = {
     roles = [ "master" "node" ];
@@ -31,14 +53,29 @@ in
     apiserver = {
       securePort = kubeMasterAPIServerPort;
       advertiseAddress = kubeMasterIP;
+      allowPrivileged = true;
     };
 
     # Addons
-    addons.dns.enable = true; # use coredns
+    addons.dns.enable = true;
+    kubelet.extraOpts = ''
+      --fail-swap-on=false
+    '';
 
-    # needed if you use swap
-    kubelet.extraOpts = "--fail-swap-on=false";
+    # Addons
+    # addons.dns = {
+    #   enable = true; # use coredns
+    #   clusterDomain = "cluster.private";
+    # };
+
+    # # needed if you use swap
+    # kubelet.extraOpts = ''
+    #   --fail-swap-on=false
+    #   --resolv-conf=/run/systemd/resolve/resolve.conf
+    # '';
   };
+
+  
 
   # networking = {
   #   bridges = {

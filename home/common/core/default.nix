@@ -96,6 +96,10 @@
 
     lnav
 
+    kns #Kubernetes namespace switcher
+
+
+
   ];
 
 
