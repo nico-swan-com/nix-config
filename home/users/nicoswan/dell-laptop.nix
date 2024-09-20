@@ -33,22 +33,17 @@
 
   sops = {
     secrets = {
-      "cygnus-labs/kubernetes/caFile" = {
-        owner = "nicoswan";
-        group = "nicoswan";
+      "servers/cygnus-labs/kubernetes/caFile" = {
         path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-ca.pem";
       };
-      "cygnus-labs/kubernetes/certFile" = {
-        owner = "nicoswan";
-        group = "nicoswan";
+      "servers/cygnus-labs/kubernetes/certFile" = {
         path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-cluster-admin.pem";
       };
-      "cygnus-labs/kubernetes/keyFile" = {
-        owner = "nicoswan";
-        group = "nicoswan";
+      "servers/cygnus-labs/kubernetes/keyFile" = {
         path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-cluster-admin-key.pem";
       };
-  }
+    };
+  };
 
   # 
   # SSH configuration
