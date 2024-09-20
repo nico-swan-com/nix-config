@@ -14,6 +14,8 @@
   programs.zsh = {
     shellAliases = {
       "kube-colima-dev-context" = "kubectl config use-context colima-development-cluster";
+      "kdev" = "kubectl --context colima-development-cluster";
+
     };
   };
 
@@ -29,8 +31,8 @@
         hostname = "development-cluster";
         kubernetes = {
           enabled = true;
-          k3sArgs = [ "--flannel-external-ip" ];
-          #kubernetesDisable=["teafik"];
+          k3sArgs = ["--no-deploy=traefik"]; 
+          kubernetesDisable=["teafik"];
         };
         rosetta = false;
         network.address = true;

@@ -20,6 +20,5 @@
     just
     nil
     nixd
-
   ];
 }

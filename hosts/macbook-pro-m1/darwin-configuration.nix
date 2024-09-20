@@ -7,6 +7,7 @@
 
     # BCB Services
     ./services/system/bcb
+    ./services/databases/postgres.nix
 
     # Custom modules
     ./modules/tools/gefyra
@@ -15,6 +16,11 @@
     #./modules/kubernetes/k0s.nix
 
   ];
+
+   
+  ids.uids.nixbld = 351;
+
+
   # List system packages only for MacOS 
   environment.systemPackages = with pkgs; [
     terminal-notifier # send notification from the terminal
