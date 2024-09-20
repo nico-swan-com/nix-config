@@ -6,9 +6,7 @@ metadata:
 spec:
   secretName: wildcard-cygnus-labs.com-tls
   dnsNames:
-    - "cygnus-labs.com"
-    - "*.cygnus-labs.com"
-    - "*.production.cygnus-labs.com"
+    - "*.services.production.cygnus-labs.com"
   issuerRef:
     name: cloudflare
     kind: Issuer  

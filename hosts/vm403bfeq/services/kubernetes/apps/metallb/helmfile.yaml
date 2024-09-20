@@ -13,6 +13,8 @@ releases:
     labels:
       app: metallb
       tier: infrastructure
+    values:
+      - values-metallb.yaml  
     hooks:
     #--This hook ensures that the MetalLB address pool
     #--is defined after helm has synced the release

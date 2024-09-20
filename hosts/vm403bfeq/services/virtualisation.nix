@@ -1,4 +1,4 @@
-{
+{pkgs,...}:{
   virtualisation.docker.enable = false;
   virtualisation.containers.enable = true;
   virtualisation = {
@@ -11,11 +11,17 @@
     oci-containers.backend = "podman";
   };
 
-  virtualisation.oci-containers.containers = {
-    helloworld = {
-      image = "testcontainers/helloworld:latest";
-      ports = ["8080:8080" "8081:8081"];
-    };
-  };
+   # Useful tools
+  environment.systemPackages = with pkgs; [
+    podman-tui # status of containers in the terminal
+    podman-compose # start group of containers for dev
+  ];
+
+  # virtualisation.oci-containers.containers = {
+  #   helloworld = {
+  #     image = "testcontainers/helloworld:latest";
+  #     ports = ["8080:8080" "8081:8081"];
+  #   };
+  # };
 }
 

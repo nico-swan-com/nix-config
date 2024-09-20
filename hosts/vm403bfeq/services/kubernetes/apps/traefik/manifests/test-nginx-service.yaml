@@ -1,118 +1,124 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pvc0
-  namespace: default
-  labels:
-    app: namespace
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 20Gi
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: testapp # Name of the deployment
-  namespace: default # Name of the namespace
+  name: testapp1-deployment
+  namespace: testing
   labels:
-    app: testapp # Name of your application
+    app: testapp1
 spec:
   selector:
     matchLabels:
-      app: testapp # Name of your application
-  replicas: 1 # Number of replicas
+      app: testapp1
+  replicas: 1 
   template:
     metadata:
       labels:
-        app: testapp # Name of your application
+        app: testapp1
     spec:
       containers:
-      # Containers are the individual pieces of your application that you want
-      # to run.
-      - name: helloworld # Name of the container
-        image: testcontainers/helloworld:latest # The image you want to run
+      - name: testapp1-container
+        image: nicoswan/nginx-tester:0.0.1
         ports:
-        - containerPort: 8080 # The port that your application uses
-        volumeMounts:
-        # VolumeMounts are the volumes that your application uses.
-        - mountPath: /var/www/html # The path that your application uses
-          name: vol0 # Name of the volume
-      volumes:
-      # Volumes are the persistent storage that your application uses.
-      - name: vol0 # Name of the volume
-        persistentVolumeClaim:
-          claimName: pvc0 # Name of the persistent volume claim
+        - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name:  testapp
-  namespace: default
+  name:  testapp1
+  namespace: testing
 spec:
   selector:
-    app:  testapp
+    app:  testapp1
   type:  ClusterIP
-  #ClusterIP means this service can be accessed by any pod in the cluster
   ports:
   - name:  http
-    port:  8080
+    port:  80
     targetPort: 80
-    # protocol: TCP  # optional protocol
-  # ---
-  # type:  NodePort
-  # NodePort means this service is only accessible by pods in the same namespace
-  # ports:
-  # - name:  http
-  #   port:  80
-  #   nodePort: 30001
-  #   protocol: TCP  # optional protocol
-  # ---
-  # type:  LoadBalancer
-  # #LoadBalancer means this service is load-balanced across all nodes in the cluster
-  # ports:
-  # - name:  http
-  #   port:  80
-  #   targetPort: 8080
-  #   protocol: TCP  # optional protocol          
 
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+ name: cloudflare-api-token-secret
+type: Opaque
+stringData:
+ api-token: <API Token>
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+ name: le-example-dns
+ namespace: whoami
+spec:
+ acme:
+   email: user@example.com
+   # We use the staging server here for testing to avoid hitting
+   server: https://acme-staging-v02.api.letsencrypt.org/directory
+   privateKeySecretRef:
+     # if not existing, it will register a new account and stores it
+     name: example-issuer-account-key
+   solvers:
+     - dns01:
+         cloudflare:
+           apiTokenSecretRef:
+             name: cloudflare-api-token-secret
+             key: api-token
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+ name: whoami
+ namespace: whoami
+ annotations:
+   cert-manager.io/issuer: "le-example-dns"
+spec:
+ tls:
+   - hosts:
+       - whoami.example.com
+     secretName: tls-whoami-ingress-dns
+ rules:
+   - host: whoami.example.com
+     http:
+       paths:
+         - path: /
+           pathType: Prefix
+           backend:
+             service:
+               name: whoami
+               port:
+                 name: web
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   name: testapp
-  namespace: default
+  namespace: testing
   annotations:
     # (Optional): Annotations for the Ingress Controller
-    # -- ingress class is needed when traefik is not the default
-    # kubernetes.io/ingress.class: traefik
     # ---
     # -- entrypoint and tls configurations
-    # traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
-    # traefik.ingress.kubernetes.io/router.tls: "true"
+    #cert-manager.io/cluster-issuer: "letsencrypt-traefik"
+    traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
     # ---
     # -- optional middlewares
     # traefik.ingress.kubernetes.io/router.middlewares:your-middleware@kubernetescrd
     # ---
 spec:
+  # tls:
+  # - hosts:
+  #   - testapp.services.production.cygnus-labs.com
+  #   secretName: letsencrypt-traefik-prod
   rules:
-  - host: "testapp.production.cygnus-labs.com"
+  - host: "testapp1.services.cygnus-labs.com"
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: testapp 
+            name: testapp1 
             port:
               number: 80
-  # (Optional) TLS settings
-  # tls:
-  # - hosts:
-  #   - your-hostname.com  # Your hostname
-  #   secretName: your-secret  # Your TLS Secret
-  # ---

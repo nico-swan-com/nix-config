@@ -31,6 +31,25 @@
     gnome-extensions-cli
   ];
 
+  sops = {
+    secrets = {
+      "cygnus-labs/kubernetes/caFile" = {
+        owner = "nicoswan";
+        group = "nicoswan";
+        path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-ca.pem";
+      };
+      "cygnus-labs/kubernetes/certFile" = {
+        owner = "nicoswan";
+        group = "nicoswan";
+        path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-cluster-admin.pem";
+      };
+      "cygnus-labs/kubernetes/keyFile" = {
+        owner = "nicoswan";
+        group = "nicoswan";
+        path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-cluster-admin-key.pem";
+      };
+  }
+
   # 
   # SSH configuration
   # 

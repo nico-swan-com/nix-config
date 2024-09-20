@@ -6,6 +6,10 @@ let
   kubeMasterHostname = "api.kubernetes";
   kubeMasterAPIServerPort = 6443;
 
+  keyFile = "${config.sops.secrets."cygnus-labs/kubernetes/keyFile".path}";
+  certFile = "${config.sops.secrets."cygnus-labs/kubernetes/certFile".path}";
+  caFile = "${config.sops.secrets."cygnus-labs/kubernetes/caFile".path}";
+
 in
 {
   # resolve master hostname
@@ -15,22 +19,11 @@ in
   environment.systemPackages = with pkgs; [
     kubectl
     kubernetes
-    kubernetes-helm
     openiscsi
     nfs-utils
     cifs-utils
     cryptsetup
     lvm2
-    helmfile
-
-    (wrapHelm kubernetes-helm {
-        plugins = with pkgs.kubernetes-helmPlugins; [
-          helm-secrets
-          helm-diff
-          helm-s3
-          helm-git
-        ];
-      }) 
   ];
 
   # Fixes for longhorn
@@ -62,6 +55,11 @@ in
       --fail-swap-on=false
     '';
 
+    kubeconfig = {
+      caFile = caFile;
+      certFile = certFile;
+      keyFile = keyFile;
+    };
     # Addons
     # addons.dns = {
     #   enable = true; # use coredns

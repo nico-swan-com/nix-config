@@ -48,6 +48,11 @@ in
       "users/vmbfeqcy/password".neededForUsers = true;
       "users/${configVars.username}/password".neededForUsers = true;
 
+      # cygnus-labs
+      "cygnus-labs/kubernetes/caFile" = {};
+      "cygnus-labs/kubernetes/certFile" = {};
+      "cygnus-labs/kubernetes/keyFile" = {};
+
       # TODO: work on password less sudo 
       # extract to default pam-u2f authfile location for passwordless sudo. see ../optional/user
       #"username/u2f_keys" = {
