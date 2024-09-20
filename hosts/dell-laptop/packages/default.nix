@@ -22,5 +22,8 @@
     kubectl
     kompose
     k9s
+
+    # gnome.polari
+    gnome-builder
   ];
 }
