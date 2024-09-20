@@ -1,11 +1,11 @@
 {
 
   imports = [
-    # ./nginx.nix
+    #./nginx.nix
     ./virtualisation.nix
-    ./minio.nix
+    #./minio.nix
     #./gitlab.nix
-    ./kubernetes
+    #./kubernetes
     ./databases/postgres.nix
     ./databases/redis.nix
   ];

@@ -1,31 +1,47 @@
-global:
-  leaderElection:
-    namespace: cert-manager
+# global:
+#   leaderElection:
+#     namespace: cert-manager
 
-resources:
-  limits:
-    cpu: "250m"
-    memory: "128Mi"
-  requests:
-    cpu: "200m"
-    memory: "128Mi"
+# resources:
+#   limits:
+#     cpu: "250m"
+#     memory: "128Mi"
+#   requests:
+#     cpu: "200m"
+#     memory: "128Mi"
 
-installCRDs: true
+# installCRDs: true
 
-webhook:
-  resources:
-    limits:
-      cpu: "100m"
-      memory: "64Mi"
-    requests:
-      cpu: "50m"
-      memory: "64Mi"
+# webhook:
+#   resources:
+#     limits:
+#       cpu: "100m"
+#       memory: "64Mi"
+#     requests:
+#       cpu: "50m"
+#       memory: "64Mi"
 
-cainjector:
-  resources:
-    limits:
-      cpu: "50m"
-      memory: "128Mi"
-    requests:
-      cpu: "50m"
-      memory: "128Mi"
+# cainjector:
+#   resources:
+#     limits:
+#       cpu: "50m"
+#       memory: "128Mi"
+#     requests:
+#       cpu: "50m"
+#       memory: "128Mi"
+
+# extraResources:
+#   - apiVersion: cert-manager.io/v1
+#     kind: ClusterIssuer
+#     metadata:
+#       name: letsencrypt-traefik
+#     spec:
+#       acme:
+#         server: https://acme-v02.api.letsencrypt.org/directory
+#         email: nico.swan@cygnus-labs.com
+#         privateKeySecretRef:
+#           name: letsencrypt-traefik
+#         solvers:
+#         - http01:
+#             ingress:
+#               class: traefik

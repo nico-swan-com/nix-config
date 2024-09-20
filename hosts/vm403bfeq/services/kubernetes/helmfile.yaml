@@ -7,14 +7,16 @@
 #   # - name: portainer 
 #   #   url: https://portainer.github.io/k8s
 
+# helmDefaults:
+#   wait: true
 
 helmfiles:
-  - apps/openebs/helmfile.yaml
-  - apps/metallb/helmfile.yaml
+  #- apps/openebs/helmfile.yaml
+  #- apps/metallb/helmfile.yaml
   - apps/traefik/helmfile.yaml
-  - apps/cert-manager/helmfile.yaml
-  - apps/trust-manager/helmfile.yaml
-  
+  #- apps/cert-manager/helmfile.yaml
+  #- apps/trust-manager/helmfile.yaml
+
 environments:
   default:
     values:

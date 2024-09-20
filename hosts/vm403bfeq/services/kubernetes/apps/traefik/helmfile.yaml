@@ -1,32 +1,58 @@
 repositories:
-  - name: traefik 
-    url: https://traefik.github.io/charts 
+  - name: traefik
+    url: https://helm.traefik.io/traefik
+  - name: pomerium
+    url: https://helm.pomerium.io  
+  - name: incubator
+    url: https://charts.helm.sh/incubator 
+  - name: jetstack 
+    url: https://charts.jetstack.io    
 
-releases: 
-  - name: traefik  
+releases:
+  - name: traefik
     namespace: traefik
     chart: traefik/traefik
-    # version: 3.1.2
     atomic: true
     timeout: 300
     labels:
       app: traefik
       tier: infrastructure
+    # needs:
+    #   - cert-manager/cert-manager  
     values:
-      - values-traefik.yaml  
+      - values-traefik.yaml
+
+  - name: cert-manager-issuer
+    namespace: traefik
+    chart: jetstack/cert-manager
+    values:
+      - apiVersion: cert-manager.io/v1
+        kind: Issuer
+        metadata:
+          name: cloudflare
+          namespace: traefik
+        spec:
+          acme:
+            server: https://acme-v02.api.letsencrypt.org/directory
+            email: 
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflare-credentials
+                  key: email
+            privateKeySecretRef:
+              name: cloudflare-key
+            solvers:
+              - dns01:
+                  cloudflare:
+                    apiTokenSecretRef:
+                      name: cloudflare-credentials
+                      key: apiKey
     hooks:
-    # - events: ["presync"]
-    #   showlogs: true
-    #   command: kubectl
-    #   args:
-    #     - apply
-    #     - -f
-    #     - presync.yaml
-    # - events: ["postsync"]
-    #   showlogs: true
-    #   command: kubectl
-    #   args:
-    #     - apply
-    #     - -f
-    #     - expose-dashboard.yaml        
-          
+    - events: ["postsync"]
+      showlogs: true
+      command: kubectl
+      args:
+        - apply
+        - -f
+        - manifests/wildcard-cygnus-labs-certificate.yaml  
+  

@@ -10,5 +10,12 @@
     };
     oci-containers.backend = "podman";
   };
+
+  virtualisation.oci-containers.containers = {
+    helloworld = {
+      image = "testcontainers/helloworld:latest";
+      ports = ["8080:8080" "8081:8081"];
+    };
+  };
 }
 

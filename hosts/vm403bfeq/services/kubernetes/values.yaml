@@ -1,3 +1,7 @@
+# domain: "cygnus-labs.com"
+# allowed_user: "nicoswan@gmail.com"
+# acme_email: "nico.swan@cygnus-labs.com"
+
 global:
   imagePullPolicy: IfNotPresent
   ingressClass: nginx

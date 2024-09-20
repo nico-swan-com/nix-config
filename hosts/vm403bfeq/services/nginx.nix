@@ -11,5 +11,17 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
+
+    virtualHosts = {
+      "*.services.production.cygnus-labs.com" = {
+        # forceSSL = true;
+        # enableACME = true;
+        locations."/".proxyPass = "http://172.1.1.2";
+      };
+    };
   };
+
+
+
+
 }

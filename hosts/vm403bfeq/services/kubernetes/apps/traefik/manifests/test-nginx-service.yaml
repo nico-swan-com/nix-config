@@ -1,0 +1,118 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc0
+  namespace: default
+  labels:
+    app: namespace
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: testapp # Name of the deployment
+  namespace: default # Name of the namespace
+  labels:
+    app: testapp # Name of your application
+spec:
+  selector:
+    matchLabels:
+      app: testapp # Name of your application
+  replicas: 1 # Number of replicas
+  template:
+    metadata:
+      labels:
+        app: testapp # Name of your application
+    spec:
+      containers:
+      # Containers are the individual pieces of your application that you want
+      # to run.
+      - name: helloworld # Name of the container
+        image: testcontainers/helloworld:latest # The image you want to run
+        ports:
+        - containerPort: 8080 # The port that your application uses
+        volumeMounts:
+        # VolumeMounts are the volumes that your application uses.
+        - mountPath: /var/www/html # The path that your application uses
+          name: vol0 # Name of the volume
+      volumes:
+      # Volumes are the persistent storage that your application uses.
+      - name: vol0 # Name of the volume
+        persistentVolumeClaim:
+          claimName: pvc0 # Name of the persistent volume claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  testapp
+  namespace: default
+spec:
+  selector:
+    app:  testapp
+  type:  ClusterIP
+  #ClusterIP means this service can be accessed by any pod in the cluster
+  ports:
+  - name:  http
+    port:  8080
+    targetPort: 80
+    # protocol: TCP  # optional protocol
+  # ---
+  # type:  NodePort
+  # NodePort means this service is only accessible by pods in the same namespace
+  # ports:
+  # - name:  http
+  #   port:  80
+  #   nodePort: 30001
+  #   protocol: TCP  # optional protocol
+  # ---
+  # type:  LoadBalancer
+  # #LoadBalancer means this service is load-balanced across all nodes in the cluster
+  # ports:
+  # - name:  http
+  #   port:  80
+  #   targetPort: 8080
+  #   protocol: TCP  # optional protocol          
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: testapp
+  namespace: default
+  annotations:
+    # (Optional): Annotations for the Ingress Controller
+    # -- ingress class is needed when traefik is not the default
+    # kubernetes.io/ingress.class: traefik
+    # ---
+    # -- entrypoint and tls configurations
+    # traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
+    # traefik.ingress.kubernetes.io/router.tls: "true"
+    # ---
+    # -- optional middlewares
+    # traefik.ingress.kubernetes.io/router.middlewares:your-middleware@kubernetescrd
+    # ---
+spec:
+  rules:
+  - host: "testapp.production.cygnus-labs.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: testapp 
+            port:
+              number: 80
+  # (Optional) TLS settings
+  # tls:
+  # - hosts:
+  #   - your-hostname.com  # Your hostname
+  #   secretName: your-secret  # Your TLS Secret
+  # ---
