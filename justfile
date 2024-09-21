@@ -81,8 +81,6 @@ sync USER HOST:
 sync-secrets USER HOST:
   rsync -av --filter=':- .gitignore' -e "ssh -l {{USER}}" . {{USER}}@{{HOST}}:nix-secrets/
 
-
-
 test-iso:
   qemu-system-x86_64 -enable-kvm -m 256 -cdrom ./result/iso/nixos*.iso  
 
@@ -94,7 +92,3 @@ nixos-clean:
   nix-env -u --always 
   rm /nix/var/nix/gcroots/auto/* 
   nix-collect-garbage -d 
-
-encrypt-kubernetes-certificates:
-  scripts/encrypt-kubernetes-certificates.sh hosts/vm403bfeq/services/kubernetes
-  
