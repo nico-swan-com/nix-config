@@ -1,0 +1,7 @@
+keys:
+  - &primary age1wg93d32ww6l3euq2xcrufdjly24avfzm8kt0svkpl2ardgs94spqktmhjv
+creation_rules:
+  - path_regex: certificates.yaml$
+    key_groups:
+    - age:
+      - *primary

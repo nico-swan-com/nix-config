@@ -1,4 +1,4 @@
-{ kubenix,... }: {
+{ kubenix, ... }: {
   #imports = [ kubenix.modules.k8s ];
   kubernetes.resources.clusterRoleBindings.cluster-admins = {
     roleRef = {

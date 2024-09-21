@@ -1,8 +1,14 @@
 { config, pkgs, configVars, ... }:
-#let
-#  password = "${config.sops.secrets."hosts//".path}";
-#in
+let
+  #gitlabPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/gitlab/dbPassword".path})";
+in
 {
+  # sops = {
+  #   secrets = {
+  #     "servers/cygnus-labs/gitlab/dbPassword" = {};
+  #   };
+  # };
+
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_16;
@@ -12,23 +18,28 @@
       port = 5432;
       listen_addresses = "*";
     };
-    ensureDatabases = [ "${configVars.username}" "test" ];
+    ensureDatabases = [ "${configVars.username}" "test" "gitlab" ];
     ensureUsers = [
       {
-         name = configVars.username;
-         ensureDBOwnership = true;
-         ensureClauses = {
-           superuser = true;
-           replication = true;
-           login = true;
- #          inherit = true;
-           createrole = true;
-           createdb = true;
-           bypassrls = true;
+        name = configVars.username;
+        ensureDBOwnership = true;
+        ensureClauses = {
+          superuser = true;
+          replication = true;
+          login = true;
+          #          inherit = true;
+          createrole = true;
+          createdb = true;
+          bypassrls = true;
         };
       }
       {
-         name = "test";
+        name = "gitlab";
+        ensureDBOwnership = true;
+        ensureClauses = {
+          createrole = true;
+          createdb = true;
+        };
       }
     ];
     extraPlugins = ps: with ps; [
@@ -63,11 +74,11 @@
       #    pg_plan_filter
       #    pg_backtrace
       #    vault
-      
+
     ];
-#     initialScript = pkgs.writeText "init-sql-script" ''
-#       alter user test with password 'password';
-#     '';
+    #initialScript = pkgs.writeText "init-sql-script" ''
+    #  alter user  with password 'password';
+    #'';
     authentication = pkgs.lib.mkOverride 10 ''
       #type    database DBuser  origin-address auth-methoda
       local    all      all                    trust

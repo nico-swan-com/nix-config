@@ -1,4 +1,4 @@
-{ config, lib, pkgs,... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -11,47 +11,47 @@ in
 
     name = mkOption {
       description = "The name of the colima instance.";
-      type        = types.str;
-      default     = "kubernetes-cluster";
+      type = types.str;
+      default = "kubernetes-cluster";
     };
 
     runAs = mkOption {
       description = "The mac username to use to user for luanchd.";
-      type        = types.str;
+      type = types.str;
     };
 
     cpu = mkOption {
       description = "The number of CPUs to allocate. default is 2";
-      type        = types.nullOr types.int;
-      example     = 4;
-      default     = null;
+      type = types.nullOr types.int;
+      example = 4;
+      default = null;
     };
 
     memory = mkOption {
       description = "The amount of memory to allocate. default is 2GB";
-      type        = types.nullOr types.int;
-      example     = 8;
-      default     = null;    
+      type = types.nullOr types.int;
+      example = 8;
+      default = null;
     };
 
     disk = mkOption {
       description = "The amount of disk space to allocate. default is 60GB";
-      type      = types.nullOr types.int;
-      example   = 1;
-      default   = null;
+      type = types.nullOr types.int;
+      example = 1;
+      default = null;
     };
 
     dns = mkOption {
       description = "The DNS servers to use.";
       type = types.listOf types.str;
-      default = ["8.8 .8 .8" "1.1 .1 .1"];
+      default = [ "8.8 .8 .8" "1.1 .1 .1" ];
       example = "[\"8.8.8.8\" \"1.1.1.1\"]";
-    }; 
-    
+    };
+
     arch = mkOption {
       description = "The architecture to use.";
       type = types.enum [ "x86_64" "aarch64" ];
-      default  = "aarch64";
+      default = "aarch64";
     };
 
     hostname = mkOption {
@@ -75,21 +75,21 @@ in
     mount = mkOption {
       description = "The mount point to use.";
       type = types.listOf types.str;
-      default  = [];
+      default = [ ];
       example = "[\"<path on the host>:<path visible to Docker>[:w]\"]";
     };
 
     k3s-arg = mkOption {
       description = "The k3s arguments to use.";
       type = types.listOf types.str;
-      default  = [];
+      default = [ ];
       example = "[\"--no-deploy=traefik\"]";
     };
 
     kubernetes-disable = mkOption {
       description = "The kubernetes components to disable.";
       type = types.listOf types.str;
-      default  = [];
+      default = [ ];
       example = "[\"coredns\" \"servicelb\" \"traefik\" \"local-storage\" \"metrics-server\"]";
     };
 
@@ -129,37 +129,38 @@ in
         k3sArg = "[${lib.concatStringsSep " " (builtins.map (config: "${config}") cfg.k3s-arg)}]";
         kubernetesDisable = "${lib.concatStringsSep "," (builtins.map (config: "${config}") cfg.kubernetes-disable)}";
 
-        command= ''${pkgs.colima}/bin/colima start -p "${cfg.name}"${kubernetes} --arch "${cfg.arch}" --kubernetes-disable=${kubernetesDisable} --hostname "${cfg.hostname}" --network-address=${toString cfg.assignIp} --runtime "${cfg.runtime}" --k3s-arg=${k3sArg}${mount}${cpu}${memory}${disk}
+        command = ''${pkgs.colima}/bin/colima start -p "${cfg.name}"${kubernetes} --arch "${cfg.arch}" --kubernetes-disable=${kubernetesDisable} --hostname "${cfg.hostname}" --network-address=${toString cfg.assignIp} --runtime "${cfg.runtime}" --k3s-arg=${k3sArg}${mount}${cpu}${memory}${disk}
         '';
-      in{
-        
+      in
+      {
+
         script = ''
-        export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/run/current-system/sw/bin"
+          export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/run/current-system/sw/bin"
 
-        function shutdown() {
-          ${pkgs.colima}/bin/colima stop ${cfg.name}
-          if [ $? -eq 0 ]; then
-            echo "Colima instance ${cfg.name} stopped successfully."
-          fi
+          function shutdown() {
+            ${pkgs.colima}/bin/colima stop ${cfg.name}
+            if [ $? -eq 0 ]; then
+              echo "Colima instance ${cfg.name} stopped successfully."
+            fi
           
-          exit 0
-        }
+            exit 0
+          }
 
-        trap shutdown SIGTERM
-        trap shutdown SIGINT
+          trap shutdown SIGTERM
+          trap shutdown SIGINT
 
-        # wait until colima is running
-        while true; do
-          ${pkgs.colima}/bin/colima -p ${cfg.name} status &>/dev/null
-          if [ $? -eq 0 ]; then
-            break
-          fi
-          ${command}
-          sleep 5
-        done
+          # wait until colima is running
+          while true; do
+            ${pkgs.colima}/bin/colima -p ${cfg.name} status &>/dev/null
+            if [ $? -eq 0 ]; then
+              break
+            fi
+            ${command}
+            sleep 5
+          done
 
-        tail -f /dev/null &
-        wait $!
+          tail -f /dev/null &
+          wait $!
         '';
         serviceConfig = {
           UserName = "${cfg.runAs}";

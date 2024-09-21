@@ -1,5 +1,4 @@
-{ configVars, ...}
-:{
+{ configVars, ... }: {
 
   imports = [
     ../../../modules/bcb/system/host-updater.nix
@@ -7,16 +6,16 @@
     #../../../modules/kubernetes/k0s.nix
   ];
 
-  services.bcb.nginx ={
-   enable = true;
-   vhostDirectories = [ "/User/${configVars.username}/.config/bcb/vhosts" ];
+  services.bcb.nginx = {
+    enable = true;
+    vhostDirectories = [ "/User/${configVars.username}/.config/bcb/vhosts" ];
   };
 
 
-  services.bcb.host-updater= {
+  services.bcb.host-updater = {
     enable = true;
     userHome = "/Users/${configVars.username}";
-  };  
+  };
 
 
   # services.k0s = {

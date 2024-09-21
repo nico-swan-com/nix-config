@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.name }}-deployment
+  namespace: testing
+  labels:
+    app: {{ .Values.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+  replicas: 1 
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}
+    spec:
+      containers:
+      - name: {{ .Values.name }}-container
+        image: nicoswan/nginx-tester:0.0.1
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app:  {{ .Values.name }}
+  type:  ClusterIP
+  ports:
+  - name:  http
+    port:  80
+    targetPort: 80
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+ name: {{ .Values.name }}
+ namespace: {{ .Values.namespace }}
+ annotations:
+   cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+ tls:
+   - hosts:
+       - {{ .Values.name }}.services.cygnus-lab.com
+     secretName: tls-whoami-ingress-dns
+ rules:
+   - host: whoami.example.com
+     http:
+       paths:
+         - path: /
+           pathType: Prefix
+           backend:
+             service:
+               name: whoami
+               port:
+                 name: web
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: testapp
+  namespace: testing
+  annotations:
+    # (Optional): Annotations for the Ingress Controller
+    # ---
+    # -- entrypoint and tls configurations
+    #cert-manager.io/cluster-issuer: "letsencrypt-traefik"
+    traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
+    # ---
+    # -- optional middlewares
+    # traefik.ingress.kubernetes.io/router.middlewares:your-middleware@kubernetescrd
+    # ---
+spec:
+  # tls:
+  # - hosts:
+  #   - testapp.services.production.cygnus-labs.com
+  #   secretName: letsencrypt-traefik-prod
+  rules:
+  - host: "testapp1.services.cygnus-labs.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: testapp1 
+            port:
+              number: 80

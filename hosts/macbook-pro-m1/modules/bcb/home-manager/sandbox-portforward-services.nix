@@ -4,9 +4,9 @@ with lib;
 
 let
   cfg = config.services.bcb.port-forward;
-  
-  configFile="${config.home.homeDirectory}/.config/bcb/services/bcb-portforward-sandbox-services.yaml";
-  mappingFile="${config.home.homeDirectory}/.config/bcb/services/bcb-portforward-sandbox-services-mapping.json";
+
+  configFile = "${config.home.homeDirectory}/.config/bcb/services/bcb-portforward-sandbox-services.yaml";
+  mappingFile = "${config.home.homeDirectory}/.config/bcb/services/bcb-portforward-sandbox-services-mapping.json";
 
   fetchServicesScript = pkgs.writeScript "fetch-services" ''
     echo "$(date) Fetching services from Kubernetes..."
@@ -87,7 +87,7 @@ let
       echo "[]" > $out
     fi
   '';
-  
+
   servicesJson = builtins.fromJSON (builtins.readFile readService);
   serviceMappingJson = builtins.fromJSON (builtins.readFile readServiceMapping);
 
@@ -177,10 +177,10 @@ in
   config = mkIf cfg.enable {
 
     programs.zsh.initExtra = ''
-        start-${cfg.namespace}-port-forward-manager() {
-          mprocs -c ${configFile}
-        }
-      '';
+      start-${cfg.namespace}-port-forward-manager() {
+        mprocs -c ${configFile}
+      }
+    '';
 
 
     launchd = {

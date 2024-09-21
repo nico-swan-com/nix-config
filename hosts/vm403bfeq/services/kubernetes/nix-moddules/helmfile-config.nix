@@ -1,6 +1,4 @@
-
-
-{ config, lib, pkgs, configVars,... }:
+{ config, lib, pkgs, configVars, ... }:
 
 with lib;
 
@@ -8,15 +6,16 @@ let
   cfg = config.services.cygnus-labs.kubernetes.config;
 
   helmfileJson = pkgs.writeText "${cfg.name}.json" builtins.toJSON cfg;
-  helmfileYaml = pkgs.runCommand "${name}.yaml" {
-        buildInputs = [ pkgs.yj ];
-        json = helmfileJson;
-        passAsFile = [ "json" ];
-      } ''
-        mkdir -p $out
-        echo "$json" > $out/${cfg.name}.json
-        yj -jy < $out/${cfg.name}.json > $out/${cfg.name}.yaml
-      '';
+  helmfileYaml = pkgs.runCommand "${name}.yaml"
+    {
+      buildInputs = [ pkgs.yj ];
+      json = helmfileJson;
+      passAsFile = [ "json" ];
+    } ''
+    mkdir -p $out
+    echo "$json" > $out/${cfg.name}.json
+    yj -jy < $out/${cfg.name}.json > $out/${cfg.name}.yaml
+  '';
 in
 {
 
@@ -42,26 +41,26 @@ in
           name = mkOption {
             type = types.str;
             description = "The name of the helm release";
-           };
+          };
 
-           namespace = mkOption {
+          namespace = mkOption {
             type = types.str;
             description = "The namespace for the helm release";
-           };
+          };
 
           chart = mkOption {
             type = types.str;
             description = "The helm chart name.";
-           };
+          };
 
-           values = mkOption {
+          values = mkOption {
             type = types.json;
             description = "The helm chart values.";
-            default = {};
-           };
+            default = { };
+          };
         };
-        });
-        };
+      });
+    };
 
 
     refreshInterval = mkOption {
@@ -76,5 +75,5 @@ in
 
     helmfile = createHelmfile
 
-  };
-}
+      };
+  }

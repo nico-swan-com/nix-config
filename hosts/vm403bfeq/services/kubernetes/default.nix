@@ -15,8 +15,9 @@ let
 in
 {
   imports = [
-     ./cluster.nix
-     #./kubenix-modules/cluster
+    ./certificates.nix
+    ./cluster.nix
+    #./kubenix-modules/cluster
   ];
   # packages for administration tasks
   environment.systemPackages = with pkgs; [
@@ -26,7 +27,7 @@ in
     k9s
     argocd
     kail
-    my-kubernetes-helm 
+    my-kubernetes-helm
     my-helmfile
   ];
 

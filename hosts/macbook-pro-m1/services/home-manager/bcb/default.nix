@@ -1,4 +1,4 @@
-{ config, ...}:
+{ config, ... }:
 {
 
   imports = [
@@ -27,20 +27,20 @@
             autostart = true;
             autorestart = true;
             env = {
-              NODE_ENV="local";
+              NODE_ENV = "local";
             };
           }
           {
-            name= "services";
+            name = "services";
             autostart = false;
             autorestart = false;
             cwd = "${config.home.homeDirectory}/Developer/src/bcb-services";
             shell = "direnv exec . npm run start:local";
             env = {
-              NODE_ENV="local";
-              NODE_VERSION_PREFIX="v";
-              NODE_VERSIONS ="~/.nvm/versions/node";
-              GOOGLE_SERVICE_KEY_PATH =" ${config.home.homeDirectory}/Developer/src/bcb-services/.devcontainer/bcb-services.json";
+              NODE_ENV = "local";
+              NODE_VERSION_PREFIX = "v";
+              NODE_VERSIONS = "~/.nvm/versions/node";
+              GOOGLE_SERVICE_KEY_PATH = " ${config.home.homeDirectory}/Developer/src/bcb-services/.devcontainer/bcb-services.json";
               GOOGLE_APPLICATION_CREDENTIALS = " ${config.home.homeDirectory}/Developer/src/bcb-services/.devcontainer/bcb-services.json";
             };
           }

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   # When using easyCerts=true the IP Address must resolve to the master on creation.
   # So use simply 127.0.0.1 in that case. Otherwise you will have errors like this https://github.com/NixOS/nixpkgs/issues/59364
@@ -6,12 +6,14 @@ let
   kubeMasterHostname = "api.kubernetes";
   kubeMasterAPIServerPort = 6443;
 
-  keyFile = "${config.sops.secrets."cygnus-labs/kubernetes/keyFile".path}";
-  certFile = "${config.sops.secrets."cygnus-labs/kubernetes/certFile".path}";
-  caFile = "${config.sops.secrets."cygnus-labs/kubernetes/caFile".path}";
+  keyFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/keyFile".path}";
+  certFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/certFile".path}";
+  caFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/caFile".path}";
 
 in
 {
+
+
   # resolve master hostname
   networking.extraHosts = "${kubeMasterIP} ${kubeMasterHostname}";
 
@@ -43,49 +45,188 @@ in
     masterAddress = kubeMasterHostname;
     apiserverAddress = "https://${kubeMasterHostname}:${toString kubeMasterAPIServerPort}";
     easyCerts = true;
+    caFile = lib.mkDefault caFile;
+    # path
+    # secretsPath 
+    # package
+    # lib
+    # featureGates
+    # dataDir
+    # clusterCidr
+    # caFile
+    # apiserverAddress
+
     apiserver = {
       securePort = kubeMasterAPIServerPort;
       advertiseAddress = kubeMasterIP;
       allowPrivileged = true;
+      # webhookConfig
+      # verbosity
+      # tokenAuthFile
+      # tlsKeyFile
+      # tlsCertFile
+      # storageBackend
+      # serviceClusterIpRange
+      # serviceAccountSigningKeyFile
+      # serviceAccountKeyFile
+      # serviceAccountIssuer
+      # securePort
+      # runtimeConfig
+      # proxyClientKeyFile
+      # proxyClientCertFile
+      # preferredAddressTypes
+      # kubeletClientKeyFile
+      # kubeletClientCertFile
+      # kubeletClientCaFile
+      # featureGates
+      # extraSANs
+      # extraOpts
+      # etcd.servers
+      # etcd.keyFile
+      # etcd.certFile
+      # etcd.caFile
+      # enableAdmissionPlugins
+      # enable
+      # disableAdmissionPlugins
+      # clientCaFile
+      # bindAddress
+      # basicAuthFile
+      # authorizationPolicy
+      # authorizationMode
+      # apiAudiences
+      # allowPrivileged
+      # advertiseAddress
     };
 
     # Addons
-    addons.dns.enable = true;
-    kubelet.extraOpts = ''
-      --fail-swap-on=false
-    '';
+    addons.dns = {
+      enable = true; # use coredns
+      # replicas
+      # reconcileMode
+      # enable
+      # corefile
+      # coredns
+      # clusterIp
+      # clusterDomain = "cluster.private";
+    };
+
+    kubelet = {
+      # verbosity
+      # unschedulable
+      # tlsKeyFile
+      # tlsCertFile
+      # taints.<name>.value
+      # taints.<name>.key
+      # taints.<name>.effect
+      # taints
+      # seedDockerImages
+      # registerNode
+      # port
+      # nodeIp
+      # manifests
+      # kubeconfig.server
+      # kubeconfig.keyFile
+      # kubeconfig.certFile
+      # kubeconfig.caFile
+      # hostname
+      # healthz.port
+      # healthz.bind
+      # featureGates
+      # extraOpts
+      # extraConfig
+      # enable
+      # containerRuntimeEndpoint
+      # cni.packages
+      # cni.configDir
+      # cni.config
+      # clusterDomain
+      # clusterDns
+      # clientCaFile
+      # address
+      extraOpts = ''
+        --fail-swap-on=false
+      '';
+    };
 
     kubeconfig = {
+      #server
       caFile = caFile;
       certFile = certFile;
       keyFile = keyFile;
     };
-    # Addons
-    # addons.dns = {
-    #   enable = true; # use coredns
-    #   clusterDomain = "cluster.private";
+
+    # scheduler = {
+    #   verbosity
+    #   port
+    #   leaderElect
+    #   kubeconfig = {
+    #     server
+    #     keyFile
+    #     certFile
+    #     caFile
+    #   };
+    #   featureGates
+    #   extraOpts
+    #   enable
+    #   address
     # };
 
-    # # needed if you use swap
-    # kubelet.extraOpts = ''
-    #   --fail-swap-on=false
-    #   --resolv-conf=/run/systemd/resolve/resolve.conf
-    # '';
+    # proxy = {
+    #   verbosity
+    #   kubeconfig = {
+    #     server
+    #     keyFile
+    #     certFile
+    #     caFile
+    #   }
+    #   hostname
+    #   featureGates
+    #   extraOpts
+    #   enable
+    #   bindAddress
+    # };
+    # pki = {
+    #    pkiTrustOnBootstrap
+    #    genCfsslCACert
+    #    genCfsslAPIToken
+    #    genCfsslAPICerts
+    #    etcClusterAdminKubeconfig
+    #    enable
+    #    cfsslAPIExtraSANs
+    #    certs
+    #    caSpec
+    #    caCertPathPrefix
+    # }
+    # controllerManager = {
+    #   verbosity
+    #   tlsKeyFile
+    #   tlsCertFile
+    #   serviceAccountKeyFile
+    #   securePort
+    #   rootCaFile
+    #   leaderElect
+    #   kubeconfig.server
+    #   kubeconfig.keyFile
+    #   kubeconfig.certFile
+    #   kubeconfig.caFile
+    #   featureGates
+    #   extraOpts
+    #   enable
+    #   clusterCidr
+    #   bindAddress
+    #   allocateNodeCIDRs
+    # };
+    # flannel = {
+    #   enable
+    #   openFirewallPorts
+    # };
+
+    # addonManager = {
+    #   enable
+    #   bootstrapAddons
+    #   addons
+    # }
+
   };
-
-  
-
-  # networking = {
-  #   bridges = {
-  #     cbr0.interfaces = [ ];
-  #   };
-  #   interfaces = {
-  #     cbr0.ipv4.addresses = [{
-  #       address = "10.10.0.1";
-  #       prefixLength = 24;
-  #     }];
-  #   };
-  # };
-  # networking.nameservers = [ "10.10.0.1" ];
 
 }

@@ -1,7 +1,7 @@
-{ configVars, ...}:
+{ configVars, ... }:
 {
   imports = [
-     #../modules/kubernetes/colima-kubernetes.nix
+    #../modules/kubernetes/colima-kubernetes.nix
   ];
 
   # #Kubernetter-cluster

@@ -26,26 +26,26 @@ in
     ];
 
     environment.etc = {
-      
-      "nginx/conf/nginx.conf".text = ''
-      daemon off;
-      worker_processes  1;
-      events {
-          worker_connections  1024;
-      }
-      http {
-          include /etc/nginx/vhosts/*.conf;
-          ${lib.concatStringsSep "\n" (builtins.map (vhostDirectory: "include ${vhostDirectory}/*.conf;") cfg.vhostDirectories)}
-          include ${pkgs.nginx}/conf/mime.types;
-          default_type  application/octet-stream;
-          sendfile        on;
-          keepalive_timeout  65;
 
-          server {
-            listen 80 default_server;
-            return 502;
-          }
+      "nginx/conf/nginx.conf".text = ''
+        daemon off;
+        worker_processes  1;
+        events {
+            worker_connections  1024;
         }
+        http {
+            include /etc/nginx/vhosts/*.conf;
+            ${lib.concatStringsSep "\n" (builtins.map (vhostDirectory: "include ${vhostDirectory}/*.conf;") cfg.vhostDirectories)}
+            include ${pkgs.nginx}/conf/mime.types;
+            default_type  application/octet-stream;
+            sendfile        on;
+            keepalive_timeout  65;
+
+            server {
+              listen 80 default_server;
+              return 502;
+            }
+          }
       
       '';
     };

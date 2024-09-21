@@ -5,14 +5,14 @@
     acceptTerms = true;
   };
 
-  services.nginx= {
+  services.nginx = {
     enable = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
   };
- 
+
   services.nginx.virtualHosts =
     let
       COMMON = {
@@ -41,7 +41,7 @@
       "qbittorrent.home.nicoswan.com" = (COMMON // {
         locations."/".proxyPass = "http://127.0.0.1:9010/";
       });
-      
+
       "jackett.home.nicoswan.com" = (COMMON // {
         locations."/".proxyPass = "http://127.0.0.1:9117/";
       });

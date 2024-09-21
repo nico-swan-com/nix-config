@@ -1,8 +1,8 @@
 additionalArguments:
-  - "--log.level=DEBUG"
+  - "--log.level=INFO"
   #- "--serverstransport.insecureskipverify=true"
   #- "--api.insecure=true"  # Enable the dashboard in insecure mode
-  #- "--api.dashboard=true" # Enable the dashboard
+  - "--api.dashboard=true" # Enable the dashboard
   - "--providers.kubernetescrd"
   #- "--providers.kubernetesgateway=true"
   

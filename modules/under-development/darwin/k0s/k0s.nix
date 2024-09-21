@@ -100,7 +100,7 @@ in
                    docker.io/k0sproject/k0s:${cfg.version} k0s controller --enable-worker --no-taints --enable-dynamic-config
         '';
 
-          startScript = ''
+        startScript = ''
           export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/run/current-system/sw/bin"
 
           function shutdown() {
@@ -132,7 +132,7 @@ in
 
           tail -f /dev/null &
           wait $!
-          '';
+        '';
       in
       {
         script = startScript;
@@ -146,29 +146,29 @@ in
 
 
 
-  #   launchd.daemons.k0s-monitor =
-  #     let
-  #       runtime = if cfg.podman then "${pkgs.podman}/bin/podman" else "${pkgs.docker}/bin/docker";
-  #       monitorScript = ''
-  #         #
-  #         while true; do
-  #           if ! launchctl list | grep -q "local.k0s"; then
-  #             ${runtime} container stop k0s > /dev/null 
-  #             break
-  #           fi
-  #           sleep 5
-  #         done
-  #       '';
-  #     in
-  #     {
-  #       script = monitorScript;
-  #       serviceConfig = {
-  #         Disabled = true;
-  #         KeepAlive = true;
-  #         RunAtLoad = true;
-  #         StandardOutPath = "/tmp/k0s-monitor.out.log";
-  #         StandardErrorPath = "/tmp/k0s-monitor.err.log";
-  #       };
-  #     };
+    #   launchd.daemons.k0s-monitor =
+    #     let
+    #       runtime = if cfg.podman then "${pkgs.podman}/bin/podman" else "${pkgs.docker}/bin/docker";
+    #       monitorScript = ''
+    #         #
+    #         while true; do
+    #           if ! launchctl list | grep -q "local.k0s"; then
+    #             ${runtime} container stop k0s > /dev/null 
+    #             break
+    #           fi
+    #           sleep 5
+    #         done
+    #       '';
+    #     in
+    #     {
+    #       script = monitorScript;
+    #       serviceConfig = {
+    #         Disabled = true;
+    #         KeepAlive = true;
+    #         RunAtLoad = true;
+    #         StandardOutPath = "/tmp/k0s-monitor.out.log";
+    #         StandardErrorPath = "/tmp/k0s-monitor.err.log";
+    #       };
+    #     };
   };
 }

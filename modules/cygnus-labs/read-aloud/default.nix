@@ -17,7 +17,7 @@ let
       isEmpty = list: length list == 0;
 
       cmd =
-        if ((cfg.model-voice != "") && ( cfg.model-config != ""))
+        if ((cfg.model-voice != "") && (cfg.model-config != ""))
         then "read-aloud --voice=${cfg.model-voice} --voice-config=${cfg.model-config}"
         else if ((cfg.model-voice != "") && (cfg.model-config == "")) then "read-aloud --voice=${cfg.model-voice}"
         else "read-aloud";

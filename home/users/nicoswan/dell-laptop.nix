@@ -33,13 +33,16 @@
 
   sops = {
     secrets = {
-      "servers/cygnus-labs/kubernetes/caFile" = {
+      "ca.pem" = {
+        sopsFile = ../../../hosts/vm403bfeq/services/kubernetes/certificates.yaml;
         path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-ca.pem";
       };
-      "servers/cygnus-labs/kubernetes/certFile" = {
+      "cluster-admin.pem" = {
+        sopsFile = ../../../hosts/vm403bfeq/services/kubernetes/certificates.yaml;
         path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-cluster-admin.pem";
       };
-      "servers/cygnus-labs/kubernetes/keyFile" = {
+      "cluster-admin-key.pem" = {
+        sopsFile = ../../../hosts/vm403bfeq/services/kubernetes/certificates.yaml;
         path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-cluster-admin-key.pem";
       };
     };

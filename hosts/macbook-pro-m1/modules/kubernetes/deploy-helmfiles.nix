@@ -7,37 +7,37 @@ let
 
   releaseType = lib.types.submodule {
     options = {
-          name = mkOption {
-            description = "The name of the helm release";
-            type = types.str;
-          };
+      name = mkOption {
+        description = "The name of the helm release";
+        type = types.str;
+      };
 
-          colimaInstance  = mkOption {
-            description = "Name of colima instance";
-            type = types.str;
-          };
+      colimaInstance = mkOption {
+        description = "Name of colima instance";
+        type = types.str;
+      };
 
 
-          version = mkOption {
-            description = "The version of the helm release";
-            type = types.str;
-          };
+      version = mkOption {
+        description = "The version of the helm release";
+        type = types.str;
+      };
 
-          namespace = mkOption {
-            description = "The namespace for the helm release";
-            type = types.str;
-          };
+      namespace = mkOption {
+        description = "The namespace for the helm release";
+        type = types.str;
+      };
 
-          chart = mkOption {
-            description = "The helm chart name.";
-            type = types.str;
-          };
+      chart = mkOption {
+        description = "The helm chart name.";
+        type = types.str;
+      };
 
-          values = mkOption {
-            description = "The helm chart values.";
-            type = types.attrsOf types.attrs;
-            default = { };
-          };
+      values = mkOption {
+        description = "The helm chart values.";
+        type = types.attrsOf types.attrs;
+        default = { };
+      };
     };
 
   };
@@ -65,7 +65,7 @@ let
   #   yj -jy < $out/${cfg.name}.json > $out/${cfg.name}.yaml
   # '';
 
-    startScript = release: pkgs.writeScriptBin "deploy-${deplomentName release}.sh" ''
+  startScript = release: pkgs.writeScriptBin "deploy-${deplomentName release}.sh" ''
     export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/run/current-system/sw/bin"
     
     # wait until colima is running
@@ -88,78 +88,75 @@ in
 {
   options.services.kubernetes.deploy-helmfiles = {
     options.services.cygnus-labs.kubernetes.cluster.storage = {
-    enable = mkEnableOption "Enable helmfile configuration.";
+      enable = mkEnableOption "Enable helmfile configuration.";
 
-    name = mkOption {
-      type = types.str;
-      description = "The name for the helmfile configuration.";
-      default = "";
+      name = mkOption {
+        type = types.str;
+        description = "The name for the helmfile configuration.";
+        default = "";
+      };
+
+      repositories = mkOption {
+        type = types.str;
+        description = "The helmfile repositories.";
+        default = "";
+      };
+
+      releases = mkOption {
+        type = types.listOf releaseType;
+      };
+
+      refreshInterval = mkOption {
+        type = types.int;
+        description = "The interval in seconds to refresh the services.";
+        default = 3600;
+      };
     };
 
-    repositories = mkOption {
-      type = types.str;
-      description = "The helmfile repositories.";
-      default = "";
+    config = mkIf cfg.enable {
+
+
+      home.file = lib.mkMerge (map
+        (vm: {
+          ".config/helmfiles/".text = builtins.readFile (configFile vm);
+        })
+        cfg.releases);
+
+
+      # launchd = {
+      #   enable = true;
+      #   agents = lib.mkMerge (map
+      #     (vm: {
+      #       "${vm.hostname}" = {
+      #         enable = vm.enable;
+      #         config = {
+      #           ProgramArguments = [
+      #             "${pkgs.bash}/bin/bash"
+      #             "-l"
+      #             "-c"
+      #             "${startScript}"
+      #           ];
+      #           StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/colima-${vm.hostname}.stderr.log";
+      #           StandardOutPath = "${config.home.homeDirectory}/Library/Logs/colima-${vm.hostname}.stdout.log";
+      #           RunAtLoad = true;
+      #           KeepAlive = true;
+      #           EnableTransactions = true;
+      #         };
+      #       };
+      #     })
+      #     cfg.vms);
+      # };
     };
-
-    releases = mkOption {
-      type = types.listOf releaseType;
-    };
-
-    refreshInterval = mkOption {
-      type = types.int;
-      description = "The interval in seconds to refresh the services.";
-      default = 3600;
-    };
-  };
-
-  config = mkIf cfg.enable {
-    
-
-  home.file = lib.mkMerge (map
-  (vm: {
-      ".config/helmfiles/".text = builtins.readFile (configFile vm);
-   })
-   cfg.releases);
+  }
 
 
-    # launchd = {
-    #   enable = true;
-    #   agents = lib.mkMerge (map
-    #     (vm: {
-    #       "${vm.hostname}" = {
-    #         enable = vm.enable;
-    #         config = {
-    #           ProgramArguments = [
-    #             "${pkgs.bash}/bin/bash"
-    #             "-l"
-    #             "-c"
-    #             "${startScript}"
-    #           ];
-    #           StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/colima-${vm.hostname}.stderr.log";
-    #           StandardOutPath = "${config.home.homeDirectory}/Library/Logs/colima-${vm.hostname}.stdout.log";
-    #           RunAtLoad = true;
-    #           KeepAlive = true;
-    #           EnableTransactions = true;
-    #         };
-    #       };
-    #     })
-    #     cfg.vms);
-    # };
-  };
-}
+    { config, lib, pkgs, configVars, ... }:
+
+      with lib;
+
+      let
+        cfg = config.services.cygnus-labs.kubernetes.deploy-helmfiles;
 
 
-{ config, lib, pkgs, configVars, ... }:
-
-with lib;
-
-let
-  cfg = config.services.cygnus-labs.kubernetes.deploy-helmfiles;
-
-  
-in
-{
-
-
-  
+      in
+      { 

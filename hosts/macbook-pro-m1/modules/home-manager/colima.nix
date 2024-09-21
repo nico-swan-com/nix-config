@@ -41,8 +41,8 @@ let
     options = {
       enabled = mkBoolOption "Enable kubernetes" false;
       version = mkStrOption "Kubernetes version to use." "v1.30.0+k3s1";
-      k3sArgs = mkListStrOption "Additional args to pass to k3s." [];
-      kubernetesDisable = mkListStrOption "The kubernetes components to disable." [];
+      k3sArgs = mkListStrOption "Additional args to pass to k3s." [ ];
+      kubernetesDisable = mkListStrOption "The kubernetes components to disable." [ ];
     };
   };
 
@@ -175,60 +175,60 @@ in
       '';
 
       launchdScript = vm: pkgs.writeScriptBin "launchd-${vm.launchd.labelPrefix}-${vm.hostname}.sh" ''
-      YAML_FILE="${config.home.homeDirectory}/.config/colima/${vm.launchd.labelPrefix}-${vm.hostname}-service.yaml"
+        YAML_FILE="${config.home.homeDirectory}/.config/colima/${vm.launchd.labelPrefix}-${vm.hostname}-service.yaml"
 
-      # Check if the YAML file exists, create it if it doesn't
-      if [ ! -f "$YAML_FILE" ]; then
-        echo "YAML file does not exist. Creating it..."
-        mkdir -p ${config.home.homeDirectory}/.config/colima/
-        echo -e "service:\n  state: start" > "$YAML_FILE"
-      fi
+        # Check if the YAML file exists, create it if it doesn't
+        if [ ! -f "$YAML_FILE" ]; then
+          echo "YAML file does not exist. Creating it..."
+          mkdir -p ${config.home.homeDirectory}/.config/colima/
+          echo -e "service:\n  state: start" > "$YAML_FILE"
+        fi
 
 
-      # Function to start Colima instance
-      start_colima() {
-          #if ! ${pkgs.colima}/bin/colima status | grep - q "Running"; then
-              echo "Starting Colima instance..."
-              ${startScript vm}/bin/start-${vm.launchd.labelPrefix}-${vm.hostname}.sh
-          #fi
-      }
+        # Function to start Colima instance
+        start_colima() {
+            #if ! ${pkgs.colima}/bin/colima status | grep - q "Running"; then
+                echo "Starting Colima instance..."
+                ${startScript vm}/bin/start-${vm.launchd.labelPrefix}-${vm.hostname}.sh
+            #fi
+        }
 
-      # Function to stop Colima instance
-      stop_colima() {
-          #if ${pkgs.colima}/bin/colima status | grep - q "Running"; then
-            echo "Stopping Colima instance..."
-            ${pkgs.colima}/bin/colima stop ${vm.hostname}
-            if [ $? -eq 0 ]; then
-                echo "Colima instance ${vm.hostname} stopped successfully."
+        # Function to stop Colima instance
+        stop_colima() {
+            #if ${pkgs.colima}/bin/colima status | grep - q "Running"; then
+              echo "Stopping Colima instance..."
+              ${pkgs.colima}/bin/colima stop ${vm.hostname}
+              if [ $? -eq 0 ]; then
+                  echo "Colima instance ${vm.hostname} stopped successfully."
+              fi
+            #fi
+        }
+
+        # Function to check the service state from the YAML file
+        check_service_state() {
+            local state
+            state=$(${pkgs.yq}/bin/yq -e '.service.state' "$YAML_FILE")
+            echo "Service state: $state"
+            if [ "$state" == "start" ]; then
+                start_colima
+            elif [ "$state" == "stop" ]; then
+                stop_colima
             fi
-          #fi
-      }
+        }
 
-      # Function to check the service state from the YAML file
-      check_service_state() {
-          local state
-          state=$(${pkgs.yq}/bin/yq -e '.service.state' "$YAML_FILE")
-          echo "Service state: $state"
-          if [ "$state" == "start" ]; then
-              start_colima
-          elif [ "$state" == "stop" ]; then
-              stop_colima
-          fi
-      }
+        # Monitor the file for changes using fswatch
+        fswatch -o "$YAML_FILE" |
+        while read -r event; do
+            check_service_state
+        done
 
-      # Monitor the file for changes using fswatch
-      fswatch -o "$YAML_FILE" |
-      while read -r event; do
-          check_service_state
-      done
+        # Trap the stop signal to stop Colima instance when the agent is stopped or disabled
+        trap stop_colima SIGTERM
 
-      # Trap the stop signal to stop Colima instance when the agent is stopped or disabled
-      trap stop_colima SIGTERM
-
-      # Keep the script running
-      while true; do
-          sleep 1
-      done
+        # Keep the script running
+        while true; do
+            sleep 1
+        done
 
 
       '';
@@ -244,10 +244,11 @@ in
 
       programs.zsh = {
         shellAliases = lib.mkMerge (map
-            (vm: {
-                "kube-colima-${vm.hostname}-context" = "kubectl config use-context colima-${vm.hostname}";
-                 }) cfg.vms);
-      
+          (vm: {
+            "kube-colima-${vm.hostname}-context" = "kubectl config use-context colima-${vm.hostname}";
+          })
+          cfg.vms);
+
         initExtra = lib.mkMerge (map
           (vm: ''
             start-colima-${vm.hostname}() {

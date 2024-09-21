@@ -1,21 +1,20 @@
-
-
-{ config, lib, pkgs, configVars,... }:
+{ config, lib, pkgs, configVars, ... }:
 
 with lib;
 
 let
   cfg = config.services.cygnus-labs.kubernetes.config;
 
-  createHelmfile = name: pkgs.runCommand "${name}.yaml" {
-        buildInputs = [ pkgs.yj ];
-        json = jsonData;
-        passAsFile = [ "json" ];
-      } ''
-        mkdir -p $out
-        echo "$json" > $out/data.json
-        yj -jy < $out/data.json > $out/data.yaml
-      '';
+  createHelmfile = name: pkgs.runCommand "${name}.yaml"
+    {
+      buildInputs = [ pkgs.yj ];
+      json = jsonData;
+      passAsFile = [ "json" ];
+    } ''
+    mkdir -p $out
+    echo "$json" > $out/data.json
+    yj -jy < $out/data.json > $out/data.yaml
+  '';
 
 
 in
@@ -43,26 +42,26 @@ in
           name = mkOption {
             type = types.str;
             description = "The name of the helm release";
-           };
+          };
 
-           namespace = mkOption {
+          namespace = mkOption {
             type = types.str;
             description = "The namespace for the helm release";
-           };
+          };
 
           chart = mkOption {
             type = types.str;
             description = "The helm chart name.";
-           };
+          };
 
-           values = mkOption {
+          values = mkOption {
             type = types.json;
             description = "The helm chart values.";
-            default = {};
-           };
+            default = { };
+          };
         };
-        });
-        };
+      });
+    };
 
 
     refreshInterval = mkOption {
@@ -75,10 +74,10 @@ in
 
   config = mkIf cfg.enable {
 
-    helmfile = mkIf cfg.repositories!= "" {
+    helmfile = mkIf cfg.repositories != "" {
       repositories = [
-        
-    };
 
-  };
-}
+        };
+
+        };
+        }

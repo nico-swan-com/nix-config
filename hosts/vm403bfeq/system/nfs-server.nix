@@ -5,7 +5,7 @@
   services.rpcbind.enable = true;
 
   systemd.tmpfiles.rules = [
-  "d /export 0755 nobody nogroup"
+    "d /export 0755 nobody nogroup"
   ];
 
   services.nfs.server.enable = true;

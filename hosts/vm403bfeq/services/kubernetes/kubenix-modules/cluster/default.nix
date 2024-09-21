@@ -1,6 +1,6 @@
 {
- imports = [ 
-   #./roles
-   ./metallb 
+  imports = [
+    #./roles
+    ./metallb
   ];
 }

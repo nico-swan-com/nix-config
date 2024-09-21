@@ -11,7 +11,7 @@
     # settings = lib.attrsets.recursiveUpdate (import ./default-settings.nix) { };
 
     # extraConfig = "include user.conf";
-        
+
     # darwinLaunchOptions = [
     #       "--single-instance"
     #       "--directory=/tmp/my-dir"
@@ -21,7 +21,7 @@
     # keybindings = {
     #   "ctrl+c" = "copy_or_interrupt";
     # };
-    
-    
+
+
   };
 }

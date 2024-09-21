@@ -85,43 +85,43 @@ let
   procsJson = proc: (builtins.toJSON proc);
 
   generateConfigFile = service: pkgs.runCommand "${service.name}.yaml" { } ''
-  echo "procs:" > $out
-  data='${builtins.toJSON service.procs}'
-  echo "$data" | ${pkgs.jq}/bin/jq -c '.[]' | while read -r proc; do
-    name=$(echo $proc | ${pkgs.jq}/bin/jq -r '.name')
-    autostart=$(echo $proc | ${pkgs.jq}/bin/jq -r '.autostart')
-    autorestart=$(echo $proc | ${pkgs.jq}/bin/jq -r '.autorestart')
-    shell=$(echo $proc | ${pkgs.jq}/bin/jq -r '.shell // empty')
-    cmd=$(echo $proc | ${pkgs.jq}/bin/jq -r '.cmd // empty')
-    cwd=$(echo $proc | ${pkgs.jq}/bin/jq -r '.cwd // empty')
-    env=$(echo $proc | ${pkgs.jq}/bin/jq -r '.env // empty')
+    echo "procs:" > $out
+    data='${builtins.toJSON service.procs}'
+    echo "$data" | ${pkgs.jq}/bin/jq -c '.[]' | while read -r proc; do
+      name=$(echo $proc | ${pkgs.jq}/bin/jq -r '.name')
+      autostart=$(echo $proc | ${pkgs.jq}/bin/jq -r '.autostart')
+      autorestart=$(echo $proc | ${pkgs.jq}/bin/jq -r '.autorestart')
+      shell=$(echo $proc | ${pkgs.jq}/bin/jq -r '.shell // empty')
+      cmd=$(echo $proc | ${pkgs.jq}/bin/jq -r '.cmd // empty')
+      cwd=$(echo $proc | ${pkgs.jq}/bin/jq -r '.cwd // empty')
+      env=$(echo $proc | ${pkgs.jq}/bin/jq -r '.env // empty')
 
-    echo "  $name:" >> $out
-    echo "    autostart: $autostart" >> $out
-    echo "    autorestart: $autorestart" >> $out
-    if [ -n "$shell" ]; then
-      echo "    shell: \"$shell\"" >> $out
-    fi
-    if [ -n "$cmd" ]; then
-      echo "    cmd:" >> $out
-      echo $cmd | ${pkgs.jq}/bin/jq -r '.[] | "      - \"\(. // empty)\""' >> $out
-    fi
-    if [ -n "$cwd" ]; then
-      echo "    cwd: \"$cwd\"" >> $out
-    fi
-    if [ -n "$env" ]; then
-      echo "    env:" >> $out
-      for key in $(echo $env | ${pkgs.jq}/bin/jq -r 'keys[]'); do
-        value=$(echo $env | ${pkgs.jq}/bin/jq -r --arg key "$key" '.[$key]')
-        if [ "$value" != "null" ]; then
-          echo "      $key: \"$value\"" >> $out
-        else
-          echo "      $key: null" >> $out
-        fi
-      done
-    fi
-  done
-'';
+      echo "  $name:" >> $out
+      echo "    autostart: $autostart" >> $out
+      echo "    autorestart: $autorestart" >> $out
+      if [ -n "$shell" ]; then
+        echo "    shell: \"$shell\"" >> $out
+      fi
+      if [ -n "$cmd" ]; then
+        echo "    cmd:" >> $out
+        echo $cmd | ${pkgs.jq}/bin/jq -r '.[] | "      - \"\(. // empty)\""' >> $out
+      fi
+      if [ -n "$cwd" ]; then
+        echo "    cwd: \"$cwd\"" >> $out
+      fi
+      if [ -n "$env" ]; then
+        echo "    env:" >> $out
+        for key in $(echo $env | ${pkgs.jq}/bin/jq -r 'keys[]'); do
+          value=$(echo $env | ${pkgs.jq}/bin/jq -r --arg key "$key" '.[$key]')
+          if [ "$value" != "null" ]; then
+            echo "      $key: \"$value\"" >> $out
+          else
+            echo "      $key: null" >> $out
+          fi
+        done
+      fi
+    done
+  '';
 
   servicesType = lib.types.submodule {
     options = {
@@ -197,12 +197,14 @@ in
       })
       cfg.services);
 
-      programs.zsh = lib.mkMerge (map
-        (service: mkIf service.enable { initExtra = ''
-        start-${service.name}() {
-          mprocs -c ~/.config/bcb/services/${service.name}.yaml
-        }
-      '';
-      }) cfg.services);
+    programs.zsh = lib.mkMerge (map
+      (service: mkIf service.enable {
+        initExtra = ''
+          start-${service.name}() {
+            mprocs -c ~/.config/bcb/services/${service.name}.yaml
+          }
+        '';
+      })
+      cfg.services);
   };
 }

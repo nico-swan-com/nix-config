@@ -12,7 +12,7 @@ in
 
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
-     (pkgs.stdenv.mkDerivation {
+      (pkgs.stdenv.mkDerivation {
         name = "gefyra";
         src = pkgs.fetchzip {
           url = "https://github.com/gefyrahq/gefyra/releases/download/2.2.2/gefyra-2.2.2-darwin-universal.zip";

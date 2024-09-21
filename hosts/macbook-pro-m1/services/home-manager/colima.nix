@@ -27,9 +27,9 @@
         arch = "aarch64";
         runtime = "docker";
         hostname = "development-cluster";
-        kubernetes ={
+        kubernetes = {
           enabled = true;
-          k3sArgs = ["--flannel-external-ip"]; 
+          k3sArgs = [ "--flannel-external-ip" ];
           #kubernetesDisable=["teafik"];
         };
         rosetta = false;
@@ -38,7 +38,7 @@
       }
     ];
   };
-  
+
 
   # services.colima = {
   #   enable = true;

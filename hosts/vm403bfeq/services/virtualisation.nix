@@ -1,4 +1,4 @@
-{pkgs,...}:{
+{ pkgs, ... }: {
   virtualisation.docker.enable = false;
   virtualisation.containers.enable = true;
   virtualisation = {
@@ -11,7 +11,7 @@
     oci-containers.backend = "podman";
   };
 
-   # Useful tools
+  # Useful tools
   environment.systemPackages = with pkgs; [
     podman-tui # status of containers in the terminal
     podman-compose # start group of containers for dev

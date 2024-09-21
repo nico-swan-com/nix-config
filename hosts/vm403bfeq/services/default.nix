@@ -6,6 +6,7 @@
     #./virtualisation.nix
     #./minio.nix
     #./gitlab.nix
+    #./gitlab.nix
     ./kubernetes
     ./databases/postgres.nix
     ./databases/redis.nix

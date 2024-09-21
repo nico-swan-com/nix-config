@@ -1,4 +1,4 @@
-{ config, lib, pkgs,... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
@@ -67,75 +67,75 @@ in
       daemons = {
         "update-hosts-bcb-${cfg.namespace}" = {
           script = ''
-  # Ensure the ~/.config/bcb/vhosts/etc/nginx/vhosts directory exists
-  if [ ! -d ${cfg.userHome}/.config/bcb/nginx/vhosts ]; then
-      sudo mkdir -p ${cfg.userHome}/.config/bcb/nginx/vhosts/
-  fi
+              # Ensure the ~/.config/bcb/vhosts/etc/nginx/vhosts directory exists
+              if [ ! -d ${cfg.userHome}/.config/bcb/nginx/vhosts ]; then
+                  sudo mkdir -p ${cfg.userHome}/.config/bcb/nginx/vhosts/
+              fi
 
-  # Ensure the /etc/resolver directory exists
-  if [ ! -d /etc/resolver ]; then
-    sudo mkdir /etc/resolver
-  fi
+              # Ensure the /etc/resolver directory exists
+              if [ ! -d /etc/resolver ]; then
+                sudo mkdir /etc/resolver
+              fi
 
-  echo "$(date) Updating hosts file..."
+              echo "$(date) Updating hosts file..."
   
-  HOSTS_FILE="/etc/hosts"
-  JSON_FILE="${cfg.mappingFile}"
-  DNS_ADRESSES=" "
+              HOSTS_FILE="/etc/hosts"
+              JSON_FILE="${cfg.mappingFile}"
+              DNS_ADRESSES=" "
 
-  # Backup the current hosts file
-  cp $HOSTS_FILE $HOSTS_FILE.bak
+              # Backup the current hosts file
+              cp $HOSTS_FILE $HOSTS_FILE.bak
 
-  # Read the JSON file and update the hosts file
-  ${pkgs.jq}/bin/jq -c '.services[]' $JSON_FILE | while read -r entry; do
-    IP=${cfg.dnsBindIp}
-    SERVICE_HOSTNAME="$(echo $entry | ${pkgs.jq}/bin/jq -r '.name').${cfg.namespace}.${cfg.hostDomain}"
-    PORT="$(echo $entry | ${ pkgs.jq}/bin/jq -r '.port')"
-    DNS_ADRESSES="$DNS_ADRESSES --address=/$SERVICE_HOSTNAME/$IP"
+              # Read the JSON file and update the hosts file
+              ${pkgs.jq}/bin/jq -c '.services[]' $JSON_FILE | while read -r entry; do
+                IP=${cfg.dnsBindIp}
+                SERVICE_HOSTNAME="$(echo $entry | ${pkgs.jq}/bin/jq -r '.name').${cfg.namespace}.${cfg.hostDomain}"
+                PORT="$(echo $entry | ${ pkgs.jq}/bin/jq -r '.port')"
+                DNS_ADRESSES="$DNS_ADRESSES --address=/$SERVICE_HOSTNAME/$IP"
     
-    # Check if the hostname already exists in the hosts file
-    if grep -q "$SERVICE_HOSTNAME" $HOSTS_FILE; then
+                # Check if the hostname already exists in the hosts file
+                if grep -q "$SERVICE_HOSTNAME" $HOSTS_FILE; then
 
-      # Update the existing entry
-      # echo "$(date) sed -i.bak \"/$SERVICE_HOSTNAME/c\\${cfg.dnsBindIp} $SERVICE_HOSTNAME\" \"$HOSTS_FILE\""
-      ESCAPED_HOST=$(echo "$SERVICE_HOSTNAME" | sed 's/\./\\./g')
-      sed -i.bak "/$ESCAPED_HOST/c\\ $IP $ESCAPED_HOST" "$HOSTS_FILE"
+                  # Update the existing entry
+                  # echo "$(date) sed -i.bak \"/$SERVICE_HOSTNAME/c\\${cfg.dnsBindIp} $SERVICE_HOSTNAME\" \"$HOSTS_FILE\""
+                  ESCAPED_HOST=$(echo "$SERVICE_HOSTNAME" | sed 's/\./\\./g')
+                  sed -i.bak "/$ESCAPED_HOST/c\\ $IP $ESCAPED_HOST" "$HOSTS_FILE"
 
-    else
-      # Add the new entry
-      echo "$IP $SERVICE_HOSTNAME" >> $HOSTS_FILE
-    fi
+                else
+                  # Add the new entry
+                  echo "$IP $SERVICE_HOSTNAME" >> $HOSTS_FILE
+                fi
     
-    NGINX_VHOST_CONFIG_FILE="/etc/nginx/vhosts/$SERVICE_HOSTNAME.conf"
-    # Create the configuration content
-    cat <<EOL > $NGINX_VHOST_CONFIG_FILE
-  server {
-      listen 80;
-      server_name $SERVICE_HOSTNAME;
+                NGINX_VHOST_CONFIG_FILE="/etc/nginx/vhosts/$SERVICE_HOSTNAME.conf"
+                # Create the configuration content
+                cat <<EOL > $NGINX_VHOST_CONFIG_FILE
+              server {
+                  listen 80;
+                  server_name $SERVICE_HOSTNAME;
 
-      location / {
-        proxy_pass http://127.0.0.1:$PORT;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-      }
-    }
-EOL
-  done
+                  location / {
+                    proxy_pass http://127.0.0.1:$PORT;
+                    proxy_set_header Host \$host;
+                    proxy_set_header X-Real-IP \$remote_addr;
+                    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                    proxy_set_header X-Forwarded-Proto \$scheme;
+                  }
+                }
+            EOL
+              done
 
-  RESOLVER_FILE="/etc/resolver/${cfg.hostDomain}"
-  # Create or overwrite the resolver file with the DNS server configuration
-  echo "$(date) Creating resolver file for $SERVICE_HOSTNAME"
-  echo "domain ${cfg.hostDomain}" > $RESOLVER_FILE
-  echo "search ${cfg.hostDomain}" >> $RESOLVER_FILE
-  echo "nameserver ${cfg.dnsBindIp}" >> $RESOLVER_FILE
+              RESOLVER_FILE="/etc/resolver/${cfg.hostDomain}"
+              # Create or overwrite the resolver file with the DNS server configuration
+              echo "$(date) Creating resolver file for $SERVICE_HOSTNAME"
+              echo "domain ${cfg.hostDomain}" > $RESOLVER_FILE
+              echo "search ${cfg.hostDomain}" >> $RESOLVER_FILE
+              echo "nameserver ${cfg.dnsBindIp}" >> $RESOLVER_FILE
 
-  echo "$(date) Resolver file for ${cfg.hostDomain} created at $RESOLVER_FILE"
-  killall - HUP mDNSResponder
+              echo "$(date) Resolver file for ${cfg.hostDomain} created at $RESOLVER_FILE"
+              killall - HUP mDNSResponder
 
-  echo "$(date) Updating dnsmaq with addresses"
-  ${pkgs.dnsmasq}/bin/dnsmasq --test --listen-address=${cfg.dnsBindIp} --port=${toString cfg.dnsPort} --keep-in-foreground $DNS_ADRESSES
+              echo "$(date) Updating dnsmaq with addresses"
+              ${pkgs.dnsmasq}/bin/dnsmasq --test --listen-address=${cfg.dnsBindIp} --port=${toString cfg.dnsPort} --keep-in-foreground $DNS_ADRESSES
           '';
           serviceConfig = {
             KeepAlive = false;

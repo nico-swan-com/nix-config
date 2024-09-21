@@ -94,4 +94,7 @@ nixos-clean:
   nix-env -u --always 
   rm /nix/var/nix/gcroots/auto/* 
   nix-collect-garbage -d 
+
+encrypt-kubernetes-certificates:
+  scripts/encrypt-kubernetes-certificates.sh hosts/vm403bfeq/services/kubernetes
   

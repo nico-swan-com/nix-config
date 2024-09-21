@@ -10,6 +10,23 @@
     ../../../common/optional/fun.nix
   ];
 
+  sops = {
+    secrets = {
+      "ca.pem" = {
+        sopsFile = ../../../hosts/vm403bfeq/services/kubernetes/certificates.yaml;
+        path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-ca.pem";
+      };
+      "cluster-admin.pem" = {
+        sopsFile = ../../../hosts/vm403bfeq/services/kubernetes/certificates.yaml;
+        path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-cluster-admin.pem";
+      };
+      "cluster-admin-key.pem" = {
+        sopsFile = ../../../hosts/vm403bfeq/services/kubernetes/certificates.yaml;
+        path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-cluster-admin-key.pem";
+      };
+    };
+  };
+
   home.packages = with pkgs; [
     terminal-notifier
     kail
