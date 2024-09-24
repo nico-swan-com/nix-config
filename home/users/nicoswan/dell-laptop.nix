@@ -1,9 +1,11 @@
-{ pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 {
 
   imports = [
     ./common.nix
     ./common-desktop.nix
+    ../../common/optional/sops.nix
+
 
     # Terminal applictions
     ../../common/optional/terminal/lazygit.nix # Git UI
@@ -27,59 +29,16 @@
     #../../common/optional/terminal/fun.nix
   ];
 
+
   home.packages = with pkgs; [
     gnome-extensions-cli
   ];
 
-  sops = {
-    secrets = {
-      "ca.pem" = {
-        sopsFile = ../../../hosts/vm403bfeq/services/kubernetes/certificates.yaml;
-        path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-ca.pem";
-      };
-      "cluster-admin.pem" = {
-        sopsFile = ../../../hosts/vm403bfeq/services/kubernetes/certificates.yaml;
-        path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-cluster-admin.pem";
-      };
-      "cluster-admin-key.pem" = {
-        sopsFile = ../../../hosts/vm403bfeq/services/kubernetes/certificates.yaml;
-        path = "/home/nicoswan/.kube/cygnus-labs-kubernetes-cluster-admin-key.pem";
-      };
-    };
-  };
 
-  # 
-  # SSH configuration
-  # 
-  # programs.ssh = {
-
-  #   matchBlocks = {
-  #     "gitlab" = {
-  #       host = "gitlab.com";
-  #       identitiesOnly = true;
-  #       identityFile = [
-  #         "~/.ssh/id_gitlab-key"
-  #       ];
-  #     };
-
-  #     "102.135.163.95" = {
-  #       host = "102.135.163.95";
-  #       identitiesOnly = true;
-  #       identityFile = [
-  #         "~/.ssh/id_nicoswan"
-  #         "~/.ssh/vm403bfeq"
-  #       ];
-  #     };
-
-  #     "github" = {
-  #       host = "github.com";
-  #       identitiesOnly = true;
-  #       identityFile = [
-  #         "~/.ssh/id_nicoswan"
-  #       ];
-  #     };
-  #   };
+  # home = {
+  #   file.".kube/cygnus-labs-kubernetes-ca.pem".source = "${config.sops.secrets."ca.pem".path}";
   # };
+
 
 
 }

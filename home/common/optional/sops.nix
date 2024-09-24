@@ -1,27 +1,45 @@
 # home level sops. see hosts/common/optional/sops.nix for hosts level
 
-{ inputs, config, ... }:
+{ inputs, lib, config, ... }:
 let
   secretsDirectory = builtins.toString inputs.nix-secrets;
   secretsFile = "${secretsDirectory}/secrets.yaml";
+  clusterAdminSecretsFile = "${secretsDirectory}/cluster-admin-secrets.yaml";
   homeDirectory = config.home.homeDirectory;
 in
 {
-  imports = [
-    inputs.sops-nix.homeManagerModules.sops
-  ];
 
-  sops = {
-    # This is the location of the host specific age-key for ta and will to have been extracted to this location via hosts/common/core/sops.nix on the host
-    age.keyFile = "${homeDirectory}/.config/sops/age/keys.txt";
+  sops.age.keyFile = "${homeDirectory}/.config/sops/age/keys.txt";
+  sops.defaultSopsFile = secretsFile;
+  sops.validateSopsFiles = true;
+  #sops.defaultSymlinkPath = "/run/user/1000/secrets";
+  #sops.defaultSecretsMountPoint = "/run/user/1000/secrets.d";
 
-    defaultSopsFile = "${secretsFile}";
-    validateSopsFiles = false;
 
-    secrets = {
-      "host/private-key" = {
-        path = "${homeDirectory}/.ssh/id_host-private-key";
-      };
+  sops.secrets = {
+    "host/private-key" = {
+      sopsFile = "${secretsFile}";
+      path = "${homeDirectory}/.ssh/id_host-private-key";
     };
+    "ca.pem" = {
+      sopsFile = "${clusterAdminSecretsFile}";
+      path = "${homeDirectory}/.kube/ca.pem";
+    };
+    "cluster-admin.pem" = {
+      sopsFile = "${clusterAdminSecretsFile}";
+      path = "${homeDirectory}/.kube/cluster-admin.pem";
+    };
+    "cluster-admin-key.pem" = {
+      sopsFile = "${clusterAdminSecretsFile}";
+      path = "${homeDirectory}/.kube/cluster-admin-key.pem";
+    };
+
   };
+
+  home.activation.updateSecrets = ''
+    /run/current-system/sw/bin/systemctl --user restart sops-nix
+  '';
+
+
+
 }

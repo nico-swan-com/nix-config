@@ -70,6 +70,10 @@ systemFunc rec {
           isWSL = isWSL;
           inputs = inputs;
         };
+        sharedModules = [
+          inputs.sops-nix.homeManagerModules.sops
+        ];
+
       };
     }
 
