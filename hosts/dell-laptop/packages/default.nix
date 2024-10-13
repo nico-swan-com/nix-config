@@ -25,5 +25,16 @@
 
     # gnome.polari
     gnome-builder
+
+    ollama
+    oterm
+    vimPlugins.ollama-nvim
+
+    beekeeper-studio
+    oci-cli
+    atac
+    termshark
+    portal
+    sshs
   ];
 }
