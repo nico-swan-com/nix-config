@@ -1,12 +1,10 @@
 { inputs, ... }:
 {
   imports = [
-    ../../common/core/nix-settings.nix
     ./hardware-configuration.nix
     ./boot-loader.nix
     ./networking.nix
     ./nfs-server.nix
-
   ];
 
   # Enable the OpenSSH daemon.

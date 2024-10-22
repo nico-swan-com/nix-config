@@ -1,13 +1,14 @@
-{ configVars, ... }:
+{ cfg, inputs, ... }:
+# let
+#   secretsDirectory = builtins.toString inputs.nix-secrets;
+#   cygnusLabsSecretsFile = "${secretsDirectory}/cluster-admin-secrets.yaml";
+# in
 {
   imports =
     [
-      # Core configuration
-      ../common/core
-      ../common/core/sops.nix
-      ../common/core/locale.nix
-      ../common/users
-
+      ../../core/nixos
+      ./sops.nix
+    
       # Include the results of the hardware scan.
       ./system
 
@@ -19,33 +20,35 @@
 
     ];
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  # users.users.nicoswan = {
-  #   isNormalUser = true;
-  #   description = "Nico Swan";
-  #   extraGroups = [ "networkmanager" "wheel" ];
-  #   openssh.authorizedKeys.keys = [
-  #     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJzDICPeNfXXLIEnf4FEQ5ZGX6REsNEPaeRbyxOh7vVL NicoMacLaptop"
-  #   ];
-  #   shell = pkgs.zsh; # default shell
+  virtualisation.vmVariant = {
+    # following configuration is added only when building VM with build-vm
+    virtualisation = {
+      memorySize = 8192; 
+      cores = 4;
+      graphics = true;
+      mountHostNixStore = true;
+      sharedDirectories= {
+        sops = {
+          source = "/home/nicoswan/.config/sops/age";
+          target = "/home/nicoswan/.config/sops/age";
+          securityModel = "passthrough";
+        };
+      };
+    };
+  };
+
+  # sops = {
+  #   secrets = {
+  #     # "ca" = {
+  #     #   sopsFile = "${cygnusLabsSecretsFile}";
+  #     # };
+  #     # "cluster-admin.pem" = {
+  #     #   sopsFile = ../../../hosts/vm403bfeq/services/kubernetes/certificates.yaml;
+  #     # };
+  #     # "cluster-admin-key.pem" = {
+  #     #   sopsFile = ../../../hosts/vm403bfeq/services/kubernetes/certificates.yaml;
+  #     # };
+  #   };
   # };
-
-
-
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  system.stateVersion = configVars.stateVersion;
 
 }

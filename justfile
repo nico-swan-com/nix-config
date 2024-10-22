@@ -34,6 +34,10 @@ sops:
   echo "Editing {{SOPS_FILE}}"
   nix-shell -p sops --run "SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt sops {{SOPS_FILE}}"
 
+sops-print:
+  echo "Editing {{SOPS_FILE}}"
+  nix-shell -p sops --run "SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt sops -d{{SOPS_FILE}}"  
+
 age-key:
   nix-shell -p age --run "age-keygen"
 
@@ -92,3 +96,4 @@ nixos-clean:
   nix-env -u --always 
   rm /nix/var/nix/gcroots/auto/* 
   nix-collect-garbage -d 
+

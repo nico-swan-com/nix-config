@@ -1,7 +1,7 @@
-{ lib, pkgs, configLib, configVars, ... }:
+{ lib, pkgs, configLib, cfg, ... }:
 {
   imports = [
-    (configLib.relativeToRoot "hosts/common/users/${configVars.username}")
+    (configLib.relativeToRoot "hosts/common/users/${cfg.username}")
   ];
 
   fileSystems."/boot".options = [ "umask=0077" ]; # Removes permissions and security warnings.

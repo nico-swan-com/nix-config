@@ -13,7 +13,6 @@ in
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
     useDHCP = lib.mkDefault false;
-    # interfaces.enp0s31f6.useDHCP = lib.mkDefault true;
     interfaces.wlp2s0.useDHCP = lib.mkDefault false;
     interfaces.wlp2s0.ipv4 = {
       addresses = [{ address = IPAddress; prefixLength = 24; }];

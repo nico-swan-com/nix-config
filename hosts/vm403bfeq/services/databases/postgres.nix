@@ -1,5 +1,6 @@
-{ config, pkgs, configVars, ... }:
+{ config, pkgs, cfg, ... }:
 let
+  dataDir = "/data/postgres/16";
   #gitlabPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/gitlab/dbPassword".path})";
 in
 {
@@ -9,19 +10,24 @@ in
   #   };
   # };
 
+  system.activationScripts.postgresData.text = ''
+    mkdir -p ${dataDir}
+    chown -R postgres ${dataDir}
+  '';
+
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_16;
     enableTCPIP = true;
-    dataDir = "/data/postgres/16";
+    dataDir = dataDir;
     settings = {
       port = 5432;
       listen_addresses = "*";
     };
-    ensureDatabases = [ "${configVars.username}" "test" "gitlab" ];
+    ensureDatabases = [ "${cfg.username}" "test" "gitlab" ];
     ensureUsers = [
       {
-        name = configVars.username;
+        name = cfg.username;
         ensureDBOwnership = true;
         ensureClauses = {
           superuser = true;
@@ -93,7 +99,7 @@ in
       # ArbitraryMapName systemUser DBUser
       superuser_map      root                    postgres
       superuser_map      postgres                postgres
-      superuser_map      ${configVars.username}  postgres
+      superuser_map      ${cfg.username}  postgres
       # Let other names login as themselves
       superuser_map      /^(.*)$   \1
     '';

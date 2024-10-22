@@ -6,9 +6,9 @@ let
   kubeMasterHostname = "api.kubernetes";
   kubeMasterAPIServerPort = 6443;
 
-  keyFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/keyFile".path}";
-  certFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/certFile".path}";
-  caFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/caFile".path}";
+  # keyFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/keyFile".path}";
+  # certFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/certFile".path}";
+  # caFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/caFile".path}";
 
 in
 {
@@ -45,7 +45,7 @@ in
     masterAddress = kubeMasterHostname;
     apiserverAddress = "https://${kubeMasterHostname}:${toString kubeMasterAPIServerPort}";
     easyCerts = true;
-    caFile = lib.mkDefault caFile;
+    # caFile = lib.mkDefault caFile;
     # path
     # secretsPath 
     # package
@@ -148,12 +148,12 @@ in
       '';
     };
 
-    kubeconfig = {
-      #server
-      caFile = caFile;
-      certFile = certFile;
-      keyFile = keyFile;
-    };
+    # kubeconfig = {
+    #   #server
+    #   caFile = caFile;
+    #   certFile = certFile;
+    #   keyFile = keyFile;
+    # };
 
     # scheduler = {
     #   verbosity

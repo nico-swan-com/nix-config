@@ -13,20 +13,20 @@
       inherit (self) outputs;
       inherit (nixpkgs) lib;
 
-      username = "nicoswan";
-      fullName = "Nico Swan";
-      email = "hi@nicoswan.com";
-
-
-      configVars = import ../vars { inherit inputs lib username fullName email; };
-
-      configLib = import ../lib { inherit lib; };
-      minimalConfigVars = lib.recursiveUpdate configVars {
+      cfg = {
+        system = "x86_64-linux";
+        username = "nicoswan";
+        fullname = "Nico Swan";
+        email = "hi@nicoswan.com";
+        locale = "en_ZA.UTF-8";
+        timezone = "Africa/Johannesburg";
         isMinimal = true;
       };
+
+
+      configLib = import ../lib { inherit lib; };
       minimalSpecialArgs = {
-        inherit inputs outputs configLib;
-        configVars = minimalConfigVars;
+        inherit inputs outputs configLib cfg;
       };
 
       # FIXME: Specify arch eventually probably

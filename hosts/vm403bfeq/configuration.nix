@@ -1,13 +1,11 @@
-{ configVars, ... }:
+{ cfg, ... }:
 {
   imports =
     [
       # Core configuration
-      ../common/core
-      ../common/core/sops.nix
-      #../common/secrets
-      ../common/core/locale.nix
-      ../common/users
+      ../../core/nixos
+      ./sops.nix
+
       ./system
       ./services
 
@@ -15,11 +13,21 @@
 
     ];
 
-  system.stateVersion = configVars.stateVersion;
-
-  sops = {
-    secrets = {
-      "users/vmbfeqcy/password".neededForUsers = true;
+  virtualisation.vmVariant = {
+    # following configuration is added only when building VM with build-vm
+    virtualisation = {
+      resolution = { x = 1280; y = 1024; };
+      memorySize = 8192; 
+      cores = 4;
+      graphics = false;
+      mountHostNixStore = true;
+      sharedDirectories= {
+        sops = {
+          source = "/home/nicoswan/.config/sops/age";
+          target = "/home/nicoswan/.config/sops/age";
+          securityModel = "passthrough";
+        };
+      };
     };
   };
 

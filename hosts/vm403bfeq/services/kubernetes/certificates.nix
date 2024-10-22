@@ -1,4 +1,4 @@
-{ pkgs, lib, inputs, configVars, ... }:
+{ pkgs, lib, inputs, cfg, ... }:
 {
   sops = {
     secrets = {

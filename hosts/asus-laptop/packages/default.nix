@@ -2,7 +2,6 @@
 {
   imports = [
     ./programs.nix
-    #./ai.nix
   ];
 
   environment.systemPackages = with pkgs; [
@@ -13,8 +12,6 @@
     xsel
     piper-tts
 
-    epson-escpr2
-    epson-escpr
 
     # Kubernetes tools
     kubectl

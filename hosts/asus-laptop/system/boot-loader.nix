@@ -12,26 +12,7 @@
       copyKernels = true;
       efiInstallAsRemovable = true;
       fsIdentifier = "label";
-      #splashImage = ./backgrounds/grub-nixos-3.png;
-      #splashMode = "stretch";
-
-      # extraEntries = ''
-      #   menuentry "Windows Boot Manager" {
-      #     insmod part_gpt
-      #     insmod fat
-      #     insmod search_fs_uuid
-      #     insmod chain
-      #     search --fs-uuid --set=root $FS_UUID
-      #     chainloader /EFI/Microsoft/Boot/bootmgr.efi
-      #   }
-      #   menuentry "Reboot" {
-      #     reboot
-      #   }
-      #   menuentry "Poweroff" {
-      #     halt
-      #   }
-      # '';
-
+      
       theme = pkgs.stdenv.mkDerivation {
         pname = "distro-grub-themes";
         version = "3.1";

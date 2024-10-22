@@ -1,11 +1,10 @@
-{ ... }: {
+{ cfg, ... }: {
+
   imports = [
-    # All user manditory configuration and packages
-    ../../home/common/core
+    ../../core/home-manager
+    ./users/${cfg.username}/home-manager.nix
 
-    # Optional packages and configiration for this host
-    ../../home/common/optional/sops.nix
-    ../../home/common/optional/desktop/gnome-desktop.nix
-
+    #../../packages/custom/read-aloud/home-manager-module.nix
   ];
+
 }

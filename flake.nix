@@ -1,7 +1,8 @@
 {
-  description = "Nico Swan";
+  description = "Example flake to apply nicoswan nixpkgs";
 
   inputs = {
+
     # Hardware
     hardware.url = "github:nixos/nixos-hardware";
 
@@ -9,13 +10,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable"; # also see 'unstable-packages' overlay at 'overlays/default.nix"
 
-    # MacOS packages
-    darwin.url = "github:lnl7/nix-darwin/master";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Build a custom WSL installer
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL";
+    # MacOS packages
+    nix-darwin = {
+      url = "github:lnl7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -32,6 +30,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+
+    # Add nicoswan packages and modules 
+    # nicoswan = {
+    #   url = "github:nico-swan-com/nixpkgs/main";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    #   inputs.home-manager .follows = "home-manager";
+    # };
+
     # Secrets management
     sops-nix = {
       url = "github:mic92/sops-nix";
@@ -47,32 +53,16 @@
     # Declarative partitioning and formatting
     disko.url = "github:nix-community/disko";
 
-    # Kubernetes
-    nixhelm = {
-      url = "github:farcaller/nixhelm";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    kubenix = {
-      url = "github:hall/kubenix";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
-    # authentik-nix = {
-    #   url = "github:nix-community/authentik-nix";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
   };
 
   outputs =
     { self
     , nixpkgs
     , nixpkgs-unstable
-    , darwin
     , hardware
-    , kubenix
-    , nixhelm
+    , nix-darwin
+    , home-manager
+    , disko
     , ...
     } @inputs:
     let
@@ -89,14 +79,26 @@
       nixpkgsFor =
         forAllSystems (system: import inputs.nixpkgs { inherit system; });
 
-      mkSystem = import ./lib/mksystem.nix {
-        inherit inputs outputs lib nixpkgs nixpkgs-unstable darwin hardware kubenix nixhelm;
+      mkSystem = import ./lib/mkSystem.nix {
+        inherit nixpkgs nixpkgs-unstable outputs inputs lib nix-darwin home-manager hardware;
+      };
+
+      # Common Configuration 
+      commonConfig = {
+          username = "nicoswan";
+          fullname = "Nico Swan";
+          email = "hi@nicoswan.com";
+          locale = "en_ZA.UTF-8";
+          timezone = "Africa/Johannesburg";
+      };
+
+      x86_64-config = lib.recursiveUpdate commonConfig {
+          system = "x86_64-linux";
       };
 
     in
     {
-
-      # TODO change this to something that has better looking output rules
+       # TODO change this to something that has better looking output rules
       # Nix formatter available through 'nix fmt' https://nix-community.github.io/nixpkgs-fmt
       formatter = forAllSystems
         (system:
@@ -110,57 +112,29 @@
           in import ./shell.nix { inherit pkgs; }
         );
 
-      # Work Macbook pro 
-      darwinConfigurations.macbook-pro-m1 = mkSystem "macbook-pro-m1" {
-        system = "aarch64-darwin";
-        username = "Nico.Swan";
-        fullName = "Nico Swan";
-        email = "nico@bcbgroup.io";
-        darwin = true;
-      };
+      # darwinConfigurations.darwin = mkSystem "darwin" {
+      #   system = "aarch64-darwin";
+      #   username = "nicoswan";
+      #   fullname = "Nico Swan";
+      #   email = "hi@nicoswan.com";
+      #   locale = "en_ZA.UTF-8";
+      #   timezone = "Africa/Johannesburg";
+      #   darwin = true;
+      #   extraModules = [ ./configuration.nix ];
+      #   extraHMModules = [ ./home.nix ];
+      # };
 
-
-      # NixOS
       nixosConfigurations = {
+        vm = mkSystem "vm" x86_64-config;
 
-        nixos = mkSystem "dell-laptop" {
-          system = "x86_64-linux";
-          username = "nicoswan";
-          fullName = "Nico Swan";
-          email = "hi@nicoswan.com";
-        };
+        dell-laptop = mkSystem "dell-laptop" x86_64-config;
+        asus-laptop = mkSystem "asus-laptop" x86_64-config;
 
-        dell-laptop = mkSystem "dell-laptop" {
-          system = "x86_64-linux";
-          username = "nicoswan";
-          fullName = "Nico Swan";
-          email = "hi@nicoswan.com";
-        };
-
-        asus-laptop = mkSystem "asus-laptop" {
-          system = "x86_64-linux";
-          username = "nicoswan";
-          fullName = "Nico Swan";
-          email = "hi@nicoswan.com";
-        };
-
-        # Home media server 
-        media = mkSystem "media-server" {
-          system = "x86_64-linux";
-          username = "nicoswan";
-          fullName = "Nico Swan";
-          email = "hi@nicoswan.com";
-        };
-
-
-        #Cloud.co.za VPS 8GB RAM
-        vps = mkSystem "vm403bfeq" {
-          system = "x86_64-linux";
-          username = "nicoswan";
-          fullName = "Nico Swan";
-          email = "nico.swan@cygnus-labs.com";
-        };
+        media = mkSystem "media" (lib.recursiveUpdate x86_64-config {
+          extraModules = [ disko.nixosModules.disko ];
+        });
+        
+        vm403bfeq = mkSystem "vm403bfeq" x86_64-config;
       };
-    };
-
+  };
 }

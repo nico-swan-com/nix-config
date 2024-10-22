@@ -1,3 +1,4 @@
 .direnv
-result
+./result
 .vscode/settings.json
+*.qcow2

@@ -1,17 +1,14 @@
-{ configVars, inputs, ... }:
-let
-  secretsDirectory = builtins.toString inputs.nix-secrets;
-  cygnusLabsSecretsFile = "${secretsDirectory}/cluster-admin-secrets.yaml";
-in
+{ cfg, inputs, ... }:
+# let
+#   secretsDirectory = builtins.toString inputs.nix-secrets;
+#   cygnusLabsSecretsFile = "${secretsDirectory}/cluster-admin-secrets.yaml";
+# in
 {
   imports =
     [
-      # Core configuration
-      ../common/core
-      ../common/core/sops.nix
-      ../common/core/locale.nix
-      ../common/users
-
+      ../../core/nixos
+      ./sops.nix
+    
       # Include the results of the hardware scan.
       ./system
 
@@ -23,7 +20,22 @@ in
 
     ];
 
-  system.stateVersion = configVars.stateVersion;
+  virtualisation.vmVariant = {
+    # following configuration is added only when building VM with build-vm
+    virtualisation = {
+      memorySize = 8192; 
+      cores = 4;
+      graphics = true;
+      mountHostNixStore = true;
+      sharedDirectories= {
+        sops = {
+          source = "/home/nicoswan/.config/sops/age";
+          target = "/home/nicoswan/.config/sops/age";
+          securityModel = "passthrough";
+        };
+      };
+    };
+  };
 
   # sops = {
   #   secrets = {

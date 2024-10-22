@@ -1,11 +1,16 @@
-{ ... }:
+{ cfg, ... }:
 {
   imports = [
-    # All user manditory configuration and packages
-    ../../home/common/core
-
-    # Optional packages and configiration for this host
-    ../../home/common/optional/sops.nix
-
+    ../../core/home-manager
+    ./users/${cfg.username}/home-manager.nix
   ];
+
+  programs.nicoswan = {
+    utils.google-cloud-sdk.enable = true;
+    utils.kubernetes = {
+      enable = true;
+      additional-utils = true;
+      admin-utils = true;
+    };
+  };
 }
