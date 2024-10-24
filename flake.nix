@@ -94,6 +94,9 @@
 
       x86_64-config = lib.recursiveUpdate commonConfig {
           system = "x86_64-linux";
+          extraModules = [
+            inputs.nur.nixosModules.nur 
+          ];
       };
 
     in
