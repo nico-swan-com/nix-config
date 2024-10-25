@@ -7,14 +7,6 @@
     ../../../../common/home-manager/terminal/lunarvim.nix # VIM IDE
   ];
  
-  programs.nicoswan = {
-    utils.google-cloud-sdk.enable = true;
-    utils.kubernetes = {
-      enable = true;
-      additional-utils = true;
-      admin-utils = true;
-    };
-  };
   # Install addition packages via home manager
   home.packages = with pkgs; [                      # Some fun 
     lnav    
