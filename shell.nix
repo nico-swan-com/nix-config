@@ -29,7 +29,8 @@
 
         age
         ssh-to-age
-        sops;
+        sops
+        qemu;
     };
   };
 }

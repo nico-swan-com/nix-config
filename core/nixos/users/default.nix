@@ -8,7 +8,7 @@ let
   rootPassword = if (rootHashedPasswordFile != null) then {
     hashedPasswordFile = rootHashedPasswordFile;
   } else {
-    initialPassword = "nixos";
+    password = "nixos";
   };
 
   # these are values we don't want to set if the environment is minimal. E.g. ISO or nixos-installer
@@ -16,7 +16,7 @@ let
   userPassword = if (userHashedPasswordFile != null) then {
     hashedPasswordFile = userHashedPasswordFile;
   } else {
-    initialPassword = "nixos";
+    password = "nixos";
   };
 
   # these are values we don't want to set if the environment is minimal. E.g. ISO or nixos-installer
@@ -66,6 +66,7 @@ in
       users.users.root = lib.recursiveUpdate rootPassword {
         # root's ssh keys are mainly used for remote deployment.
         openssh.authorizedKeys.keys = config.users.users.${cfg.username}.openssh.authorizedKeys.keys;
+        initialPassword = "nixos";
       };
 
       # No matter what environment we are in we want these tools for root, and the user(s)

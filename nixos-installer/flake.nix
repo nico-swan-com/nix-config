@@ -6,6 +6,17 @@
     nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
     # Declarative partitioning and formatting
     disko.url = "github:nix-community/disko";
+    # Secrets management
+    sops-nix = {
+      url = "github:mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Secrets
+    nix-secrets = {
+      url = "git+ssh://git@github.com/nico-swan-com/nix-secrets.git?ref=main&shallow=1";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
@@ -13,27 +24,28 @@
       inherit (self) outputs;
       inherit (nixpkgs) lib;
 
-      cfg = {
-        system = "x86_64-linux";
-        username = "nicoswan";
-        fullname = "Nico Swan";
-        email = "hi@nicoswan.com";
-        locale = "en_ZA.UTF-8";
-        timezone = "Africa/Johannesburg";
-        isMinimal = true;
-      };
-
-
       configLib = import ../lib { inherit lib; };
-      minimalSpecialArgs = {
-        inherit inputs outputs configLib cfg;
-      };
+       minimalSpecialArgs = {
+          inherit inputs outputs configLib;
+        };
 
       # FIXME: Specify arch eventually probably
       # This mkHost is way better: https://github.com/linyinfeng/dotfiles/blob/8785bdb188504cfda3daae9c3f70a6935e35c4df/flake/hosts.nix#L358
       newConfig =
         name: disk: withSwap: swapSize:
-        (nixpkgs.lib.nixosSystem {
+        let
+        cfg = {
+          hostname = name;
+          system = "x86_64-linux";
+          username = "nicoswan";
+          fullname = "Nico Swan";
+          email = "hi@nicoswan.com";
+          locale = "en_ZA.UTF-8";
+          timezone = "Africa/Johannesburg";
+          isMinimal = true;
+        };
+       
+        in (nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = minimalSpecialArgs;
           modules = [
@@ -52,7 +64,7 @@
       nixosConfigurations = {
         # host = newConfig "name" disk" "withSwap" "swapSize" 
         # Swap size is in GiB
-        media = newConfig "media-server" "/dev/sdb" false "0";
+        media = newConfig "media" "/dev/sdb" false "0";
 
         # Custom ISO
         #

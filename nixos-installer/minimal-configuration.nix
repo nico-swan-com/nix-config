@@ -1,7 +1,7 @@
 { lib, pkgs, configLib, cfg, ... }:
 {
   imports = [
-    (configLib.relativeToRoot "hosts/common/users/${cfg.username}")
+    (configLib.relativeToRoot "core/nixos/users")
   ];
 
   fileSystems."/boot".options = [ "umask=0077" ]; # Removes permissions and security warnings.
@@ -53,5 +53,5 @@
     experimental-features = [ "nix-command" "flakes" ];
     warn-dirty = false;
   };
-  system.stateVersion = configVars.stateVersion;
+  system.stateVersion = 24.05;
 }

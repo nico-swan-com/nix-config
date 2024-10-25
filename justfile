@@ -54,10 +54,14 @@ update-nix-secrets:
   (cd ../nix-secrets && git fetch && git rebase) || true
   nix flake lock --update-input nix-secrets
 
+# Create a minimal NixOS iso file
 iso:
   # If we dont remove this folder, libvirtd VM doesnt run with the new iso...
   rm -rf result
   nix build ./nixos-installer#nixosConfigurations.iso.config.system.build.isoImage
+
+test-iso:
+  qemu-system-x86_64 -enable-kvm -m 256 -cdrom ./result/iso/nixos*.iso    
 
 iso-install DRIVE: iso
   sudo dd if=$(eza --sort changed result/iso/*.iso | tail -n1) of={{DRIVE}} bs=4M status=progress oflag=sync
@@ -84,9 +88,6 @@ sync USER HOST:
 
 sync-secrets USER HOST:
   rsync -av --filter=':- .gitignore' -e "ssh -l {{USER}}" . {{USER}}@{{HOST}}:nix-secrets/
-
-test-iso:
-  qemu-system-x86_64 -enable-kvm -m 256 -cdrom ./result/iso/nixos*.iso  
 
 nixgc:
   nix-collect-garbage -d
