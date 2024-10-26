@@ -12,7 +12,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-  
+    qemu
     # gnome.polari
     gnome-builder
 

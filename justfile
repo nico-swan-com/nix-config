@@ -61,7 +61,7 @@ iso:
   nix build ./nixos-installer#nixosConfigurations.iso.config.system.build.isoImage
 
 test-iso:
-  qemu-system-x86_64 -enable-kvm -m 256 -cdrom ./result/iso/nixos*.iso    
+  qemu-system-x86_64 -enable-kvm -m 256 -device e1000,netdev=net0 -netdev user,id=net0,hostfwd=tcp::5555-:22 -cdrom ./result/iso/nixos*.iso    
 
 iso-install DRIVE: iso
   sudo dd if=$(eza --sort changed result/iso/*.iso | tail -n1) of={{DRIVE}} bs=4M status=progress oflag=sync

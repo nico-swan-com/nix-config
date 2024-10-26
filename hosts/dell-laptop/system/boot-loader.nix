@@ -6,15 +6,15 @@
     efi.canTouchEfiVariables = true;
     systemd-boot = {
       enable = false;
-      configurationLimit = 3;
+      configurationLimit =3;
     };
     grub = {
       enable = true;
       device = "nodev";
       useOSProber = true;
       efiSupport = true;
-      configurationLimit = 10;
-      copyKernels = true;
+      configurationLimit = 3;
+      copyKernels = false;
       fsIdentifier = "label";
       #splashImage = ./backgrounds/grub-nixos-3.png;
       #splashMode = "stretch";
