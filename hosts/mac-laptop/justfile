@@ -1,0 +1,80 @@
+SOPS_FILE := "../nix-secrets/secrets.yaml"
+
+# default recipe to display help information
+default:
+  @just --list
+
+rebuild-pre: update-nix-secrets
+  git add *.nix
+
+rebuild-post:
+  just check-sops
+
+# Add --option eval-cache false if you end up caching a failure you can't get around
+rebuild: rebuild-pre
+  scripts/system-flake-rebuild.sh
+
+# Requires sops to be running and you must have reboot after initial rebuild
+rebuild-full: rebuild-pre && rebuild-post
+  scripts/system-flake-rebuild.sh
+
+# Requires sops to be running and you must have reboot after initial rebuild
+rebuild-trace: rebuild-pre && rebuild-post
+  scripts/system-flake-rebuild-trace.sh
+
+# Update all packages
+update:
+  nix flake update
+
+# Update all packages and rebuild
+rebuild-update: update && rebuild
+
+# Show the diff of the packages
+diff:
+  git diff ':!flake.lock'
+
+# Open secrets file
+sops:
+  echo "Editing {{SOPS_FILE}}"
+  nix-shell -p sops --run "SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt sops {{SOPS_FILE}}"
+
+# Create new age key file
+age-key:
+  nix-shell -p age --run "age-keygen"
+
+# Rekey secrets file
+rekey:
+  cd ../nix-secrets && (\
+    sops updatekeys -y secrets.yaml && \
+    (pre-commit run --all-files || true) && \
+    git add -u && (git commit -m "chore: rekey" || true) && git push \
+  )
+
+# Check sops configuration
+check-sops:
+  scripts/check-sops.sh
+
+# Update nix-secrets
+update-nix-secrets:
+  (cd ../nix-secrets && git fetch && git rebase) || true
+  nix flake lock --update-input nix-secrets
+
+# Nix garbage collection
+nixgc:
+  nix-collect-garbage -d
+
+nixos-clean:
+  nix-channel --update 
+  nix-env -u --always 
+  rm /nix/var/nix/gcroots/auto/* 
+  nixgc 
+
+install:
+  scripts/install.sh
+
+install-homebrew:
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+vscode-update:
+  code --list-extensions | xargs -L 1 echo code --install-extension  
+
