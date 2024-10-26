@@ -12,7 +12,7 @@ mkdir ~/.ssh
 2) Run ssh-keygen -t followed by the key type and an optional comment. This comment is included in the .pub file that’s created. You may want to use an email address for the comment.
 For example, for ED25519:
 ```
-ssh-keygen -t ed25519 -C "<bcb-email-address>"
+ssh-keygen -t ed25519 -C "<email-address>"
 ```
 
 3) Enter the following `/Users/<username>/.ssh/id_gitlab` Press `Enter`. Output similar to the following is displayed:
@@ -50,7 +50,7 @@ tr -d '\n' < ~/.ssh/id_gitlab.pub | pbcopy
 4) Select Edit profile.
 5) On the left sidebar, select SSH Keys.
 6) Select Add new key.
-7) In the Key box, paste the contents of your public key. If you manually copied the key, make sure you copy the entire key, which starts with ssh-ed25519 and may end with a your bcb email address.
+7) In the Key box, paste the contents of your public key. If you manually copied the key, make sure you copy the entire key, which starts with ssh-ed25519 and may end with a your email address.
 8) In the Title box, type a description, like Work Laptop or Home Workstation.
 9) Optional. Select the Usage type of the key. It can be used either for Authentication or Signing or both. Authentication & Signing is the default value.
 10) Optional. Update Expiration date to modify the default expiration date.

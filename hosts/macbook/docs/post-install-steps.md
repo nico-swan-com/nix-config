@@ -6,7 +6,7 @@ Login to google cloud from you console
 ```
 gcloud auth login
 gcloud auth application-default login
-gcloud config set project bcb-group-sandbox
+gcloud config set project <project name>
 
 ```
 

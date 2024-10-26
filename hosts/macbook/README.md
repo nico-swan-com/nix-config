@@ -1,4 +1,4 @@
-# BCB Developer environment setup
+# Developer environment setup
 
 This project uses the Nix package manager to manage your local environment to create reproducible setup quickly and consistency for all developers. 
 

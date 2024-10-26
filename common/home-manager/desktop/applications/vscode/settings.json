@@ -1,0 +1,314 @@
+{
+  "gitlens.views.branches.branches.layout": "list",
+  "nxConsole.showNodeVersionOnStartup": false,
+  "editor.language.brackets": [],
+  "workbench.iconTheme": "material-icon-theme",
+  "editor.suggestSelection": "first",
+  "editor.fontFamily": "FiraCode Nerd Font",
+  "editor.fontLigatures": true,
+  "editor.fontWeight": "500",
+  "editor.fontSize": 12,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "never",
+    "source.fixAll": "never"
+  },
+  "editor.formatOnPaste": true,
+  "editor.largeFileOptimizations": false,
+  "editor.unfoldOnClickAfterEndOfLine": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.accessibilitySupport": "off",
+  "editor.semanticTokenColorCustomizations": {},
+
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "terminal.integrated.env.linux": {},
+  "terminal.integrated.fontWeight": "normal",
+
+  "prettier.printWidth": 150,
+  "prettier.singleQuote": true,
+  "prettier.arrowParens": "avoid",
+  "prettier.quoteProps": "consistent",
+  "prettier.tabWidth": 4,
+  "prettier.trailingComma": "none",
+  "prettier.useTabs": true,
+  "prettier.jsxSingleQuote": true,
+  "prettier.endOfLine": "lf",
+
+  "git.autofetch": true,
+  "git.enableSmartCommit": true,
+
+  "cSpell.language": "en-GB",
+  "cSpell.userWords": [
+    "actioned",
+    "Arial",
+    "Authorisations",
+    "autovalidate",
+    "axios",
+    "bignumber",
+    "BLINC",
+    "CCCAGG",
+    "changefreq",
+    "chartjs",
+    "CMDB",
+    "codelyzer",
+    "Counterparties",
+    "counterparty",
+    "counterpatry",
+    "cupertino",
+    "dartz",
+    "datavalidation",
+    "ddamqplib",
+    "ddeisapplicationregistra",
+    "DDEMR",
+    "ddemrutils",
+    "Devicelocale",
+    "DIRECTUS",
+    "dnac",
+    "ecommerce",
+    "ESID",
+    "execa",
+    "firestore",
+    "flexsearch",
+    "flushbar",
+    "focusedinput",
+    "fontawesome",
+    "fortawesome",
+    "gravatar",
+    "gridsome",
+    "gsoa",
+    "heimdall",
+    "Helvetica",
+    "heroicon",
+    "hiddenmx",
+    "Iban",
+    "INCOREBANK",
+    "itsm",
+    "Jarratt",
+    "jasminewd",
+    "jitsi",
+    "keyup",
+    "keyvalue",
+    "lerp",
+    "linecap",
+    "linejoin",
+    "MACD",
+    "micorservice",
+    "mockito",
+    "MSAP",
+    "multiline",
+    "Mutex",
+    "nestjs",
+    "Neue",
+    "ngrx",
+    "Nico",
+    "noopener",
+    "noreferrer",
+    "Nucleo",
+    "nuxt",
+    "nuxtjs",
+    "Parens",
+    "pricemulti",
+    "reorderable",
+    "reorderables",
+    "RGBO",
+    "Roboto",
+    "Routeto",
+    "rxdart",
+    "scrollto",
+    "Scully",
+    "scullyio",
+    "Segoe",
+    "semibold",
+    "SEPA",
+    "serializable",
+    "Shopify",
+    "Signup",
+    "stylelint",
+    "tailwindcss",
+    "tbody",
+    "tfoot",
+    "thead",
+    "touchicon",
+    "typeorm",
+    "Unauthorised",
+    "unsessasary",
+    "upsert",
+    "uuid",
+    "Vuetify",
+    "Vuex",
+    "wordpress"
+  ],
+  "cSpell.enableFiletypes": ["dart", "vue"],
+
+  "jest.autoRun": { "watch": false, "onSave": "test-file" },
+
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "javascript.suggest.autoImports": true,
+  "javascript.preferences.quoteStyle": "single",
+  "javascript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "js/ts.implicitProjectConfig.experimentalDecorators": true,
+  "debug.javascript.debugByLinkOptions": "on",
+  "debug.javascript.autoAttachFilter": "disabled",
+
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "html.format.wrapAttributes": "force-aligned",
+
+  "[csharp]": {},
+
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  },
+
+  "[handlebars]": {
+    "editor.defaultFormatter": "embertooling.prettier-for-handlebars-vscode"
+  },
+
+  "[yaml]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "gitlens.codeLens.scopes": ["document"],
+    "editor.formatOnSave": false
+  },
+
+  "[scss]": {
+    "editor.defaultFormatter": "Wscats.qf"
+  },
+
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "css.validate": false,
+
+  "[sql]": {
+    "editor.defaultFormatter": "ms-mssql.mssql"
+  },
+
+  "yaml.schemas": {
+    "https://api.cerbos.dev/latest/cerbos/policy/v1/Policy.schema.json": "cerbos/*"
+  },
+
+  "docker.commands.build": [],
+  "dev.containers.repositoryConfigurationPaths": [],
+
+  "files.eol": "\n",
+  "editor.formatOnType": true,
+  "prettier.embeddedLanguageFormatting": "off",
+  "prettier.requireConfig": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "typescript.updateImportsOnFileMove.enabled": "never",
+  "editor.tokenColorCustomizations": {},
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "terminal.integrated.rightClickBehavior": "copyPaste",
+  "diffEditor.codeLens": true,
+  "gitlens.gitCommands.skipConfirmations": [
+    "fetch:command",
+    "stash-push:command",
+    "switch:command",
+    "branch-create:command"
+  ],
+  "projectManager.git.baseFolders": ["/Users/Nico.Swan/Developer/src/"],
+  "javascript.format.semicolons": "remove",
+  "typescript.format.semicolons": "remove",
+  "vs-kubernetes": {
+    "vscode-kubernetes.helm-path-mac": "/Users/Nico.Swan/.vs-kubernetes/tools/helm/darwin-arm64/helm",
+    "vscode-kubernetes.minikube-path-mac": "/Users/Nico.Swan/.vs-kubernetes/tools/minikube/darwin-arm64/minikube",
+    "vs-kubernetes.crd-code-completion": "enabled",
+    "vs-kubernetes.minikube-show-information-expiration": "2025-02-27T13:18:46.543Z"
+  },
+  "conventionalCommits.scopes": [],
+  "accessibility.signals.lineHasError": {
+    "sound": "off"
+  },
+  "accessibility.signals.lineHasFoldedArea": {
+    "sound": "off"
+  },
+  "accessibility.signals.lineHasBreakpoint": {
+    "sound": "off"
+  },
+  "accessibility.signals.lineHasInlineSuggestion": {
+    "sound": "off"
+  },
+  "accessibility.signals.terminalQuickFix": {
+    "sound": "off"
+  },
+  "accessibility.signals.onDebugBreak": {
+    "sound": "off"
+  },
+  "accessibility.signals.noInlayHints": {
+    "sound": "off"
+  },
+  "accessibility.signals.taskCompleted": {
+    "sound": "off"
+  },
+  "accessibility.signals.taskFailed": {
+    "sound": "off"
+  },
+  "accessibility.signals.notebookCellCompleted": {
+    "sound": "off"
+  },
+  "accessibility.signals.notebookCellFailed": {
+    "sound": "off"
+  },
+  "accessibility.signals.diffLineInserted": {
+    "sound": "off"
+  },
+  "accessibility.signals.diffLineDeleted": {
+    "sound": "off"
+  },
+  "editor.minimap.enabled": false,
+  "[nix]": {
+    "editor.defaultFormatter": "jnoortheen.nix-ide"
+  },
+  "gitlens.views.remotes.branches.layout": "list",
+  "files.exclude": {
+    "**/.trunk/*actions/": true,
+    "**/.trunk/*logs/": true,
+    "**/.trunk/*notifications/": true,
+    "**/.trunk/*out/": true,
+    "**/.trunk/*plugins/": true
+  },
+  "files.watcherExclude": {
+    "**/.trunk/*actions/": true,
+    "**/.trunk/*logs/": true,
+    "**/.trunk/*notifications/": true,
+    "**/.trunk/*out/": true,
+    "**/.trunk/*plugins/": true
+  },
+  "nix.formatterPath": "/Users/Nico.Swan/.nix-profile/bin/nixpkgs-fmt",
+  "continue.enableTabAutocomplete": true,
+  "terminal.integrated.fontFamily": "FiraCode Nerd Font Mono",
+  "terminal.external.osxExec": "",
+  "terminal.explorerKind": "external",
+  "terminal.external.linuxExec": "",
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "direnv.path.executable": "/Users/Nico.Swan/.nix-profile/bin/direnv",
+  "workbench.colorTheme": "Tokyo Night Storm",
+  "settingsSync.ignoredSettings": [],
+  "github.experimental.multipleAccounts": true
+}

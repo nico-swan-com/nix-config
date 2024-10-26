@@ -1,0 +1,14 @@
+
+# default recipe to display help information
+default:
+  @just --list
+
+install:
+  scripts/install.sh
+
+install-homebrew:
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+vscode-update:
+  code --list-extensions | xargs -L 1 echo code --install-extension  
+

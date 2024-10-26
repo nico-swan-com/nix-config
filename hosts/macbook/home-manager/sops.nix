@@ -23,9 +23,6 @@ in
       "host/private-key" = {
         path = "${homeDirectory}/.ssh/id_host-private-key";
       };
-      "bcb/services/service-account.json" = {
-        path = "${homeDirectory}/.config/bcb/secrets/services/service-account.json";
-      };
     };
   };
 }
