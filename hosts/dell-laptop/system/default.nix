@@ -8,6 +8,7 @@
     ./networking.nix
     ./dell-5490.nix
     ./gnome-desktop.nix
+    ./nfs-client.nix
   ];
 
   # Enable CUPS to print documents.
