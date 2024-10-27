@@ -84,7 +84,7 @@ in
 
     ];
     initialScript = pkgs.writeText "init-sql-script" ''
-     alter user ${configVars.username} with password '${adminPassword}';
+     alter user ${cfg.username} with password '${adminPassword}';
      alter user gitlab with password '${gitlabPassword}';
     '';
     authentication = pkgs.lib.mkOverride 10 ''

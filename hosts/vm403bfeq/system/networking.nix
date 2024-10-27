@@ -1,10 +1,10 @@
 {
 
   # Open ports in the firewall.
-  networking.firewall.enable = false;
-  # networking.firewall = {
-  #   allowedTCPPorts = [ 80 443 22 6443 5432 8888 ];
-  # };
+  #networking.firewall.enable = false;
+  networking.firewall = {
+     allowedTCPPorts = [ 80 443 22 6443 5432 8888 111 4000 4001 4002 20048 ];
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;

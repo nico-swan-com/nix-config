@@ -10,14 +10,15 @@
   programs.nicoswan = {
     utils.google-cloud-sdk.enable = true;
     utils.kubernetes = {
-      enable = true;
+      enable = false;
       additional-utils = true;
       admin-utils = true;
     };
   };
   # Install addition packages via home manager
   home.packages = with pkgs; [                      # Some fun 
-    lnav    
+    lnav   
+    systemctl-tui 
   ];
 
   # home = {
