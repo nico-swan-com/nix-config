@@ -1,14 +1,16 @@
 { config, pkgs, cfg, ... }:
 let
   dataDir = "/data/postgres/16";
-  #gitlabPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/gitlab/dbPassword".path})";
+  gitlabPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/gitlab/databasePasswordFile".path})";
+  adminPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/postgres/users/admin/password".path})";
 in
 {
-  # sops = {
-  #   secrets = {
-  #     "servers/cygnus-labs/gitlab/dbPassword" = {};
-  #   };
-  # };
+  sops = {
+    secrets = {
+      "servers/cygnus-labs/gitlab/databasePasswordFile" = {};
+      "servers/cygnus-labs/postgres/users/admin/password" = {};
+    };
+  };
 
   system.activationScripts.postgresData.text = ''
     mkdir -p ${dataDir}
@@ -33,7 +35,6 @@ in
           superuser = true;
           replication = true;
           login = true;
-          #          inherit = true;
           createrole = true;
           createdb = true;
           bypassrls = true;
@@ -82,9 +83,10 @@ in
       #    vault
 
     ];
-    #initialScript = pkgs.writeText "init-sql-script" ''
-    #  alter user  with password 'password';
-    #'';
+    initialScript = pkgs.writeText "init-sql-script" ''
+     alter user ${configVars.username} with password '${adminPassword}';
+     alter user gitlab with password '${gitlabPassword}';
+    '';
     authentication = pkgs.lib.mkOverride 10 ''
       #type    database DBuser  origin-address auth-methoda
       local    all      all                    trust
@@ -106,6 +108,10 @@ in
 
   };
 
+  # system.activationScripts.postActivation = {
+  #     enable = true;
+  #     text = '' ${createUserScript} '';
+  # };
 
   services.postgresqlBackup = {
     enable = true;

@@ -2,12 +2,11 @@
 
   imports = [
     #./traefik.nix
-    #./nginx.nix
+    ./nginx.nix
     #./virtualisation.nix
     #./minio.nix
-    #./gitlab.nix
-    #./gitlab.nix
-    ./kubernetes
+    ./gitlab/gitlab.nix
+    #./kubernetes
     ./databases/postgres.nix
     ./databases/redis.nix
   ];
