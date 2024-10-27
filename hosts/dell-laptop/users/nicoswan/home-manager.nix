@@ -4,14 +4,14 @@
   imports = [
 
     ../../../../common/home-manager/desktop/common-desktop.nix
-    
+
         # Terminal applictions
     ../../../../common/home-manager/terminal/lazygit.nix # Git UI
     ../../../../common/home-manager/terminal/lunarvim.nix # VIM IDE
 
 
-    # Software Development 
-    ../../../../common/home-manager/desktop/applications/vscode.nix
+    # Software Development
+    ../../../../common/home-manager/desktop/applications/vscode/vscode.nix
     ../../../../common/home-manager/development/node/node_20.nix
 
 
@@ -19,7 +19,7 @@
     ../../../../common/home-manager/desktop/applications/lens.nix
     ../../../../common/home-manager/desktop/applications/firefox.nix
     ../../../../common/home-manager/desktop/applications/google-chrome.nix
-    
+
     #../../../../common/home-manager/desktop/applications/libraoffice.nix
     #../../../../common/home-manager/desktop/applications/obsidian.nix
 
@@ -27,7 +27,7 @@
     # Just for fun
     ../../../../common/home-manager/terminal/fun.nix
   ];
- 
+
   programs.nicoswan = {
     utils.google-cloud-sdk.enable = true;
     utils.kubernetes = {
@@ -38,10 +38,11 @@
   };
   # Install addition packages via home manager
   home.packages = with pkgs; [
+    systemctl-tui
     gnome-extensions-cli
-    cmatrix                      # Some fun 
+    cmatrix                      # Some fun
     glow                         # Terminal marckdown viewer
-    lnav    
+    lnav
   ];
 
   # home = {

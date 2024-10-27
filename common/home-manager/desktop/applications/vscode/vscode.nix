@@ -38,6 +38,7 @@
 
       #vscode-conventional-commits
     ] ++ (with pkgs.vscode-extensions; [
+      jnoortheen.nix-ide
       #IDE
       dracula-theme.theme-dracula
       streetsidesoftware.code-spell-checker # Spell checker for VSCode
