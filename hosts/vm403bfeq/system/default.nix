@@ -5,6 +5,7 @@
     ./boot-loader.nix
     ./networking.nix
     ./nfs-server.nix
+    ./nfs-client.nix
   ];
 
   # Enable the OpenSSH daemon.
