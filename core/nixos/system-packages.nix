@@ -6,20 +6,13 @@
 
   environment.systemPackages = with pkgs; [
     # utils
-    # ncdu # disk usage uitls   
-    #rmlint # remove duplicate file
-    #rsync # fast copy
-    #rclone # fast copy to cloud providers like minio
-    #ntfy # terminal notification 
-
-    # utils
     fswatch # watch file system events
-#   git-extras # Some git extra command see https://github.com/tj/git-extras
-#   ncdu # disk usage uitls   
-#   rmlint # remove duplicate file
-#   rsync # fast copy
-#   rclone # fast copy to cloud providers like minio
-#   ntfy # terminal notification 
+    git-extras # Some git extra command see https://github.com/tj/git-extras
+    ncdu # disk usage uitls   
+    rmlint # remove duplicate file
+    rsync # fast copy
+    rclone # fast copy to cloud providers like minio
+#    ntfy # terminal notification 
 #   iotop # io monitoring
 
 

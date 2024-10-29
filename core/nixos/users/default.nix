@@ -1,4 +1,4 @@
-{ pkgs, inputs, config, lib, cfg, configLib, ... }:
+{ pkgs, inputs, config, lib, cfg, ... }:
 let
   ifTheyExist = groups: builtins.filter (group: builtins.hasAttr group config.users.groups) groups;
   userHashedPasswordFile = lib.optionalString (lib.hasAttr "sops-nix" inputs) config.sops.secrets."users/${cfg.username}/password".path;

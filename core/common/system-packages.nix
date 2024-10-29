@@ -23,12 +23,6 @@
     mc
 
     # utils
-    # ncdu # disk usage uitls   
-    #rmlint # remove duplicate file
-    #rsync # fast copy
-    #rclone # fast copy to cloud providers like minio
-
-    # utils
     ripgrep # recursively searches directories for a regex pattern
     jq # A lightweight and flexible command-line JSON processor
     yq-go # yaml processor https://github.com/mikefarah/yq

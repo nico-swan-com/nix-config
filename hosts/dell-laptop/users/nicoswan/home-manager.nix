@@ -1,4 +1,4 @@
-{ pkgs, configLib, ... }:
+{ pkgs, ... }:
 {
 
   imports = [
@@ -38,11 +38,16 @@
   };
   # Install addition packages via home manager
   home.packages = with pkgs; [
+    cryptomator 
+
     systemctl-tui
     gnome-extensions-cli
     cmatrix                      # Some fun
     glow                         # Terminal marckdown viewer
     lnav
+    devenv
+
+    nest-cli
   ];
 
   # home = {

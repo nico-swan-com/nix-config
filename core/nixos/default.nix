@@ -1,4 +1,3 @@
-{pkgs, cfg, ...}:
 {
   imports = [
     ./system-packages.nix
