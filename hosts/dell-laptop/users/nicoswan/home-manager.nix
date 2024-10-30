@@ -38,17 +38,17 @@
   };
   # Install addition packages via home manager
   home.packages = with pkgs; [
-    cryptomator 
-
     systemctl-tui
     gnome-extensions-cli
     cmatrix                      # Some fun
     glow                         # Terminal marckdown viewer
     lnav
-    devenv
 
+  ] ++ (with pkgs.unstable; [
+    devenv
+    cryptomator
     nest-cli
-  ];
+  ]);
 
   # home = {
   #   file.".kube/cygnus-labs-kubernetes-ca.pem".source = "${config.sops.secrets."ca.pem".path}";

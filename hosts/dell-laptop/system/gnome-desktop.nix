@@ -13,6 +13,8 @@
     gnome-extension-manager
   ] ++ (with pkgs.gnomeExtensions; [
     clipboard-history
+    compiz-windows-effect
+    desktop-cube
   ]);
 
   # Exclde packages installed by default

@@ -1,11 +1,11 @@
-{ pkgs, cfg, ... }:
+{ lib, ... }:
 {
   imports = [
     # Core must have system installations
     ./macos-settings.nix
   ];
 
-  nixpkgs.hostPlatform = mkForce "aarch64-darwin";
+  nixpkgs.hostPlatform = lib.mkForce "aarch64-darwin";
   system.stateVersion = 5;
 
   programs = {

@@ -2,7 +2,7 @@
 {
   imports = [
     ./docker.nix
-    ./podman.nix
+    #./podman.nix
   ];
   # Enable common container config files in /etc/containers
   virtualisation.containers.enable = true;

@@ -1,6 +1,7 @@
 {pkgs, ...}:
 {
   environment.systemPackages = with pkgs; [
+    zsh-history-substring-search
     zsh
     vim
     sops

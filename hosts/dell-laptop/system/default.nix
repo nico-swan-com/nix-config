@@ -1,4 +1,3 @@
-{ lib, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -13,6 +12,4 @@
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
-
-  # nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }

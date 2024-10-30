@@ -3,7 +3,7 @@
 
   programs.vscode = {
     enable = true;
-    #package = pkgs.vscodium;
+    package = pkgs.unstable.vscode;
     mutableExtensionsDir = true;
     #enableExtensionUpdateCheck = true;
     #enableUpdateCheck = true;
