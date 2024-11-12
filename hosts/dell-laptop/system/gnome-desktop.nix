@@ -11,14 +11,14 @@
     libgtop
     gparted
     gnome-extension-manager
-  ] ++ (with pkgs.gnomeExtensions; [
+  ] ++ (with pkgs.unstable.gnomeExtensions; [
     clipboard-history
     compiz-windows-effect
     desktop-cube
   ]);
 
   # Exclde packages installed by default
-  environment.gnome.excludePackages = (with pkgs; [
+  environment.gnome.excludePackages = (with pkgs.unstable; [
     gnome-photos
     gnome-tour
     gedit # text editor
