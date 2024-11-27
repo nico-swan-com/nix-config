@@ -16,10 +16,15 @@
     };
   };
   # Install addition packages via home manager
-  home.packages = with pkgs; [                      # Some fun 
+  home.packages = with pkgs; [
+    (writeShellScriptBin "update-kube-admin" (builtins.readFile scripts/update-kube-admin.sh))                      # Some fun 
+    (writeShellScriptBin "remove-kubernetes" (builtins.readFile scripts/remove-kubernetes.sh))                      # Some fun 
     lnav   
     systemctl-tui 
   ];
+
+
+
 
   # home = {
   #   file.".kube/cygnus-labs-kubernetes-ca.pem".source = "${config.sops.secrets."ca.pem".path}";

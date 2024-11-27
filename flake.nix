@@ -24,7 +24,7 @@
     };
 
     # Nix User Repository
-    nur.url = github:nix-community/NUR;
+    nur.url = "github:nix-community/NUR";
     firefox-addons = {
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -1,0 +1,5 @@
+image:
+  tag: <current agentk version>
+config:
+  token: <your_token> 
+  kasAddress: 

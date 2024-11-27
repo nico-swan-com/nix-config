@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
   gitlabPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/gitlab/databasePasswordFile".path})";
   createUserScript = pkgs.writeScript "createGitlabUser" ''
@@ -18,6 +18,12 @@ let
   '';
 in
 {
+  imports = [
+    ./runners/default-runner.nix
+    ./runners/nix-runner.nix
+    ./runners/docker-images.nix
+    ./runners/node.nix
+  ];
   sops = {
     secrets = {
       "servers/cygnus-labs/gitlab/smtpPasswordFile" = { 
@@ -48,12 +54,30 @@ in
         owner = "git";
         group = "git";
       };
+      "servers/cygnus-labs/gitlab/secrets/registryCertFile" = { 
+        owner = "docker-registry";
+        group = "git";
+        mode = "0440";
+      };
+      "servers/cygnus-labs/gitlab/secrets/registryKeyFile" = { 
+        owner = "docker-registry";
+        group = "git";
+        mode = "0440";
+      };
     };
   };
 
-  #services.openssh.enable = true;
+  environment.systemPackages = with pkgs.unstable; [
+    glab
+    fluxcd
+  ];
 
-  #systemd.services.gitlab-backup.environment.BACKUP = "dump";
+
+  
+  #services.openssh.enable = true;
+  boot.kernel.sysctl."net.ipv4.ip_forward" = lib.mkForce true; 
+
+  #virtualisation.docker.enable = true;
 
   security.acme = {
     defaults.email = "nico.swan@cygnus-labs.com";
@@ -73,14 +97,16 @@ in
         forceSSL = true;
         locations."/".proxyPass = "http://unix:/run/gitlab/gitlab-workhorse.socket";
       };
-      # "gitlab.cygnus-labs.com" = {
-      #   #enableACME = true;
-      #   #forceSSL = true;
-      #   locations."/".proxyPass = "http://localhost:8080";
-      # };
-      # localhost = {
-      #   locations."/".proxyPass = "http://unix:/run/gitlab/gitlab-workhorse.socket";
-      # };
+       "registry.cygnus-labs.com" = {
+          enableACME = true;
+          forceSSL = true;
+          locations."/" = {
+            extraConfig = ''
+              client_max_body_size 0;
+            '';
+            proxyPass = "http://127.0.0.1:${toString config.services.gitlab.registry.port}";
+          };
+       };
     };
   };
 
@@ -113,6 +139,16 @@ in
       otpFile = "${config.sops.secrets."servers/cygnus-labs/gitlab/secrets/otpFile".path}";
       jwsFile = "${config.sops.secrets."servers/cygnus-labs/gitlab/secrets/jwsFile".path}";
     };
+    registry = {
+      enable = true;
+      port = 5000;
+      certFile = "${config.sops.secrets."servers/cygnus-labs/gitlab/secrets/registryCertFile".path}";
+      keyFile = "${config.sops.secrets."servers/cygnus-labs/gitlab/secrets/registryKeyFile".path}";
+      externalPort = 443;
+      defaultForProjects = true;
+      externalAddress = "registry.cygnus-labs.com";
+    };
+
     extraConfig = {
       gitlab = {
         email_from = "gitlab-no-reply@cygnus-labs.com";
@@ -120,6 +156,32 @@ in
         email_reply_to = "gitlab-no-reply@cygnus-labs.com";
         default_projects_features = { builds = false; };
       };
+      gitlab_kas = {
+        enabled = true;
+        # The URL to the external KAS API (used by the Kubernetes agents)
+        #external_url= "wss://kas.cygnus-labs.com";
+
+        # The URL to the internal KAS API (used by the GitLab backend)
+        internal_url = "grpc://120.0.0.1:8153";
+
+        # The URL to the Kubernetes API proxy (used by GitLab users)
+        #external_k8s_proxy_url = "https://127.0.0.1:8154"; # default: nil
+      };
+
     };
+
+
+
+#    backup = {
+#      uploadOptions
+#      startAt
+#      skip
+#      path
+#      keepTime
+#    };
   };
+
+  systemd.services.gitlab-backup.environment.BACKUP = "dump";
+
+
 }

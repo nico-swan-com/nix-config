@@ -33,7 +33,7 @@ in
     "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
     "d /data/openebs/local 0755 root root"
   ];
-  virtualisation.docker.logDriver = "json-file";
+  #virtualisation.docker.logDriver = "json-file";
 
   services.openiscsi = {
     enable = true;

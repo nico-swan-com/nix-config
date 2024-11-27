@@ -1,4 +1,4 @@
-{ cfg, ... }:
+{ pkgs, ... }:
 {
   imports =
     [
@@ -12,6 +12,9 @@
       ./extra-users.nix
 
     ];
+  environment.systemPackages =  with pkgs; [
+     clang
+  ];
 
   virtualisation.vmVariant = {
     # following configuration is added only when building VM with build-vm

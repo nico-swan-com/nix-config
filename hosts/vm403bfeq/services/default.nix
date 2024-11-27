@@ -3,10 +3,10 @@
   imports = [
     #./traefik.nix
     ./nginx.nix
-    #./virtualisation.nix
+    ./virtualisation.nix
     #./minio.nix
     ./gitlab/gitlab.nix
-    #./kubernetes
+    ./kubernetes
     ./databases/postgres.nix
     ./databases/redis.nix
   ];

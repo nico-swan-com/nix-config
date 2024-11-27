@@ -1,0 +1,17 @@
+repositories:
+  - name: gitlab 
+    url: https://charts.gitlab.io
+
+releases: 
+  - name: gitlab-agent
+    namespace: gitlab-agent
+    chart: gitlab/gitlab-agent
+    version: 4.1.0
+    atomic: true
+    timeout: 300
+    labels:
+      app: gitlab-agent
+      tier: infrastructure
+    values:
+      - values_gitlab_agent.yaml
+
