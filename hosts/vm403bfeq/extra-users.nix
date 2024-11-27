@@ -11,19 +11,14 @@ in
       "users/vmbfeqcy/password".neededForUsers = true;
       "users/deployer/password".neededForUsers = true;
       "users/deployer/private-key" = {
-        path = lib.optionalString (lib.hasAttr "sops-nix" inputs) config.sops.secrets."users/deployer/private-key".path;
-      };
+         owner = "deployer";
+         group = "deployer";
+         path = "/home/deployer/.ssh/id_deployer";
+       };
     };
   };
 
-  users.groups.deployer = {
-     members = ifTheyExist [
-      "docker"
-      "podman"
-      "git"
-    ];
-  };
-  
+  users.groups.deployer = {};
 
   users.users.vmbfeqcy = {
     isNormalUser = true;
@@ -49,7 +44,15 @@ in
     openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICVO4sSaq5GG3MHLCnYu3GfCO5e75RrpTnOmAXlBj6RO deployer"
     ];
+    extraGroups = [
+      "wheel"
+    ] ++ ifTheyExist [
+      "docker"
+      "podman"
+      "git"
+      "networkmanager"
+    ];
     group = "deployer";
-    shell = pkgs.zsh;
+    
   };
 }

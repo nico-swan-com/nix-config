@@ -1,10 +1,14 @@
 {
 
   # Open ports in the firewall.
-  # networking.firewall.enable = false;
-  networking.firewall = {
-     allowedTCPPorts = [ 80 443 22 6443 5432 8888 111 4000 4001 4002 20048 5000 8153 8154 ];
-  };
+   networking.firewall.enable = false;
+  # networking.firewall = {
+  #    allowedTCPPorts = [ 80 443 22 6443 5432 8888 111 4000 4001 4002 20048 5000 8153 8154  8080];
+  #    extraCommands = ''
+  #       iptables -I INPUT 1 -i docker0 -p tcp -d 172.17.0.1 -j ACCEPT
+  #       iptables -I INPUT 2 -i docker0 -p udp -d 172.17.0.1 -j ACCEPT
+  #     '';
+  # };
 
   # Enable networking
   networking.networkmanager.enable = true;

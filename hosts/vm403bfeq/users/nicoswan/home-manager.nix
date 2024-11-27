@@ -20,7 +20,7 @@
     (writeShellScriptBin "update-kube-admin" (builtins.readFile scripts/update-kube-admin.sh))                      # Some fun 
     (writeShellScriptBin "remove-kubernetes" (builtins.readFile scripts/remove-kubernetes.sh))                      # Some fun 
     lnav   
-    systemctl-tui 
+    systemctl-tui
   ];
 
 

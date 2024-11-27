@@ -19,7 +19,7 @@ let
 in
 {
   imports = [
-    ./runners/default-runner.nix
+    #./runners/default-runner.nix
     ./runners/nix-runner.nix
     ./runners/docker-images.nix
     ./runners/node.nix
@@ -95,18 +95,24 @@ in
       "git.cygnus-labs.com" = {
         enableACME = true;
         forceSSL = true;
-        locations."/".proxyPass = "http://unix:/run/gitlab/gitlab-workhorse.socket";
+        locations."/" = {
+          proxyPass = "http://unix:/run/gitlab/gitlab-workhorse.socket";
+        };
+        locations."/-/kubernetes-agent" = {
+           proxyWebsockets = true;
+           proxyPass = "";
+        };
       };
-       "registry.cygnus-labs.com" = {
-          enableACME = true;
-          forceSSL = true;
-          locations."/" = {
-            extraConfig = ''
-              client_max_body_size 0;
-            '';
-            proxyPass = "http://127.0.0.1:${toString config.services.gitlab.registry.port}";
-          };
-       };
+      "registry.cygnus-labs.com" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/" = {
+          extraConfig = ''
+            client_max_body_size 0;
+          '';
+          proxyPass = "http://127.0.0.1:${toString config.services.gitlab.registry.port}";
+        };
+      };
     };
   };
 
@@ -149,6 +155,13 @@ in
       externalAddress = "registry.cygnus-labs.com";
     };
 
+#    extraGitlabRb = ''
+#       gitlab_kas['internal_api_listen_network'] = 'unix'
+#       gitlab_kas['internal_api_listen_address'] = '/run/gitlab/gitlab-kas/sockets/internal-api.socket'
+#       gitlab_kas['private_api_listen_network'] = 'unix'
+#       gitlab_kas['private_api_listen_address'] = '/run/gitlab/gitlab-kas/sockets/private-api.socket'
+#    ''; 
+
     extraConfig = {
       gitlab = {
         email_from = "gitlab-no-reply@cygnus-labs.com";
@@ -159,13 +172,13 @@ in
       gitlab_kas = {
         enabled = true;
         # The URL to the external KAS API (used by the Kubernetes agents)
-        #external_url= "wss://kas.cygnus-labs.com";
+        external_url = "wss://git.cygnus-labs.com/-/kubernetes-agent";
 
         # The URL to the internal KAS API (used by the GitLab backend)
-        internal_url = "grpc://120.0.0.1:8153";
+        internal_url = "grpc://localhost:8153";
 
         # The URL to the Kubernetes API proxy (used by GitLab users)
-        #external_k8s_proxy_url = "https://127.0.0.1:8154"; # default: nil
+        #external_k8s_proxy_url = "https://102.135.163.95:8154"; # default: nil
       };
 
     };
