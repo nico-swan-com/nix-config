@@ -116,10 +116,10 @@
     "nix-secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1733246006,
-        "narHash": "sha256-FSIyZzgTM4IxVg+8Ob/ks1RCQwra5ehWtkS/YWX/+wU=",
+        "lastModified": 1733247032,
+        "narHash": "sha256-X6u8DYFsjBmqo3ylsL3GYPqum8Z2BH+iJBKdAvlAJlc=",
         "ref": "main",
-        "rev": "c1bf040a0bdde3eecbb1c1aeaf4e8b39abe7373b",
+        "rev": "7444c47d286c827337fc6dfc88b281bbfa395054",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/nico-swan-com/nix-secrets.git"
