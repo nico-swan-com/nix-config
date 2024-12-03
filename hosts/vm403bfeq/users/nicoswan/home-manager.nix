@@ -10,7 +10,7 @@
   programs.nicoswan = {
     utils.google-cloud-sdk.enable = true;
     utils.kubernetes = {
-      enable = false;
+      enable = true;
       additional-utils = true;
       admin-utils = true;
     };

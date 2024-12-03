@@ -1,9 +1,35 @@
+{ config, pkgs, ... }:
+
+let
+  cloudflareEnvFile = "${config.sops.secrets."servers/cygnus-labs/services/cloudflare/envFile".path}";
+  cloudflareEmail = "nico.swan@cygnus-labs.com";
+in
 {
 
-  security.acme = {
-    defaults.email = "nico.swan@cygnus-labs.com";
-    acceptTerms = true;
+  sops = {
+    secrets = {
+      "servers/cygnus-labs/services/cloudflare/email" = { };
+      "servers/cygnus-labs/services/cloudflare/envFile" = { };
+    };
   };
+  
+
+  security.acme = {
+    acceptTerms = true;
+    defaults.email = "${cloudflareEmail}";
+    certs."cygnus-labs.com" = {
+      domain = "cygnus-labs.com";
+      dnsProvider = "cloudflare";
+      dnsPropagationCheck = true;
+      credentialsFile = "${cloudflareEnvFile}";
+      group = "nginx";
+      extraDomainNames = [ 
+        "*.cygnus-labs.com" 
+        "*.services.cygnus-labs.com" 
+        "*.development.cygnus-labs.com" 
+        "*.production.cygnus-labs.com"   ];
+    };
+  };  
 
   services.nginx = {
     enable = true;
@@ -12,16 +38,13 @@
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
 
-    # virtualHosts = {
-    #   "*.services.production.cygnus-labs.com" = {
-    #     #forceSSL = true;
-    #     #enableACME = true;
-    #     locations."/".proxyPass = "http://localhost:10080";
-    #   };
-    # };
+    virtualHosts = {
+      "~^(?<subdomain>.+)\\.(development|production|services)\\.cygnus-labs\\.com$" = {
+        useACMEHost = "cygnus-labs.com";
+        forceSSL = true;
+        locations."/".proxyPass = "https://127.0.0.1:32060";
+      };
+    };
   };
-
-
-
-
 }
+ 

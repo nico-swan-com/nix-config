@@ -13,7 +13,7 @@
 CA_CERT=$(sudo cat /var/lib/kubernetes/secrets/ca.pem | base64 -w 0)
 CLIENT_CERT=$(sudo cat /var/lib/kubernetes/secrets/cluster-admin.pem | base64 -w 0)
 CLIENT_KEY=$(sudo cat /var/lib/kubernetes/secrets/cluster-admin-key.pem | base64 -w 0)
-CLUSTER_IP="102.135.163.95"
+HOST="$(hostname -f)"
 
 # Generate kubeconfig content
 cat <<EOF > ~/.kube/config
@@ -21,14 +21,14 @@ apiVersion: v1
 clusters:
 - cluster:
     certificate-authority-data: $CA_CERT
-    server: https://$CLUSTER_IP:6443
-  name: local
+    server: https://$HOST:6443
+  name: $HOST
 contexts:
 - context:
-    cluster: local
+    cluster: $HOST
     user: cluster-admin
-  name: local
-current-context: local
+  name: $HOST
+current-context: $HOST
 kind: Config
 preferences: {}
 users:

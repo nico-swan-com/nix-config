@@ -3,7 +3,7 @@ let
   # When using easyCerts=true the IP Address must resolve to the master on creation.
   # So use simply 127.0.0.1 in that case. Otherwise you will have errors like this https://github.com/NixOS/nixpkgs/issues/59364
   kubeMasterIP = "102.135.163.95";
-  kubeMasterHostname = "api.kubernetes";
+  kubeMasterHostname = "vm403bfeq.cygnus-labs.com";
   kubeMasterAPIServerPort = 6443;
 
   # keyFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/keyFile".path}";

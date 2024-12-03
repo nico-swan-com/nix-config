@@ -19,6 +19,7 @@ let
 in
 {
   imports = [
+    ./runners/infrastructure/alpine.nix
     #./runners/default-runner.nix
     ./runners/nix-runner.nix
     ./runners/docker-images.nix
@@ -79,32 +80,19 @@ in
 
   #virtualisation.docker.enable = true;
 
-  security.acme = {
-    defaults.email = "nico.swan@cygnus-labs.com";
-    acceptTerms = true;
-  };
 
   services.nginx = {
-    enable = true;
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
 
     virtualHosts = {
       "git.cygnus-labs.com" = {
-        enableACME = true;
+        useACMEHost = "cygnus-labs.com";
         forceSSL = true;
         locations."/" = {
           proxyPass = "http://unix:/run/gitlab/gitlab-workhorse.socket";
         };
-        locations."/-/kubernetes-agent" = {
-           proxyWebsockets = true;
-           proxyPass = "";
-        };
       };
       "registry.cygnus-labs.com" = {
-        enableACME = true;
+        useACMEHost = "cygnus-labs.com";
         forceSSL = true;
         locations."/" = {
           extraConfig = ''
@@ -169,17 +157,17 @@ in
         email_reply_to = "gitlab-no-reply@cygnus-labs.com";
         default_projects_features = { builds = false; };
       };
-      gitlab_kas = {
-        enabled = true;
-        # The URL to the external KAS API (used by the Kubernetes agents)
-        external_url = "wss://git.cygnus-labs.com/-/kubernetes-agent";
-
-        # The URL to the internal KAS API (used by the GitLab backend)
-        internal_url = "grpc://localhost:8153";
-
-        # The URL to the Kubernetes API proxy (used by GitLab users)
-        #external_k8s_proxy_url = "https://102.135.163.95:8154"; # default: nil
-      };
+#      gitlab_kas = {
+#        enabled = true;
+#        # The URL to the external KAS API (used by the Kubernetes agents)
+#        external_url = "wss://git.cygnus-labs.com/-/kubernetes-agent";
+#
+#        # The URL to the internal KAS API (used by the GitLab backend)
+#        internal_url = "grpc://localhost:8153";
+#
+#        # The URL to the Kubernetes API proxy (used by GitLab users)
+#        #external_k8s_proxy_url = "https://102.135.163.95:8154"; # default: nil
+#      };
 
     };
 
