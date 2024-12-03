@@ -19,7 +19,9 @@ let
 in
 {
   imports = [
+    ./runners/instance/docker-images.nix
     ./runners/infrastructure/alpine.nix
+    ./runners/infrastructure/docker-images.nix
     #./runners/default-runner.nix
     ./runners/nix-runner.nix
     ./runners/docker-images.nix
