@@ -53,6 +53,14 @@
     # Declarative partitioning and formatting
     disko.url = "github:nix-community/disko";
 
+    #neovim
+    # Neve.url = "github:redyf/Neve";
+    nixvim = {
+        url = "github:nix-community/nixvim";
+        #url = "github:nix-community/nixvim/nixos-24.05";
+        # If using a stable channel you can use `url = "github:nix-community/nixvim/nixos-<version>"`
+        inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
   };
 
   outputs =
@@ -63,6 +71,7 @@
     , nix-darwin
     , home-manager
     , disko
+    , nixvim
     , ...
     } @inputs:
     let
@@ -94,8 +103,12 @@
 
       x86_64-config = lib.recursiveUpdate commonConfig {
           system = "x86_64-linux";
+          # sharedHMModules = [
+          #   nixvim.homeManagerModules.nixvim
+          # ];
           extraModules = [
-            inputs.nur.nixosModules.nur 
+            inputs.nur.nixosModules.nur
+            #
           ];
       };
 

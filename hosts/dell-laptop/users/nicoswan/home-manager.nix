@@ -5,12 +5,14 @@
 
     ../../../../common/home-manager/desktop/common-desktop.nix
 
-        # Terminal applictions
+    # Terminal applictions
     ../../../../common/home-manager/terminal/lazygit.nix # Git UI
-    ../../../../common/home-manager/terminal/lunarvim.nix # VIM IDE
-
+    ../../../../common/home-manager/development/lunarvim # VIM IDE
+    #../../../../common/home-manager/development/neovim # NEOVIM IDE
+    #../../../../common/home-manager/development/nixvim # NEOVIM IDE
 
     # Software Development
+    ../../../../common/home-manager/development/github.nix
     ../../../../common/home-manager/desktop/applications/vscode/vscode.nix
     ../../../../common/home-manager/development/node/node_20.nix
 
@@ -48,6 +50,8 @@
     devenv
     cryptomator
     nest-cli
+    neovim
+    gcc
   ]);
 
   # home = {

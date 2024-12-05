@@ -1,9 +1,13 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 {
-
+  nix = {
+    settings = {
+      auto-optimise-store = lib.mkForce false;
+    };
+  };  
   # Auto update
   system.autoUpgrade = {
-    enable = true;
+    enable = false;
     # To see the status of the timer run
     #  systemctl status nixos-upgrade.timer
 
