@@ -4,10 +4,10 @@
   };
 
   selection.save_to_clipboard = true;
-  live_config_reload = true;
+  general.live_config_reload = true;
 
 
-  shell = {
+  terminal.shell = {
     program = "/run/current-system/sw/bin/zsh";
     args = [ "-l" "-c" "tmux" ];
   };
