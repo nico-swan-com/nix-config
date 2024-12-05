@@ -4,13 +4,13 @@
   imports = [
     # Terminal applictions
     ../../../../common/home-manager/terminal/lazygit.nix # Git UI
-    ../../../../common/home-manager/terminal/lunarvim.nix # VIM IDE
   ];
  
   # Install addition packages via home manager
-  home.packages = with pkgs; [
+  home.packages = with pkgs.unstable; [
     systemctl-tui
-    lnav    
+    lnav 
+    lunarvim
   ];
 
   # home = {

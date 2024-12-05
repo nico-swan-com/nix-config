@@ -3,7 +3,7 @@
   description = "read aloud - is a script that reads the clibboard and reads it aloud for the user.";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     flake-utils.url = "github:numtide/flake-utils";
 
     defaultVoice = {

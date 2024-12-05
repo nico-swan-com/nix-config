@@ -7,7 +7,7 @@
 
     # Terminal applictions
     ../../../../common/home-manager/terminal/lazygit.nix # Git UI
-    ../../../../common/home-manager/development/lunarvim # VIM IDE
+    #../../../../common/home-manager/development/lunarvim # VIM IDE
     #../../../../common/home-manager/development/neovim # NEOVIM IDE
     #../../../../common/home-manager/development/nixvim # NEOVIM IDE
 
@@ -48,6 +48,7 @@
 
   ] ++ (with pkgs.unstable; [
     devenv
+    lunarvim
     cryptomator
     nest-cli
     neovim

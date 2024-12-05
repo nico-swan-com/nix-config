@@ -7,7 +7,7 @@
     hardware.url = "github:nixos/nixos-hardware";
 
     # NixOS
-    nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable"; # also see 'unstable-packages' overlay at 'overlays/default.nix"
 
 
@@ -19,7 +19,7 @@
 
     # User packages
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -55,12 +55,12 @@
 
     #neovim
     # Neve.url = "github:redyf/Neve";
-    nixvim = {
-        url = "github:nix-community/nixvim";
-        #url = "github:nix-community/nixvim/nixos-24.05";
-        # If using a stable channel you can use `url = "github:nix-community/nixvim/nixos-<version>"`
-        inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    #nixvim = {
+    #    #url = "github:nix-community/nixvim";
+    #    url = "github:nix-community/nixvim/nixos-24.11";
+    #    # If using a stable channel you can use `url = "github:nix-community/nixvim/nixos-<version>"`
+    #    inputs.nixpkgs.follows = "nixpkgs-unstable";
+    #};
   };
 
   outputs =
@@ -71,7 +71,7 @@
     , nix-darwin
     , home-manager
     , disko
-    , nixvim
+    #, nixvim
     , ...
     } @inputs:
     let

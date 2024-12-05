@@ -24,7 +24,7 @@
     gedit # text editor
   ]) ++ (with pkgs.gnomeExtensions; [
     system-monitor
-  ]) ++ (with pkgs.gnome; [
+  ]) ++ (with pkgs; [
     cheese # webcam tool
     gnome-music
     gnome-terminal
@@ -43,7 +43,7 @@
   environment.variables = {
     GI_TYPELIB_PATH = "/run/current-system/sw/lib/girepository-1.0";
   };
-  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
+  services.udev.packages = with pkgs; [ gnome-settings-daemon ];
 
   # Auto login configurations
   # services.displayManager.autoLogin.enable = true;
@@ -67,7 +67,7 @@
 
     extraGSettingsOverridePackages = [
       pkgs.gsettings-desktop-schemas # for org.gnome.desktop
-      pkgs.gnome.gnome-shell # for org.gnome.shell
+      pkgs.gnome-shell # for org.gnome.shell
     ];
   };
 
