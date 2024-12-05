@@ -9,6 +9,7 @@
     ./kubernetes
     ./databases/postgres.nix
     ./databases/redis.nix
+    ./keycloak
   ];
 
 }

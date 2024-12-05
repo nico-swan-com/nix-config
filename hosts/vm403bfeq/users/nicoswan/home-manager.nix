@@ -4,7 +4,7 @@
   imports = [
     # Terminal applictions
     ../../../../common/home-manager/terminal/lazygit.nix # Git UI
-    ../../../../common/home-manager/terminal/lunarvim.nix # VIM IDE
+    #../../../../common/home-manager/terminal/lunarvim.nix # VIM IDE
   ];
  
   programs.nicoswan = {
@@ -21,7 +21,9 @@
     (writeShellScriptBin "remove-kubernetes" (builtins.readFile scripts/remove-kubernetes.sh))                      # Some fun 
     lnav   
     systemctl-tui
-  ];
+  ] ++ ( with pkgs.unstable; [
+    lunarvim
+  ]);
 
 
 

@@ -3,12 +3,16 @@ let
   dataDir = "/data/postgres/16";
   gitlabPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/gitlab/databasePasswordFile".path})";
   adminPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/postgres/users/admin/password".path})";
+  keycloakUsername = "$(cat ${config.sops.secrets."servers/cygnus-labs/keycloak/dbUsername".path})";
+  keycloakPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/keycloak/dbPassword".path})";
 in
 {
   sops = {
     secrets = {
       "servers/cygnus-labs/gitlab/databasePasswordFile" = {};
       "servers/cygnus-labs/postgres/users/admin/password" = {};
+      "servers/cygnus-labs/keycloak/dbUsername" = {};
+      "servers/cygnus-labs/keycloak/dbPassword" = {};
     };
   };
 
@@ -26,7 +30,7 @@ in
       port = 5432;
       listen_addresses = "*";
     };
-    ensureDatabases = [ "${cfg.username}" "test" "gitlab" ];
+    ensureDatabases = [ "${cfg.username}" "keycloak" "gitlab" ];
     ensureUsers = [
       {
         name = cfg.username;
@@ -49,7 +53,7 @@ in
         };
       }
     ];
-    extraPlugins = ps: with ps; [
+    extensions = ps: with ps; [
       rum
       timescaledb
       pgroonga
@@ -86,6 +90,7 @@ in
     initialScript = pkgs.writeText "init-sql-script" ''
      alter user ${cfg.username} with password '${adminPassword}';
      alter user gitlab with password '${gitlabPassword}';
+     alter user ${keycloakUsername} with password '${keycloakPassword}';
     '';
     authentication = pkgs.lib.mkOverride 10 ''
       #type    database DBuser  origin-address auth-methoda

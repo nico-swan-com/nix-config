@@ -1,4 +1,4 @@
-{pkgs, ...}:{
+{pkgs, lib, ...}:{
  
   home.packages = with pkgs; [
     delta
@@ -12,7 +12,7 @@
        git = {
           paging = {
               colorArg = "never";
-              pager= "delta --dark --paging=never --color-only --line-numbers";
+              pager = lib.mkDefault "delta --dark --paging=never --color-only --line-numbers";
               # pager: ydiff -p cat -s --wrap --width={{columnWidth}}   
               useConfig = false;
             };
