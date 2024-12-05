@@ -4,7 +4,7 @@
   imports = [
     # Terminal applictions
     ../../../../common/home-manager/terminal/lazygit.nix # Git UI
-    ../../../../common/home-manager/terminal/lunarvim.nix # VIM IDE
+    #../../../../common/home-manager/terminal/lunarvim.nix # VIM IDE
   ];
  
   programs.nicoswan = {
@@ -16,8 +16,9 @@
     };
   };
   # Install addition packages via home manager
-  home.packages = with pkgs; [                      # Some fun 
-    lnav    
+  home.packages = with pkgs.unstable; [                      # Some fun 
+    lnav 
+    lunarvim   
   ];
 
   # home = {
