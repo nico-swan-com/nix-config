@@ -1,25 +1,25 @@
 {
-  env = {
-    "TERM" = "xterm-256color";
-  };
+
+  env = { "TERM" = "xterm-256color"; };
 
   selection.save_to_clipboard = true;
   general.live_config_reload = true;
-
 
   terminal.shell = {
     program = "/run/current-system/sw/bin/zsh";
     args = [ "-l" "-c" "tmux" ];
   };
 
-  mouse.bindings = [
-    { mouse = "Right"; action = "Paste"; }
-  ];
+  mouse.bindings = [{
+    mouse = "Right";
+    action = "Paste";
+  }];
 
   window = {
-    padding.x = 0;
-    padding.y = 0;
+    padding.x = 2;
+    padding.y = 2;
     decorations = "Full";
+    #decorations = "None";
     blur = true;
     opacity = 0.95;
     dimensions = {
@@ -35,8 +35,14 @@
 
   font = {
     size = 12.0;
-    normal = { family = "FiraCode Nerd Font"; style = "Light"; };
-    bold = { family = "FiraCode Nerd Font"; style = "Semibold"; };
+    normal = {
+      family = "FiraCode Nerd Font";
+      style = "Light";
+    };
+    bold = {
+      family = "FiraCode Nerd Font";
+      style = "Semibold";
+    };
     italic.family = "FiraCode Nerd Font";
   };
 
@@ -72,54 +78,52 @@
     {
       key = "LBracket";
       mods = "Command";
-      chars = "\x5c\x70";
+      chars = "x5cx70";
     }
     # Use command + ] - to go to previous tmux window
     {
       key = "RBracket";
       mods = "Command";
-      chars = "\x5c\x6e";
+      chars = "x5cx6e";
     }
     # ctrl-^ doesn't work in some terminals like alacritty
     {
       key = "Key6";
       mods = "Control";
-      chars = "\x1e";
+      chars = "x1e";
     }
 
   ];
 
-  colors = {
-    primary = {
-      background = "#1a1b26";
-      foreground = "#a9b1d6";
-    };
-    # Normal colors
-    normal = {
-      black = "#32344a";
-      red = "#f7768e";
-      green = "#9ece6a";
-      yellow = "#e0af68";
-      blue = "#7aa2f7";
-      magenta = "#ad8ee6";
-      cyan = "#449dab";
-      white = "#787c99";
-    };
-    # Bright colors
-    bright = {
-      black = "#444b6a";
-      red = "#ff7a93";
-      green = "#b9f27c";
-      yellow = "#ff9e64";
-      blue = "#7da6ff";
-      magenta = "#bb9af7";
-      cyan = "#0db9d7";
-      white = "#acb0d0";
-    };
-  };
+  #  colors = {
+  #    primary = {
+  #      background = "#1a1b26";
+  #      foreground = "#a9b1d6";
+  #    };
+  #    # Normal colors
+  #    normal = {
+  #      black = "#32344a";
+  #      red = "#f7768e";
+  #      green = "#9ece6a";
+  #      yellow = "#e0af68";
+  #      blue = "#7aa2f7";
+  #      magenta = "#ad8ee6";
+  #      cyan = "#449dab";
+  #      white = "#787c99";
+  #    };
+  #    # Bright colors
+  #    bright = {
+  #      black = "#444b6a";
+  #      red = "#ff7a93";
+  #      green = "#b9f27c";
+  #      yellow = "#ff9e64";
+  #      blue = "#7da6ff";
+  #      magenta = "#bb9af7";
+  #      cyan = "#0db9d7";
+  #      white = "#acb0d0";
+  #    };
+  #  };
 }
-
-
 
 # custom_cursor_colors: true
 # colors:
