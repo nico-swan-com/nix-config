@@ -1,3 +1,6 @@
-{
-  services.onedrive.enable = true;
+{ pkgs, ... }: {
+  services.onedrive = {
+    enable = true;
+    package = pkgs.unstable.onedrive;
+  };
 }
