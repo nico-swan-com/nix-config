@@ -1,13 +1,14 @@
-   { lib, builtins, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }: {
+  home.packages = with pkgs.unstable; [ gcc neovim ];
 
-let
-  # Replace with the URL of your GitHub repository
-  repo = builtins.fetchGit {
-    url = "git+ssh://git@github.com:nico-swan-com/nvim.git?ref=main&shallow=1";
-  };
-in
-{
-  # Import the contents into ~/.config/nvim
-  homeDirectory."nvim" = lib.concatStrings [ pkgs.homeDirectory."nvim" repo ];
+  #  home.activation.copy-nvim-config =
+  #    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  #
+  #      #mv ${config.home.homeDirectory}/.config/nvim ${config.home.homeDirectory}/.config/nvim.bak 
+  #
+  #      mkdir -p ${config.home.homeDirectory}/.config/nvim
+  #
+  #      cp -rn ${inputs.nicoswan-nvim-config}/* ${config.home.homeDirectory}/.config/nvim/
+  #    '';
 }
 
