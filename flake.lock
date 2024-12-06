@@ -78,11 +78,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1733050161,
-        "narHash": "sha256-lYnT+EYE47f5yY3KS/Kd4pJ6CO9fhCqumkYYkQ3TK20=",
+        "lastModified": 1733482664,
+        "narHash": "sha256-ZD+h1fwvZs+Xvg46lzTWveAqyDe18h9m7wZnTIJfFZ4=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "62d536255879be574ebfe9b87c4ac194febf47c5",
+        "rev": "e38d3dd1d355a003cc63e8fe6ff66ef2257509ed",
         "type": "github"
       },
       "original": {
@@ -90,6 +90,24 @@
         "ref": "release-24.11",
         "repo": "home-manager",
         "type": "github"
+      }
+    },
+    "nicoswan-nvim-config": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1733121665,
+        "narHash": "sha256-nDJpFq6UsD9GF0Ugv6/oqNQ83gA1eoHSEzH3HwqaDS8=",
+        "ref": "main",
+        "rev": "1a0486b0e97d3f99338701f7eeab6f1b7d46dd07",
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@github.com/nico-swan-com/nvim.git"
+      },
+      "original": {
+        "ref": "main",
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@github.com/nico-swan-com/nvim.git"
       }
     },
     "nix-darwin": {
@@ -165,11 +183,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1733426865,
-        "narHash": "sha256-zpitNdEuOT/JlqvK2t4Bi1lck/jFkrBFhJc38/dRsiE=",
+        "lastModified": 1733506536,
+        "narHash": "sha256-hmTCczt4tDKyKNtm0UOp78oHSDnJU3qZHX80KEEu1lI=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5b289f59543c4dc0d940ea0c1098291cc51cac01",
+        "rev": "260a02d2ee673c2e4a4cfe8bc6c78ce8ea39c08c",
         "type": "github"
       },
       "original": {
@@ -216,6 +234,7 @@
         "firefox-addons": "firefox-addons",
         "hardware": "hardware",
         "home-manager": "home-manager",
+        "nicoswan-nvim-config": "nicoswan-nvim-config",
         "nix-darwin": "nix-darwin",
         "nix-secrets": "nix-secrets",
         "nixpkgs": "nixpkgs_2",

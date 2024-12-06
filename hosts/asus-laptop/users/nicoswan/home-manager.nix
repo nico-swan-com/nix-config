@@ -9,16 +9,17 @@
     #../../../../common/home-manager/development/lunarvim # VIM IDE
     #../../../../common/home-manager/development/neovim # NEOVIM IDE
     #../../../../common/home-manager/development/nixvim # NEOVIM IDE
+    ../../../../common/home-manager/neovim.nix
 
     # Software Development
     ../../../../common/home-manager/development/github.nix
-    ../../../../common/home-manager/desktop/applications/vscode/vscode.nix
+    #../../../../common/home-manager/desktop/applications/vscode/vscode.nix
     ../../../../common/home-manager/development/node/node_20.nix
 
 
     # Desktop application
-    ../../../../common/home-manager/desktop/applications/lens.nix
-    ../../../../common/home-manager/desktop/applications/firefox.nix
+    #../../../../common/home-manager/desktop/applications/lens.nix
+    #../../../../common/home-manager/desktop/applications/firefox.nix
     ../../../../common/home-manager/desktop/applications/google-chrome.nix
 
     #../../../../common/home-manager/desktop/applications/libraoffice.nix

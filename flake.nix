@@ -50,6 +50,11 @@
       flake = false;
     };
 
+    nicoswan-nvim-config = {
+      url = "git+ssh://git@github.com/nico-swan-com/nvim.git?ref=main&shallow=1";
+      flake = false;
+    };
+
     # Declarative partitioning and formatting
     disko.url = "github:nix-community/disko";
 

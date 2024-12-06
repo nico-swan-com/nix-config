@@ -42,7 +42,7 @@
         settings = {
           git = {
             paging = {
-              pager = "${pkgs.diff-so-fancy}/bin/diff-so-fancy";
+              pager = "${pkgs.delta}/bin/delta  --line-numbers --dark --paging=never --syntax-theme=dracula";
             };
           };
           gui = {
