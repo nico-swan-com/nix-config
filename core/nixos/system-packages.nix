@@ -1,21 +1,32 @@
-{ pkgs, ... }:
-{
-  imports = [
-    ../common/system-packages.nix
-  ];
+{ pkgs, ... }: {
+  imports = [ ../common/system-packages.nix ];
 
   environment.systemPackages = with pkgs; [
     # utils
     fswatch # watch file system events
     git-extras # Some git extra command see https://github.com/tj/git-extras
-    ncdu # disk usage uitls   
+    ncdu # disk usage uitls
     rmlint # remove duplicate file
     rsync # fast copy
     rclone # fast copy to cloud providers like minio
+    fd # Simple, fast and user-friendly alternative to find
+    wget # Tool for retrieving files using HTTP, HTTPS, and FTP
+
+    # For neovim
+    #gcc
+    #fish_indent
+    #markdown-toc
+    #markdownlint-cli2
+    #prettier
+    #sqlfluff
+    #viu
+    #chafa
+    #ueberzugpp
+    #
+    #cargo
+
     #    ntfy # terminal notification 
     #   iotop # io monitoring
-
-
 
     # networking tools
     # iftop # network monitoring
@@ -27,7 +38,6 @@
     # socat # replacement of openbsd-netcat
     # nmap # A utility for network discovery and security auditing
     # ipcalc # it is a calculator for the IPv4/v6 addresses
-
 
     # misc
     # file
