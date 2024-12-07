@@ -1,4 +1,4 @@
-{
+{ pkgs, ... }: {
   imports = [
     # Core services
     ../../../common/nixos/services/virtualisation
@@ -7,6 +7,8 @@
     #./nextcloud # Own home Cloud 
   ];
 
-  services.onedrive.enable = true;
-
+  services.onedrive = {
+    enable = true;
+    package = pkgs.unstable.onedrive;
+  };
 }
