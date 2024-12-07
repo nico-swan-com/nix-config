@@ -1,16 +1,15 @@
 { nixpkgs, nixpkgs-unstable, inputs, outputs, lib, home-manager, nix-darwin, hardware, ... }:
-name: {
-  system,
-  username,
-  fullname,
-  email,
-  locale,
-  timezone,
-  extraModules ? [],
-  sharedHMModules ? [],
-  darwin ? false,
-  isMinimal ? false
-}:
+name: { system
+      , username
+      , fullname
+      , email
+      , locale
+      , timezone
+      , extraModules ? [ ]
+      , sharedHMModules ? [ ]
+      , darwin ? false
+      , isMinimal ? false
+      }:
 
 let
   inherit (nixpkgs) lib;
@@ -30,7 +29,7 @@ let
   # Custom modifications/overrides to upstream packages.
   pkgs = nixpkgs;
   overlays = import ../overlays { inherit pkgs inputs outputs; };
-  
+
   # The config files for this system.
   configuration = ../hosts/${name}/configuration.nix;
   homeManagerConfig = ../hosts/${name}/home-manager.nix;
@@ -67,7 +66,7 @@ systemFunc rec {
             "https://devenv.cachix.org"
           ];
           trusted-public-keys = [
-           "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+            "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
           ];
         };
       };
@@ -81,7 +80,8 @@ systemFunc rec {
       };
     }
     configuration
-    homeManagerModules.home-manager {
+    homeManagerModules.home-manager
+    {
       home-manager = {
         useGlobalPkgs = true;
         extraSpecialArgs = specialArgs;

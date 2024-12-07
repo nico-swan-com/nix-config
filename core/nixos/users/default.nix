@@ -5,19 +5,21 @@ let
   rootHashedPasswordFile = lib.optionalString (lib.hasAttr "sops-nix" inputs) config.sops.secrets."users/root/password".path;
   pubKeys = lib.filesystem.listFilesRecursive (./keys);
 
-  rootPassword = if (rootHashedPasswordFile != null) then {
-    hashedPasswordFile = rootHashedPasswordFile;
-  } else {
-    password = "nixos";
-  };
+  rootPassword =
+    if (rootHashedPasswordFile != null) then {
+      hashedPasswordFile = rootHashedPasswordFile;
+    } else {
+      password = "nixos";
+    };
 
   # these are values we don't want to set if the environment is minimal. E.g. ISO or nixos-installer
   # isMinimal is true in the nixos-installer/flake.nix
-  userPassword = if (userHashedPasswordFile != null) then {
-    hashedPasswordFile = userHashedPasswordFile;
-  } else {
-    password = "nixos";
-  };
+  userPassword =
+    if (userHashedPasswordFile != null) then {
+      hashedPasswordFile = userHashedPasswordFile;
+    } else {
+      password = "nixos";
+    };
 
   # these are values we don't want to set if the environment is minimal. E.g. ISO or nixos-installer
   # isMinimal is true in the nixos-installer/flake.nix
@@ -37,7 +39,7 @@ in
   config = lib.recursiveUpdate fullUserConfig
     #this is the second argument to recursiveUpdate
     {
-      users.users.${cfg.username} = lib.recursiveUpdate userPassword{
+      users.users.${cfg.username} = lib.recursiveUpdate userPassword {
         isNormalUser = true;
         description = cfg.fullname;
         home =
@@ -60,7 +62,7 @@ in
         openssh.authorizedKeys.keys = lib.lists.forEach pubKeys (key: builtins.readFile key);
 
         shell = pkgs.zsh; # default shell
-      } ;
+      };
 
       # Proper root use required for borg and some other specific operations
       users.users.root = lib.recursiveUpdate rootPassword {

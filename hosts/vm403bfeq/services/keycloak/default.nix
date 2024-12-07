@@ -6,10 +6,10 @@ in
 {
 
   sops = {
-     secrets = {
-        "servers/cygnus-labs/keycloak/dbUsername" = {}; 
-        "servers/cygnus-labs/keycloak/dbPassword" = {}; 
-     };
+    secrets = {
+      "servers/cygnus-labs/keycloak/dbUsername" = { };
+      "servers/cygnus-labs/keycloak/dbPassword" = { };
+    };
   };
 
   services.nginx = {

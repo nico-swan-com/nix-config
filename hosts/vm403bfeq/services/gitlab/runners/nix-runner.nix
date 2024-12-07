@@ -1,8 +1,8 @@
 { config, pkgs, lib, ... }: {
-  
+
   sops = {
     secrets = {
-      "servers/cygnus-labs/gitlab/runners/nix" = { 
+      "servers/cygnus-labs/gitlab/runners/nix" = {
         owner = "git";
         group = "git";
       };
@@ -11,14 +11,14 @@
 
   services.gitlab-runner = {
     enable = true;
-    services= {
+    services = {
       # runner for building in docker via host's nix-daemon
       # nix store will be readable in runner, might be insecure
       nix = with lib;{
         # File should contain at least these two variables:
         # `CI_SERVER_URL`
         # `CI_SERVER_TOKEN`
-        authenticationTokenConfigFile ="${config.sops.secrets."servers/cygnus-labs/gitlab/runners/nix".path}"; 
+        authenticationTokenConfigFile = "${config.sops.secrets."servers/cygnus-labs/gitlab/runners/nix".path}";
         dockerImage = "alpine";
         dockerVolumes = [
           "/nix/store:/nix/store:ro"

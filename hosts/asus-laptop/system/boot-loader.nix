@@ -6,7 +6,7 @@
     efi.canTouchEfiVariables = true;
     systemd-boot = {
       enable = false;
-      configurationLimit =3;
+      configurationLimit = 3;
     };
     grub = {
       enable = true;

@@ -15,10 +15,10 @@ let
         volumes:
           - /Users/Nico.Swan/tmp/docker/data:/data
           - /Users/Nico.Swan/tmp/docker/letsencrypt:/etc/letsencrypt
-   '';
-   dockerStartScript = pkgs.writeScript "dockerStartScript" ''
-      ${pkgs.docker-compose}/bin/docker-compose -f ${dockerComposeFile} up
-   '';
+  '';
+  dockerStartScript = pkgs.writeScript "dockerStartScript" ''
+    ${pkgs.docker-compose}/bin/docker-compose -f ${dockerComposeFile} up
+  '';
 in
 {
   options.services.docker-compose.example = {
@@ -30,8 +30,8 @@ in
   };
 
   config = mkIf cfg.enable {
-  
-  launchd = {
+
+    launchd = {
       enable = true;
       agents = {
         "docker-compose-example" = {

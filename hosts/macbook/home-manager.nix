@@ -18,14 +18,14 @@
 
   # Install addition packages via home manager
   home.packages = with pkgs.unstable; [
-     process-compose
-     # openapi-tui # seems to not work with files
+    process-compose
+    # openapi-tui # seems to not work with files
   ] ++ (with pkgs; [
     sops
     lunarvim
     vimPlugins.neogit
 
-    
+
     # Utils
     lazydocker # Terninal UI for docker
     podman-tui # Podman terminal UI
@@ -58,11 +58,11 @@
 
   ]);
 
-   programs.nnn.bookmarks = {
-     D = "~/Documents";
-     d = "~/Developer/src";
-     h = "~/";
-   };
+  programs.nnn.bookmarks = {
+    D = "~/Documents";
+    d = "~/Developer/src";
+    h = "~/";
+  };
 
   programs.zsh = {
     shellAliases = {
@@ -79,12 +79,12 @@
     # This is added for when you have nvm install via homebrew
     # Also the manual install for iterm2
     initExtra = ''
-          export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
+      export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
 
-          [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-          [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+      [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+      [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
-          test -e "~/.iterm2_shell_integration.zsh" && source "~/.iterm2_shell_integration.zsh"
+      test -e "~/.iterm2_shell_integration.zsh" && source "~/.iterm2_shell_integration.zsh"
     '';
   };
 }

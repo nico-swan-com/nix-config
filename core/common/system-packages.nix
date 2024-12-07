@@ -1,4 +1,4 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
     zsh-history-substring-search
@@ -9,7 +9,7 @@
     nil
 
     # nix
-    nix-output-monitor  # it provides the command `nom` works just like `nix` with more details log output
+    nix-output-monitor # it provides the command `nom` works just like `nix` with more details log output
     nixd
     nixpkgs-fmt
     nixfmt-classic
@@ -33,7 +33,7 @@
     tldr # man page replacement
     dust # disk utilization tool
     btop # replacement of htop/nmon
-    
+
     lsof # list open files
 
     # networking tools

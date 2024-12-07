@@ -12,9 +12,5 @@ in
     enable = mkEnableOption "Enable gitlab.";
   };
 
-  config = mkIf cfg.enable {
-
-  
-
-  };
+  config = mkIf cfg.enable { };
 }

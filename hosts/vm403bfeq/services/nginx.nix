@@ -12,7 +12,7 @@ in
       "servers/cygnus-labs/services/cloudflare/envFile" = { };
     };
   };
-  
+
 
   security.acme = {
     acceptTerms = true;
@@ -23,13 +23,14 @@ in
       dnsPropagationCheck = true;
       credentialsFile = "${cloudflareEnvFile}";
       group = "nginx";
-      extraDomainNames = [ 
-        "*.cygnus-labs.com" 
-        "*.services.cygnus-labs.com" 
-        "*.development.cygnus-labs.com" 
-        "*.production.cygnus-labs.com"   ];
+      extraDomainNames = [
+        "*.cygnus-labs.com"
+        "*.services.cygnus-labs.com"
+        "*.development.cygnus-labs.com"
+        "*.production.cygnus-labs.com"
+      ];
     };
-  };  
+  };
 
   services.nginx = {
     enable = true;

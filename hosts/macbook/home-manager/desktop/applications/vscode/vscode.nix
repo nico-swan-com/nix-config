@@ -64,17 +64,17 @@
 
 
       gruntfuggly.todo-tree
-      bierner.emojisense   # Emoji int
+      bierner.emojisense # Emoji int
 
       mkhl.direnv
-      quicktype.quicktype  # Copy JSON, paste as Go, TypeScript, C#, C++ and more.
+      quicktype.quicktype # Copy JSON, paste as Go, TypeScript, C#, C++ and more.
       christian-kohler.path-intellisense #Visual Studio Code plugin that autocompletes filenames
       mikestead.dotenv
 
       # AI
-      github.copilot        # Github AI code assistant
+      github.copilot # Github AI code assistant
       github.copilot-chat
-      continue.continue     # The leading open-source AI code assistant           # Adds suggestions and autocomplete for emoji
+      continue.continue # The leading open-source AI code assistant           # Adds suggestions and autocomplete for emoji
 
       # Languages
       dbaeumer.vscode-eslint

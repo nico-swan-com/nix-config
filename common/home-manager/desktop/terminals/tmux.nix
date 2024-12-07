@@ -8,9 +8,7 @@
     baseIndex = 1;
     mouse = true;
 
-    tmuxinator = {
-      enable = true;
-    };
+    tmuxinator = { enable = true; };
 
     plugins = with pkgs; [
       tmuxPlugins.prefix-highlight
@@ -33,7 +31,7 @@
           set -g @dracula-plugins "git time weather"
           set -g @dracula-show-battery true
           set -g @dracula-show-left-icon session
-          
+
           #set -g @dracula-military-time true
           set -g @dracula-show-fahrenheit false
           set -g @dracula-fixed-location "Johannesburg"
@@ -87,12 +85,14 @@
       # Status bar
       set-option -g status-position top
 
-     
+
 
       # Pane and Windows
+      set -g pane-border-style 'fg=red'
+      set -g pane-active-border-style 'fg=yellow'
       bind | split-window -h -c "#{pane_current_path}"
       bind - split-window -v -c "#{pane_current_path}"
-      
+
       bind j resize-pane -D 5
       bind k resize-pane -U 5
       bind l resize-pane -R 5
@@ -108,7 +108,7 @@
 
       # set vi-mode
       set-window-option -g mode-keys vi
-   
+
       # keybindings
       bind-key -T copy-mode-vi 'v' send -X begin-selection # start selecting text with "v"
       bind-key -T copy-mode-vi 'y' send -X copy-selection-and-cancel # copy text with "y"
@@ -158,7 +158,7 @@
 
       # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
       #run '~/.config/tmux/plugins/tpm/tpm'
-      
+
     '';
   };
 }

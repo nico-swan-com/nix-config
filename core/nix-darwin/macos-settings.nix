@@ -22,11 +22,11 @@
       screencapture.location = "/Users/${cfg.username}/Documents/Captures";
 
       dock = {
-         autohide = false;
-         mru-spaces = false;
-         orientation = "left";
-         showhidden = true;
-         static-only = true;
+        autohide = false;
+        mru-spaces = false;
+        orientation = "left";
+        showhidden = true;
+        static-only = true;
       };
 
       finder = {

@@ -1,4 +1,4 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 {
   imports = [
     ../common/system-packages.nix
@@ -12,8 +12,8 @@
     rmlint # remove duplicate file
     rsync # fast copy
     rclone # fast copy to cloud providers like minio
-#    ntfy # terminal notification 
-#   iotop # io monitoring
+    #    ntfy # terminal notification 
+    #   iotop # io monitoring
 
 
 
@@ -40,15 +40,15 @@
     # gnupg
 
     # system tools
-#   sysstat
-#   lm_sensors # for `sensors` command
-#   ethtool
-#   pciutils # lspci
-#   usbutils # lsusb
+    #   sysstat
+    #   lm_sensors # for `sensors` command
+    #   ethtool
+    #   pciutils # lspci
+    #   usbutils # lsusb
 
-   # system call monitoring
-#   strace # system call monitoring
-#   ltrace # library call monitoring
+    # system call monitoring
+    #   strace # system call monitoring
+    #   ltrace # library call monitoring
 
     #Fun 
     cmatrix

@@ -1,32 +1,41 @@
 { pkgs, cfg, ... }:
 {
 
-    imports = [
-      ../common/home-packages.nix
-    ];
-  
-    home.stateVersion = "24.05";
+  imports = [
+    ../common/home-packages.nix
+  ];
 
-    fonts.fontconfig.enable = true;
+  home.stateVersion = "24.05";
 
-    programs = {
-      home-manager.enable = true;
+  fonts.fontconfig.enable = true;
 
-      nicoswan = {
-        zsh.enable = true;
-        starship.enable = true;
-      };
+  programs = {
+    home-manager.enable = true;
 
-      # Git configuration
-      git = {
-        enable = true;
-        userName = cfg.fullname;
-        userEmail = cfg.email;
-        extraConfig = {
-          init.defaultBranch = "main";
-          diff.colorMoved = "default";
-          pull.rebase = true;
+    nicoswan = {
+      zsh.enable = true;
+      starship.enable = true;
+    };
+
+    # Git configuration
+    git = {
+      enable = true;
+      userName = cfg.fullname;
+      userEmail = cfg.email;
+      extraConfig = {
+        init.defaultBranch = "main";
+        diff.colorMoved = "default";
+        pull.rebase = true;
+        core.pager = "delta";
+
+        interactive.diffFilter = "${pkgs.delta}/bin/delta  --line-numbers --dark --paging=never --syntax-theme=dracula";
+
+        delta = {
+          navigate = true; # use n and N to move between diff sections
+          dark = true; # or light = true, or omit for auto-detection
         };
+        merge.conflictstyle = "zdiff3";
+
         ignores = [
           "*~"
           ".DS_Store"
@@ -160,9 +169,9 @@
       direnv = {
         enable = true;
         enableZshIntegration = true;
-        nix-direnv.enable = true;   
+        nix-direnv.enable = true;
       };
 
 
     };
-}
+  }

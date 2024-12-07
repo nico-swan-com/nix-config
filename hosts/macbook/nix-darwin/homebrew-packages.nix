@@ -16,19 +16,19 @@
     casks = [
       "iterm2"
       "rectangle"
-      "datagrip"       # SQL IDE
-      "postman"        # REST API testing
-      "capcut"         # Video editing
-      "gather"         # Gather Town
-      "sourcetree"     # Git manager 
+      "datagrip" # SQL IDE
+      "postman" # REST API testing
+      "capcut" # Video editing
+      "gather" # Gather Town
+      "sourcetree" # Git manager 
       "bing-wallpaper" # Random wallpapers
-      "inkscape"       # Graphics tool for SVGs
-      "gimp"           # Graphics tool
-      "cryptomator"    # Encrypt oneline storage files
+      "inkscape" # Graphics tool for SVGs
+      "gimp" # Graphics tool
+      "cryptomator" # Encrypt oneline storage files
       #"ksnip"          # Screen capture
 
-    # -- Security --
-    #"1password"
+      # -- Security --
+      #"1password"
     ];
   };
 }

@@ -42,8 +42,8 @@
   home.packages = with pkgs; [
     systemctl-tui
     gnome-extensions-cli
-    cmatrix                      # Some fun
-    glow                         # Terminal marckdown viewer
+    cmatrix # Some fun
+    glow # Terminal marckdown viewer
     lnav
 
   ] ++ (with pkgs.unstable; [

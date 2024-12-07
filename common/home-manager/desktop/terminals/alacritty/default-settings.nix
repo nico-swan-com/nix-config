@@ -10,14 +10,17 @@
     args = [ "-l" "-c" "tmux" ];
   };
 
-  mouse.bindings = [{
-    mouse = "Right";
-    action = "Paste";
-  }];
+  mouse = {
+    bindings = [{
+      mouse = "Right";
+      action = "PasteSelection";
+    }];
+    hide_when_typing = false;
+  };
 
   window = {
-    padding.x = 2;
-    padding.y = 2;
+    padding.x = 0;
+    padding.y = 0;
     decorations = "Full";
     #decorations = "None";
     blur = true;

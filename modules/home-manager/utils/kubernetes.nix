@@ -2,7 +2,7 @@
 with lib;
 let
   cfg = config.programs.nicoswan.utils.kubernetes;
-  in
+in
 {
   options.programs.nicoswan.utils.kubernetes = {
     enable = mkEnableOption "Enable kubernetes utilities.";

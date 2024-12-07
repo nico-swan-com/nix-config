@@ -11,14 +11,14 @@ in
       "users/vmbfeqcy/password".neededForUsers = true;
       "users/deployer/password".neededForUsers = true;
       "users/deployer/private-key" = {
-         owner = "deployer";
-         group = "deployer";
-         path = "/home/deployer/.ssh/id_deployer";
-       };
+        owner = "deployer";
+        group = "deployer";
+        path = "/home/deployer/.ssh/id_deployer";
+      };
     };
   };
 
-  users.groups.deployer = {};
+  users.groups.deployer = { };
 
   users.users.vmbfeqcy = {
     isNormalUser = true;
@@ -42,7 +42,7 @@ in
     description = "Kubernetes Deployer";
     hashedPasswordFile = deployerHashedPasswordFile;
     openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICVO4sSaq5GG3MHLCnYu3GfCO5e75RrpTnOmAXlBj6RO deployer"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICVO4sSaq5GG3MHLCnYu3GfCO5e75RrpTnOmAXlBj6RO deployer"
     ];
     extraGroups = [
       "wheel"
@@ -53,6 +53,6 @@ in
       "networkmanager"
     ];
     group = "deployer";
-    
+
   };
 }

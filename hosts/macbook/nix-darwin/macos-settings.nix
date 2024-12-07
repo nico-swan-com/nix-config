@@ -126,13 +126,13 @@
           OpenWith -bool true \
           Privileges -bool true   
      
-    '';  
+    '';
     #   # TODO: Rewrite as much of these as possible using nix-darwin
     #   # From https://github.com/mathiasbynens/dotfiles/blob/master/.macos taken
     #   # at commit e72d1060f3df8c157f93af52ea59508dae36ef50.
-      ###############################################################################
-      # General UI/UX                                                               #
-      ###############################################################################
+    ###############################################################################
+    # General UI/UX                                                               #
+    ###############################################################################
     # Disable UI alert audio
     #   defaults write com.apple.systemsound "com.apple.sound.uiaudio.enabled" -int 0
     #   # todo FLASH

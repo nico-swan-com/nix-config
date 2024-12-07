@@ -1,9 +1,9 @@
-{pkgs, lib, ...}:{
- 
+{ pkgs, lib, ... }: {
+
   home.packages = with pkgs; [
     delta
   ];
-   
+
   programs.lazygit = {
     enable = true;
 

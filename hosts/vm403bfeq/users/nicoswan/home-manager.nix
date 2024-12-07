@@ -6,7 +6,7 @@
     ../../../../common/home-manager/terminal/lazygit.nix # Git UI
     #../../../../common/home-manager/terminal/lunarvim.nix # VIM IDE
   ];
- 
+
   programs.nicoswan = {
     utils.google-cloud-sdk.enable = true;
     utils.kubernetes = {
@@ -17,11 +17,11 @@
   };
   # Install addition packages via home manager
   home.packages = with pkgs; [
-    (writeShellScriptBin "update-kube-admin" (builtins.readFile scripts/update-kube-admin.sh))                      # Some fun 
-    (writeShellScriptBin "remove-kubernetes" (builtins.readFile scripts/remove-kubernetes.sh))                      # Some fun 
-    lnav   
+    (writeShellScriptBin "update-kube-admin" (builtins.readFile scripts/update-kube-admin.sh)) # Some fun 
+    (writeShellScriptBin "remove-kubernetes" (builtins.readFile scripts/remove-kubernetes.sh)) # Some fun 
+    lnav
     systemctl-tui
-  ] ++ ( with pkgs.unstable; [
+  ] ++ (with pkgs.unstable; [
     lunarvim
   ]);
 

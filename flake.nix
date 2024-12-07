@@ -76,7 +76,7 @@
     , nix-darwin
     , home-manager
     , disko
-    #, nixvim
+      #, nixvim
     , ...
     } @inputs:
     let
@@ -99,27 +99,27 @@
 
       # Common Configuration 
       commonConfig = {
-          username = "nicoswan";
-          fullname = "Nico Swan";
-          email = "hi@nicoswan.com";
-          locale = "en_ZA.UTF-8";
-          timezone = "Africa/Johannesburg";
+        username = "nicoswan";
+        fullname = "Nico Swan";
+        email = "hi@nicoswan.com";
+        locale = "en_ZA.UTF-8";
+        timezone = "Africa/Johannesburg";
       };
 
       x86_64-config = lib.recursiveUpdate commonConfig {
-          system = "x86_64-linux";
-          # sharedHMModules = [
-          #   nixvim.homeManagerModules.nixvim
-          # ];
-          extraModules = [
-            inputs.nur.nixosModules.nur
-            #
-          ];
+        system = "x86_64-linux";
+        # sharedHMModules = [
+        #   nixvim.homeManagerModules.nixvim
+        # ];
+        extraModules = [
+          inputs.nur.nixosModules.nur
+          #
+        ];
       };
 
     in
     {
-       # TODO change this to something that has better looking output rules
+      # TODO change this to something that has better looking output rules
       # Nix formatter available through 'nix fmt' https://nix-community.github.io/nixpkgs-fmt
       formatter = forAllSystems
         (system:
@@ -154,8 +154,8 @@
         media = mkSystem "media" (lib.recursiveUpdate x86_64-config {
           extraModules = [ disko.nixosModules.disko ];
         });
-        
+
         vm403bfeq = mkSystem "vm403bfeq" x86_64-config;
       };
-  };
+    };
 }

@@ -25,27 +25,28 @@
       inherit (nixpkgs) lib;
 
       configLib = import ../lib { inherit lib; };
-       minimalSpecialArgs = {
-          inherit inputs outputs configLib;
-        };
+      minimalSpecialArgs = {
+        inherit inputs outputs configLib;
+      };
 
       # FIXME: Specify arch eventually probably
       # This mkHost is way better: https://github.com/linyinfeng/dotfiles/blob/8785bdb188504cfda3daae9c3f70a6935e35c4df/flake/hosts.nix#L358
       newConfig =
         name: disk: withSwap: swapSize:
         let
-        cfg = {
-          hostname = name;
-          system = "x86_64-linux";
-          username = "nicoswan";
-          fullname = "Nico Swan";
-          email = "hi@nicoswan.com";
-          locale = "en_ZA.UTF-8";
-          timezone = "Africa/Johannesburg";
-          isMinimal = true;
-        };
-       
-        in (nixpkgs.lib.nixosSystem {
+          cfg = {
+            hostname = name;
+            system = "x86_64-linux";
+            username = "nicoswan";
+            fullname = "Nico Swan";
+            email = "hi@nicoswan.com";
+            locale = "en_ZA.UTF-8";
+            timezone = "Africa/Johannesburg";
+            isMinimal = true;
+          };
+
+        in
+        (nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = minimalSpecialArgs;
           modules = [

@@ -9,10 +9,10 @@ in
 {
   sops = {
     secrets = {
-      "servers/cygnus-labs/gitlab/databasePasswordFile" = {};
-      "servers/cygnus-labs/postgres/users/admin/password" = {};
-      "servers/cygnus-labs/keycloak/dbUsername" = {};
-      "servers/cygnus-labs/keycloak/dbPassword" = {};
+      "servers/cygnus-labs/gitlab/databasePasswordFile" = { };
+      "servers/cygnus-labs/postgres/users/admin/password" = { };
+      "servers/cygnus-labs/keycloak/dbUsername" = { };
+      "servers/cygnus-labs/keycloak/dbPassword" = { };
     };
   };
 
@@ -88,9 +88,9 @@ in
 
     ];
     initialScript = pkgs.writeText "init-sql-script" ''
-     alter user ${cfg.username} with password '${adminPassword}';
-     alter user gitlab with password '${gitlabPassword}';
-     alter user ${keycloakUsername} with password '${keycloakPassword}';
+      alter user ${cfg.username} with password '${adminPassword}';
+      alter user gitlab with password '${gitlabPassword}';
+      alter user ${keycloakUsername} with password '${keycloakPassword}';
     '';
     authentication = pkgs.lib.mkOverride 10 ''
       #type    database DBuser  origin-address auth-methoda

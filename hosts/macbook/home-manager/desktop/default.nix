@@ -2,7 +2,7 @@
 {
   imports = [
     ./applications/vscode/vscode.nix
-    ./terminals/alacritty  
+    ./terminals/alacritty
     ./terminals/kitty
     ./terminals/tmux.nix
   ];
@@ -12,6 +12,6 @@
     obsidian
     google-chrome
   ];
-  
+
 }
 

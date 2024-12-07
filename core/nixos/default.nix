@@ -1,4 +1,4 @@
-{ pkgs, ... }:{
+{ pkgs, ... }: {
   imports = [
     ./system-packages.nix
     ./users

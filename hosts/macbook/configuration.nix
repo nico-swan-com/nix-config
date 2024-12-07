@@ -16,8 +16,8 @@
   environment.systemPackages = with pkgs; [
     qemu
   ] ++ (with pkgs.unstable; [
-     #process-compose
-     # openapi-tui # seems to not work with files
+    #process-compose
+    # openapi-tui # seems to not work with files
   ]);
 
   programs.zsh = {

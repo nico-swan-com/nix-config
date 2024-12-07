@@ -4,7 +4,7 @@
     settings = {
       auto-optimise-store = lib.mkForce false;
     };
-  };  
+  };
   # Auto update
   system.autoUpgrade = {
     enable = false;

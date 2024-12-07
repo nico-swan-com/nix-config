@@ -29,40 +29,40 @@ in
   ];
   sops = {
     secrets = {
-      "servers/cygnus-labs/gitlab/smtpPasswordFile" = { 
+      "servers/cygnus-labs/gitlab/smtpPasswordFile" = {
         owner = "git";
         group = "git";
       };
-      "servers/cygnus-labs/gitlab/databasePasswordFile" = { 
+      "servers/cygnus-labs/gitlab/databasePasswordFile" = {
         owner = "git";
         group = "git";
       };
-      "servers/cygnus-labs/gitlab/initialRootPasswordFile" = { 
+      "servers/cygnus-labs/gitlab/initialRootPasswordFile" = {
         owner = "git";
         group = "git";
       };
-      "servers/cygnus-labs/gitlab/secrets/dbFile" = { 
+      "servers/cygnus-labs/gitlab/secrets/dbFile" = {
         owner = "git";
         group = "git";
       };
-      "servers/cygnus-labs/gitlab/secrets/secretsFile" = { 
+      "servers/cygnus-labs/gitlab/secrets/secretsFile" = {
         owner = "git";
         group = "git";
       };
-      "servers/cygnus-labs/gitlab/secrets/otpFile" = { 
+      "servers/cygnus-labs/gitlab/secrets/otpFile" = {
         owner = "git";
         group = "git";
       };
-      "servers/cygnus-labs/gitlab/secrets/jwsFile" = { 
+      "servers/cygnus-labs/gitlab/secrets/jwsFile" = {
         owner = "git";
         group = "git";
       };
-      "servers/cygnus-labs/gitlab/secrets/registryCertFile" = { 
+      "servers/cygnus-labs/gitlab/secrets/registryCertFile" = {
         owner = "docker-registry";
         group = "git";
         mode = "0440";
       };
-      "servers/cygnus-labs/gitlab/secrets/registryKeyFile" = { 
+      "servers/cygnus-labs/gitlab/secrets/registryKeyFile" = {
         owner = "docker-registry";
         group = "git";
         mode = "0440";
@@ -76,9 +76,9 @@ in
   ];
 
 
-  
+
   #services.openssh.enable = true;
-  boot.kernel.sysctl."net.ipv4.ip_forward" = lib.mkForce true; 
+  boot.kernel.sysctl."net.ipv4.ip_forward" = lib.mkForce true;
 
   #virtualisation.docker.enable = true;
 
@@ -108,12 +108,12 @@ in
 
   services.gitlab = {
     enable = true;
-    
+
     databaseCreateLocally = false;
     databaseUsername = "gitlab";
     databasePasswordFile = "${config.sops.secrets."servers/cygnus-labs/gitlab/databasePasswordFile".path}";
     #databaseHost = "localhost";
-    
+
     initialRootEmail = "nico.swan@cygnus-labs.com";
     initialRootPasswordFile = "${config.sops.secrets."servers/cygnus-labs/gitlab/initialRootPasswordFile".path}";
 
@@ -145,12 +145,12 @@ in
       externalAddress = "registry.cygnus-labs.com";
     };
 
-#    extraGitlabRb = ''
-#       gitlab_kas['internal_api_listen_network'] = 'unix'
-#       gitlab_kas['internal_api_listen_address'] = '/run/gitlab/gitlab-kas/sockets/internal-api.socket'
-#       gitlab_kas['private_api_listen_network'] = 'unix'
-#       gitlab_kas['private_api_listen_address'] = '/run/gitlab/gitlab-kas/sockets/private-api.socket'
-#    ''; 
+    #    extraGitlabRb = ''
+    #       gitlab_kas['internal_api_listen_network'] = 'unix'
+    #       gitlab_kas['internal_api_listen_address'] = '/run/gitlab/gitlab-kas/sockets/internal-api.socket'
+    #       gitlab_kas['private_api_listen_network'] = 'unix'
+    #       gitlab_kas['private_api_listen_address'] = '/run/gitlab/gitlab-kas/sockets/private-api.socket'
+    #    ''; 
 
     extraConfig = {
       gitlab = {
@@ -159,29 +159,29 @@ in
         email_reply_to = "gitlab-no-reply@cygnus-labs.com";
         default_projects_features = { builds = false; };
       };
-#      gitlab_kas = {
-#        enabled = true;
-#        # The URL to the external KAS API (used by the Kubernetes agents)
-#        external_url = "wss://git.cygnus-labs.com/-/kubernetes-agent";
-#
-#        # The URL to the internal KAS API (used by the GitLab backend)
-#        internal_url = "grpc://localhost:8153";
-#
-#        # The URL to the Kubernetes API proxy (used by GitLab users)
-#        #external_k8s_proxy_url = "https://102.135.163.95:8154"; # default: nil
-#      };
+      #      gitlab_kas = {
+      #        enabled = true;
+      #        # The URL to the external KAS API (used by the Kubernetes agents)
+      #        external_url = "wss://git.cygnus-labs.com/-/kubernetes-agent";
+      #
+      #        # The URL to the internal KAS API (used by the GitLab backend)
+      #        internal_url = "grpc://localhost:8153";
+      #
+      #        # The URL to the Kubernetes API proxy (used by GitLab users)
+      #        #external_k8s_proxy_url = "https://102.135.163.95:8154"; # default: nil
+      #      };
 
     };
 
 
 
-#    backup = {
-#      uploadOptions
-#      startAt
-#      skip
-#      path
-#      keepTime
-#    };
+    #    backup = {
+    #      uploadOptions
+    #      startAt
+    #      skip
+    #      path
+    #      keepTime
+    #    };
   };
 
   systemd.services.gitlab-backup.environment.BACKUP = "dump";

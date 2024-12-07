@@ -4,7 +4,7 @@
   imports = [
     ../../../../common/home-manager/desktop/terminals/tmux.nix
   ];
- 
+
   programs.nicoswan = {
     utils.google-cloud-sdk.enable = true;
     utils.kubernetes = {
@@ -15,8 +15,8 @@
   };
   # Install addition packages via home manager
   home.packages = with pkgs; [
-    cmatrix                      # Some fun 
-    glow                         # Terminal marckdown viewer
-    lnav    
+    cmatrix # Some fun 
+    glow # Terminal marckdown viewer
+    lnav
   ];
 }

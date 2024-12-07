@@ -29,7 +29,7 @@
     # Just for fun
     ../../../../common/home-manager/terminal/fun.nix
   ];
- 
+
   programs.nicoswan = {
     utils.google-cloud-sdk.enable = false;
     utils.kubernetes = {
@@ -39,9 +39,10 @@
     };
   };
   # Install addition packages via home manager
-  home.packages = with pkgs.unstable; [                      # Some fun 
-    lnav 
-    lunarvim   
+  home.packages = with pkgs.unstable; [
+    # Some fun 
+    lnav
+    lunarvim
   ];
 
   # home = {

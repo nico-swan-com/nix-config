@@ -7,7 +7,7 @@
     settings = lib.attrsets.recursiveUpdate (import ./default-settings.nix) {
       # Import the Dracula theme
       #import = ["${pkgs.alacritty-theme}/dracula_plus.toml"];
-      general.import = ["${pkgs.alacritty-theme}/dracula_plus.toml"];
+      general.import = [ "${pkgs.alacritty-theme}/dracula_plus.toml" ];
     };
   };
 

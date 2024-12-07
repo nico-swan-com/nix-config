@@ -1,7 +1,7 @@
 {
   imports = [
-   ./servers
-   ./virtualization
-   ./databases
+    ./servers
+    ./virtualization
+    ./databases
   ];
 }

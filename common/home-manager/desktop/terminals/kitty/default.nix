@@ -11,7 +11,7 @@
     settings = lib.attrsets.recursiveUpdate (import ./default-settings.nix) { };
 
     extraConfig = ''
-    include current-theme.conf
+      include current-theme.conf
     '';
 
     # extraConfig = "include user.conf";

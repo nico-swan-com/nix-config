@@ -19,7 +19,7 @@ in
     validateSopsFiles = false;
 
     secrets = {
-      "git-lab/access-token" = {};
+      "git-lab/access-token" = { };
       "host/private-key" = {
         path = "${homeDirectory}/.ssh/id_host-private-key";
       };
