@@ -1,30 +1,24 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
   # Gnome default application
-  environment.systemPackages = with pkgs; [
-    gtop
-    libgtop
-    gparted
-    gnome-extension-manager
-  ] ++ (with pkgs.unstable.gnomeExtensions; [
-    clipboard-history
-    compiz-windows-effect
-    desktop-cube
-  ]);
+  environment.systemPackages = with pkgs.ustable;
+    [ gtop libgtop gparted gnome-extension-manager ]
+    ++ (with pkgs.unstable.gnomeExtensions; [
+      clipboard-history
+      compiz-windows-effect
+      desktop-cube
+    ]);
 
   # Exclde packages installed by default
   environment.gnome.excludePackages = (with pkgs.unstable; [
     gnome-photos
     gnome-tour
     gedit # text editor
-  ]) ++ (with pkgs.gnomeExtensions; [
-    system-monitor
-  ]) ++ (with pkgs.gnome; [
+  ]) ++ (with pkgs.gnomeExtensions; [ system-monitor ]) ++ (with pkgs; [
     cheese # webcam tool
     gnome-music
     gnome-terminal
@@ -39,7 +33,6 @@
     atomix # puzzle game
   ]);
 
-
   environment.variables = {
     GI_TYPELIB_PATH = "/run/current-system/sw/lib/girepository-1.0";
   };
@@ -50,7 +43,6 @@
   # services.displayManager.autoLogin.user = "nicoswan";
   # systemd.services."getty@tty1".enable = false;
   # systemd.services."autovt@tty1".enable = false;
-
 
   services.xserver.desktopManager.gnome = {
     extraGSettingsOverrides = ''
