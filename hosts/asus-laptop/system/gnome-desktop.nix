@@ -5,7 +5,7 @@
   services.xserver.desktopManager.gnome.enable = true;
 
   # Gnome default application
-  environment.systemPackages = with pkgs.ustable;
+  environment.systemPackages = with pkgs;
     [ gtop libgtop gparted gnome-extension-manager ]
     ++ (with pkgs.unstable.gnomeExtensions; [
       clipboard-history
