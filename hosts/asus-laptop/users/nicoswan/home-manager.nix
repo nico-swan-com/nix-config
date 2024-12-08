@@ -1,5 +1,4 @@
-{ pkgs, configLib, ... }:
-{
+{ pkgs, configLib, ... }: {
 
   imports = [
     ../../../../common/home-manager/desktop/common-desktop.nix
@@ -16,7 +15,6 @@
     #../../../../common/home-manager/desktop/applications/vscode/vscode.nix
     ../../../../common/home-manager/development/node/node_20.nix
 
-
     # Desktop application
     #../../../../common/home-manager/desktop/applications/lens.nix
     #../../../../common/home-manager/desktop/applications/firefox.nix
@@ -24,7 +22,6 @@
 
     #../../../../common/home-manager/desktop/applications/libraoffice.nix
     #../../../../common/home-manager/desktop/applications/obsidian.nix
-
 
     # Just for fun
     ../../../../common/home-manager/terminal/fun.nix
@@ -43,6 +40,7 @@
     # Some fun 
     lnav
     lunarvim
+    openssl
   ];
 
   # home = {

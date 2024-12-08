@@ -44,6 +44,7 @@
       cmatrix # Some fun
       glow # Terminal marckdown viewer
       lnav
+      openssl
 
     ] ++ (with pkgs.unstable; [ devenv lunarvim cryptomator nest-cli ]);
 
