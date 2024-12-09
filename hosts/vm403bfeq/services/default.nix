@@ -10,6 +10,7 @@
     ./databases/postgres.nix
     ./databases/redis.nix
     ./keycloak
+    ./rclone.nix
   ];
 
 }
