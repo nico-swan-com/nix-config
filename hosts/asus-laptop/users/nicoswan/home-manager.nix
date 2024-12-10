@@ -41,6 +41,7 @@
     lnav
     lunarvim
     openssl
+    sshs
   ];
 
   # home = {
