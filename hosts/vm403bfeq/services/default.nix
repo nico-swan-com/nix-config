@@ -11,6 +11,7 @@
     ./databases/redis.nix
     ./keycloak
     ./rclone.nix
+    ./restic.nix
   ];
 
 }
