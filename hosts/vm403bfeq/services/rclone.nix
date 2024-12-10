@@ -1,22 +1,32 @@
-{ config, pkgs, ... }: {
-  sops = {
-    secrets = {
-      "servers/cygnus-labs/services/google/vm403bfeq-service-account.json" =
-        { };
-    };
-  };
+{ config, pkgs, ... }:
 
-  environment.systemPackages = [ pkgs.unstable.rclone ];
-  environment.etc."rclone-google-drive.conf".text = ''
+let
+  # Decrypt the passwords
+  password = "$(cat ${
+      config.sops.secrets."servers/cygnus-labs/rclone/encryption/google-drive/password".path
+    })";
+  password2 = "$(cat ${
+      config.sops.secrets."servers/cygnus-labs/rclone/encryption/google-drive/password2".path
+    })";
+
+  # Script to generate rclone-google.conf
+  rcloneConfigScript = pkgs.writeScript "generate-rclone-config.sh" ''
+    #!/bin/sh
+
+    cat << EOF > /etc/rclone-google.conf
     [google-drive]
     type = drive
     scope = drive
     service_account_file = ${
       config.sops.secrets."servers/cygnus-labs/services/google/vm403bfeq-service-account.json".path
     }
-  '';
 
-  environment.etc."rclone-google-drive-shared.conf".text = ''
+    [encrypted-google-drive]
+    type = crypt
+    remote = google-drive:/
+    password = ${password}
+    password2 = ${password2}
+
     [google-drive-shared]
     type = drive
     scope = drive
@@ -25,33 +35,72 @@
     }
     shared_with_me = true
 
-
+    [encrypted-google-drive-shared]
+    type = crypt
+    remote = google-drive-shared:/
+    password = ${password}
+    password2 = ${password2}
+    EOF
   '';
 
-  #    [crypt]
-  #    type = crypt
-  #    remote = google-drive:data/backup
-  #    filename_encryption = standard
-  #    directory_name_encryption = true
-  #    password = X
-  #    password2 = X 
-  #root_folder_id=1ROYnr5dK4TQFMdTV4_Dy0jgdMSHZOnl_
-  #  impersonate=vm403bfeq@gmail.com
-  #impersonate=vm403dfeq@gmail.com
+  # Ensure the script is executable
+  activationScript = pkgs.writeScript "activation-script.sh" ''
+    echo ${rcloneConfigScript}
+
+    ${rcloneConfigScript}
+  '';
+
+in {
+  environment.systemPackages = [ pkgs.unstable.rclone pkgs.sops ];
+
+  sops = {
+    secrets = {
+      "servers/cygnus-labs/services/google/vm403bfeq-service-account.json" =
+        { };
+      "servers/cygnus-labs/rclone/encryption/google-drive/password" = { };
+      "servers/cygnus-labs/rclone/encryption/google-drive/password2" = { };
+    };
+  };
+
+  systemd.services.generate-rclone-config = {
+    wantedBy = [ "multi-user.target" ];
+    script = "${activationScript}";
+  };
+
+  services.nginx = {
+    virtualHosts = {
+      "rclone.cygnus-labs.com" = {
+        useACMEHost = "cygnus-labs.com";
+        forceSSL = true;
+        locations."/".proxyPass = "http://127.0.0.1:5572";
+      };
+    };
+  };
 
   fileSystems."/mnt/google-drive" = {
-    device = "google-drive:";
+    device = "encrypted-google-drive:/";
     fsType = "rclone";
     options = [
       "nodev"
       "nofail"
       "allow_other"
       "args2env"
-      "config=/etc/rclone-google-drive.conf"
+      "config=/etc/rclone-google.conf"
     ];
   };
 
   fileSystems."/mnt/google-drive-shared" = {
+    device = "encrypted-google-drive-shared:/";
+    fsType = "rclone";
+    options = [
+      "nodev"
+      "nofail"
+      "allow_other"
+      "args2env"
+      "config=/etc/rclone-google.conf"
+    ];
+  };
+  fileSystems."/mnt/google-drive-shared-unencrypted" = {
     device = "google-drive-shared:";
     fsType = "rclone";
     options = [
@@ -59,7 +108,8 @@
       "nofail"
       "allow_other"
       "args2env"
-      "config=/etc/rclone-google-drive-shared.conf"
+      "config=/etc/rclone-google.conf"
     ];
   };
 }
+

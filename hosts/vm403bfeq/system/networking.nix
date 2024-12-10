@@ -17,6 +17,7 @@
       20048 # gitlab
       #5000 # gitlab container registry
       #8153 8154i gitlab kas
+      5572 # Rclone GUI
     ];
     #    extraCommands = ''
     #       iptables -I INPUT 1 -i docker0 -p tcp -d 172.17.0.1 -j ACCEPT
