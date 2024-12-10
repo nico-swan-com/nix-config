@@ -39,7 +39,7 @@ let
 
     [encrypted-google-drive-shared]
     type = crypt
-    remote = google-drive-shared:/
+    remote = google-drive-shared:data/
     password = ${password}
     password2 = ${password2}
     EOF

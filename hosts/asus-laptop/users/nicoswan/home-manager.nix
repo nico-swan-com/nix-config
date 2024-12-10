@@ -42,6 +42,7 @@
     lunarvim
     openssl
     sshs
+    mattermost-desktop
   ];
 
   # home = {

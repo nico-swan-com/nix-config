@@ -1,20 +1,20 @@
 { config, pkgs, ... }:
 let
-  username = "$(cat ${config.sops.secrets."servers/cygnus-labs/keycloak/dbUsername".path})";
-  passwordFile = config.sops.secrets."servers/cygnus-labs/keycloak/dbPassword".path;
-in
-{
+  username = "$(cat ${
+      config.sops.secrets."servers/cygnus-labs/keycloak/dbUsername".path
+    })";
+  passwordFile =
+    config.sops.secrets."servers/cygnus-labs/keycloak/dbPassword".path;
+in {
 
   sops = {
-     secrets = {
-        "servers/cygnus-labs/keycloak/dbUsername" = {};
-        "servers/cygnus-labs/keycloak/dbPassword" = {};
-     };
+    secrets = {
+      "servers/cygnus-labs/keycloak/dbUsername" = { };
+      "servers/cygnus-labs/keycloak/dbPassword" = { };
+    };
   };
 
-  environment.systemPackages = with pkgs; [
-    keycloak
-  ];
+  environment.systemPackages = with pkgs.unstable; [ keycloak ];
 
   services.nginx = {
     virtualHosts = {
@@ -29,6 +29,7 @@ in
 
   services.keycloak = {
     enable = true;
+    package = pkgs.unstable.keycloak;
     database = {
       type = "postgresql";
       createLocally = true;
@@ -45,7 +46,7 @@ in
       http-port = 38080;
       hostname = "https://keycloak.cygnus-labs.com";
       http-host = "127.0.0.1";
-    # Uncomment the following line if you need to add CSP headers directly to Keycloak
+      # Uncomment the following line if you need to add CSP headers directly to Keycloak
       securityHeaders = "frame-src 'self' http://keycloak.cygnus-labs.com";
 
     };

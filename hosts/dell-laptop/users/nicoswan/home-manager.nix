@@ -45,6 +45,7 @@
       glow # Terminal marckdown viewer
       lnav
       openssl
+      mattermost-desktop
 
     ] ++ (with pkgs.unstable; [ devenv lunarvim cryptomator nest-cli ]);
 

@@ -1,12 +1,19 @@
 { config, pkgs, cfg, ... }:
 let
   dataDir = "/data/postgres/16";
-  gitlabPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/gitlab/databasePasswordFile".path})";
-  adminPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/postgres/users/admin/password".path})";
-  keycloakUsername = "$(cat ${config.sops.secrets."servers/cygnus-labs/keycloak/dbUsername".path})";
-  keycloakPassword = "$(cat ${config.sops.secrets."servers/cygnus-labs/keycloak/dbPassword".path})";
-in
-{
+  gitlabPassword = "$(cat ${
+      config.sops.secrets."servers/cygnus-labs/gitlab/databasePasswordFile".path
+    })";
+  adminPassword = "$(cat ${
+      config.sops.secrets."servers/cygnus-labs/postgres/users/admin/password".path
+    })";
+  keycloakUsername = "$(cat ${
+      config.sops.secrets."servers/cygnus-labs/keycloak/dbUsername".path
+    })";
+  keycloakPassword = "$(cat ${
+      config.sops.secrets."servers/cygnus-labs/keycloak/dbPassword".path
+    })";
+in {
   sops = {
     secrets = {
       "servers/cygnus-labs/gitlab/databasePasswordFile" = { };
@@ -53,40 +60,41 @@ in
         };
       }
     ];
-    extensions = ps: with ps; [
-      rum
-      timescaledb
-      pgroonga
-      wal2json
-      pg_repack
-      pg_safeupdate
-      plpgsql_check
-      pgjwt
-      pgaudit
-      postgis
-      pgrouting
-      pgtap
-      pg_cron
-      pgsql-http
-      pg_net
-      pgsodium
-      pgvector
-      hypopg
-      plv8
-      # Missing supabase plugins
-      #    index_advisor
-      #    pg_tle
-      #    wrappers
-      #    supautils
-      #    pg_graphql
-      #    pg_stat_monitor
-      #    pg_jsonschema
-      #    pg_hashids
-      #    pg_plan_filter
-      #    pg_backtrace
-      #    vault
+    extensions = ps:
+      with ps; [
+        rum
+        timescaledb
+        pgroonga
+        wal2json
+        pg_repack
+        pg_safeupdate
+        plpgsql_check
+        pgjwt
+        pgaudit
+        postgis
+        pgrouting
+        pgtap
+        pg_cron
+        pgsql-http
+        pg_net
+        pgsodium
+        pgvector
+        hypopg
+        plv8
+        # Missing supabase plugins
+        #    index_advisor
+        #    pg_tle
+        #    wrappers
+        #    supautils
+        #    pg_graphql
+        #    pg_stat_monitor
+        #    pg_jsonschema
+        #    pg_hashids
+        #    pg_plan_filter
+        #    pg_backtrace
+        #    vault
 
-    ];
+      ];
     initialScript = pkgs.writeText "init-sql-script" ''
       alter user ${cfg.username} with password '${adminPassword}';
       alter user gitlab with password '${gitlabPassword}';

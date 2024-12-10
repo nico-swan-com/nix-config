@@ -10,15 +10,15 @@
       6443 # kubernettes api
       5432 # postgres db
       8888
-      111
-      4000
-      4001
-      4002
+      111 # NFS
+      4000 # NFS
+      4001 # NFS
+      4002 # NFS
       20048 # gitlab
       #5000 # gitlab container registry
       #8153 8154i gitlab kas
-      5572 # Rclone GUI
-      8000 # Restic
+      #5572 # Rclone GUI
+      #8000 # Restic
     ];
     #    extraCommands = ''
     #       iptables -I INPUT 1 -i docker0 -p tcp -d 172.17.0.1 -j ACCEPT
