@@ -1,10 +1,10 @@
 { config, pkgs, ... }:
 
 let
-  cloudflareEnvFile = "${config.sops.secrets."servers/cygnus-labs/services/cloudflare/envFile".path}";
+  cloudflareEnvFile =
+    "${config.sops.secrets."servers/cygnus-labs/services/cloudflare/envFile".path}";
   cloudflareEmail = "nico.swan@cygnus-labs.com";
-in
-{
+in {
 
   sops = {
     secrets = {
@@ -12,7 +12,6 @@ in
       "servers/cygnus-labs/services/cloudflare/envFile" = { };
     };
   };
-
 
   security.acme = {
     acceptTerms = true;
@@ -28,6 +27,7 @@ in
         "*.services.cygnus-labs.com"
         "*.development.cygnus-labs.com"
         "*.production.cygnus-labs.com"
+        "*.platform.cygnus-labs.com"
       ];
     };
   };
@@ -40,12 +40,13 @@ in
     recommendedTlsSettings = true;
 
     virtualHosts = {
-      "~^(?<subdomain>.+)\\.(development|production|services)\\.cygnus-labs\\.com$" = {
-        useACMEHost = "cygnus-labs.com";
-        forceSSL = true;
-        locations."/".proxyPass = "https://127.0.0.1:32060";
-      };
+      "~^(?<subdomain>.+)\\.(development|production|services)\\.cygnus-labs\\.com$" =
+        {
+          useACMEHost = "cygnus-labs.com";
+          forceSSL = true;
+          locations."/".proxyPass = "https://127.0.0.1:32060";
+        };
     };
   };
 }
- 
+
