@@ -24,7 +24,7 @@
           "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
         paths = [ "/var/gitlab/state/backup" ];
         repository =
-          "rclone:encrypted-google-drive-shared:/restic-repo/postgres";
+          "rclone:encrypted-google-drive-backup:/restic-repo/postgres";
       };
 
       gitlab-backup-home-nfs = {
@@ -39,7 +39,7 @@
         passwordFile =
           "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
         paths = [ "/var/gitlab/state/backup" ];
-        repository = "rclone:encrypted-google-drive-shared:/restic-repo/gitlab";
+        repository = "rclone:encrypted-google-drive-backup:/restic-repo/gitlab";
       };
     };
   };

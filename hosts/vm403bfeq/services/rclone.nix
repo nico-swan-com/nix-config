@@ -14,35 +14,33 @@ let
   # Script to generate rclone-google.conf
   rcloneConfigScript = pkgs.writeScript "generate-rclone-config.sh" ''
     #!/bin/sh
-
-    cat << EOF > /etc/rclone-google.conf
+    mkdir -p /etc/rclone
+    cat << EOF > /etc/rclone/rclone.conf
     [google-drive]
     type = drive
     scope = drive
     service_account_file = ${
-      config.sops.secrets."servers/cygnus-labs/services/google/vm403bfeq-service-account.json".path
+      config.sops.secrets."servers/cygnus-labs/external-services/google/vm403bfeq-service-account.json".path
     }
 
     [encrypted-google-drive]
     type = crypt
-    remote = google-drive:/
+    remote = google-drive:/encrypted
     password = ${password}
     password2 = ${password2}
 
-    [google-drive-shared]
-    type = drive
-    scope = drive
-    service_account_file = ${
-      config.sops.secrets."servers/cygnus-labs/services/google/vm403bfeq-service-account.json".path
-    }
-    shared_with_me = true
-
-    [encrypted-google-drive-shared]
+    [encrypted-google-drive-backup]
     type = crypt
-    remote = google-drive-shared:data/
+    remote = google-drive:/backup
     password = ${password}
     password2 = ${password2}
     EOF
+
+    mkdir -p /root/.config/rclone
+    rm /root/.config/rclone/rclone.conf
+    ln -s /etc/rclone/rclone.conf /root/.config/rclone/rclone.conf
+
+
   '';
 
   # Ensure the script is executable
@@ -57,12 +55,14 @@ in {
 
   sops = {
     secrets = {
-      "servers/cygnus-labs/services/google/vm403bfeq-service-account.json" =
+      "servers/cygnus-labs/external-services/google/vm403bfeq-service-account.json" =
         { };
       "servers/cygnus-labs/rclone/encryption/google-drive/password" = { };
       "servers/cygnus-labs/rclone/encryption/google-drive/password2" = { };
     };
   };
+
+  environment.variables = { RCLONE_CONFIG_DIR = "/etc/rclone"; };
 
   systemd.services.generate-rclone-config = {
     wantedBy = [ "multi-user.target" ];
@@ -79,39 +79,71 @@ in {
     };
   };
 
-  fileSystems."/mnt/google-drive" = {
-    device = "encrypted-google-drive:/";
-    fsType = "rclone";
-    options = [
-      "nodev"
-      "nofail"
-      "allow_other"
-      "args2env"
-      "config=/etc/rclone-google.conf"
-    ];
+  #  fileSystems."/mnt/google-drive-unencrypted" = {
+  #    device = "google-drive:/";
+  #    fsType = "rclone";
+  #    options = [
+  #      "nodev"
+  #      "nofail"
+  #      "allow_other"
+  #      "args2env"
+  #      "config=/etc/rclone/rclone.conf"
+  #    ];
+  #  };
+
+  systemd.services = {
+    "rclone-mounts-google-drive-unencrypted" = {
+      enable = true;
+      description = "Mount rclone google-drive unencrypted folder.";
+      after = [ "network-online.target" ];
+      preStart = "/usr/bin/env mkdir -p /mnt/google-drive-unencrypted";
+      serviceConfig = {
+        Type = "notify";
+        ExecStart = ''
+          ${pkgs.rclone}/bin/rclone --config=/etc/rclone/rclone.conf --vfs-cache-mode writes --ignore-checksum mount "google-drive:/" "/mnt/google-drive-unencrypted"
+        '';
+        ExecStop =
+          "/run/wrappers/bin/fusermount -u /mnt/google-drive-unencrypted";
+      };
+      wantedBy = [ "default.target" ];
+    };
   };
 
-  fileSystems."/mnt/google-drive-shared" = {
-    device = "encrypted-google-drive-shared:/";
-    fsType = "rclone";
-    options = [
-      "nodev"
-      "nofail"
-      "allow_other"
-      "args2env"
-      "config=/etc/rclone-google.conf"
-    ];
+  systemd.services = {
+    "rclone-mounts-google-drive-encrypted" = {
+      enable = true;
+      description = "Mount rclone google-drive encrypted folder.";
+      after = [ "network-online.target" ];
+      preStart = "/usr/bin/env mkdir -p /mnt/google-drive-encrypted";
+      serviceConfig = {
+        Type = "notify";
+        ExecStart = ''
+          ${pkgs.rclone}/bin/rclone --config=/etc/rclone/rclone.conf --vfs-cache-mode writes --ignore-checksum mount "encrypted-google-drive:/" "/mnt/google-drive-encrypted"
+        '';
+        ExecStop =
+          "/run/wrappers/bin/fusermount -u /mnt/google-drive-encrypted";
+      };
+      wantedBy = [ "default.target" ];
+    };
   };
-  fileSystems."/mnt/google-drive-shared-unencrypted" = {
-    device = "google-drive-shared:";
-    fsType = "rclone";
-    options = [
-      "nodev"
-      "nofail"
-      "allow_other"
-      "args2env"
-      "config=/etc/rclone-google.conf"
-    ];
+
+  systemd.services = {
+    "rclone-mounts-encrypted-google-drive-backup" = {
+      enable = true;
+      description = "Mount rclone google-drive shared backup folder.";
+      after = [ "network-online.target" ];
+      preStart =
+        "/usr/bin/env mkdir -p /mnt/google-drive-shared-encrypted-backup";
+      serviceConfig = {
+        Type = "notify";
+        ExecStart = ''
+          ${pkgs.rclone}/bin/rclone --config=/etc/rclone/rclone.conf --vfs-cache-mode writes --ignore-checksum mount "encrypted-google-drive-backup:/" "/mnt/google-drive-shared-encrypted-backup"
+        '';
+        ExecStop =
+          "/run/wrappers/bin/fusermount -u /mnt/google-drive-shared-encrypted-backup";
+      };
+      wantedBy = [ "default.target" ];
+    };
   };
 }
 

@@ -17,6 +17,16 @@ in {
   environment.systemPackages = with pkgs.unstable; [ keycloak ];
 
   services.nginx = {
+    upstreams = {
+      keycloak = {
+        extraConfig = ''
+          ip_hash;
+          keepalive 16;
+        '';
+        servers = { "localhost:38080" = { weight = 5; }; };
+      };
+    };
+
     virtualHosts = {
       "keycloak.cygnus-labs.com" = {
         useACMEHost = "cygnus-labs.com";

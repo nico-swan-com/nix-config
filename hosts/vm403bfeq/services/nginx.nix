@@ -2,14 +2,14 @@
 
 let
   cloudflareEnvFile =
-    "${config.sops.secrets."servers/cygnus-labs/services/cloudflare/envFile".path}";
-  cloudflareEmail = "nico.swan@cygnus-labs.com";
+    "${config.sops.secrets."servers/cygnus-labs/external-services/cloudflare/envFile".path}";
+  cloudflareEmail = "dev@cygnus-labs.com";
 in {
 
   sops = {
     secrets = {
-      "servers/cygnus-labs/services/cloudflare/email" = { };
-      "servers/cygnus-labs/services/cloudflare/envFile" = { };
+      "servers/cygnus-labs/external-services/cloudflare/email" = { };
+      "servers/cygnus-labs/external-services/cloudflare/envFile" = { };
     };
   };
 
