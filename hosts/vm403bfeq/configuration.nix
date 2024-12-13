@@ -1,25 +1,24 @@
-{ pkgs, ... }:
-{
-  imports =
-    [
-      # Core configuration
-      ../../core/nixos
-      ./sops.nix
+{ pkgs, ... }: {
+  imports = [
+    # Core configuration
+    ../../core/nixos
+    ./sops.nix
 
-      ./system
-      ./services
+    ./system
+    ./services
 
-      ./extra-users.nix
+    ./extra-users.nix
 
-    ];
-  environment.systemPackages = with pkgs; [
-    clang
   ];
+  environment.systemPackages = with pkgs; [ clang ];
 
   virtualisation.vmVariant = {
     # following configuration is added only when building VM with build-vm
     virtualisation = {
-      resolution = { x = 1280; y = 1024; };
+      resolution = {
+        x = 1280;
+        y = 1024;
+      };
       memorySize = 8192;
       cores = 4;
       graphics = false;

@@ -30,8 +30,8 @@
     enable = true;
     package = pkgs.unstable.minio;
     region = "af-south-1";
-    secretKey = config.sops.secrets."servers/cygnus-labs/minio/secretKey".path;
-    accessKey = config.sops.secrets."servers/cygnus-labs/minio/accessKey".path;
+    #secretKey = config.sops.secrets."servers/cygnus-labs/minio/secretKey".path;
+    #accessKey = config.sops.secrets."servers/cygnus-labs/minio/accessKey".path;
     rootCredentialsFile =
       config.sops.secrets."servers/cygnus-labs/minio/rootCredentialsFiles".path;
   };
