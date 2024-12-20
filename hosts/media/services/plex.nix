@@ -1,8 +1,9 @@
-{
+{ pkgs, ... }: {
 
   # Media Server
   services.plex = {
     enable = true;
+    package = pkgs.unstable.plex;
     openFirewall = true;
     dataDir = "/data/media/plex";
     user = "media";

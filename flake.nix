@@ -8,8 +8,8 @@
 
     # NixOS
     nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable"; # also see 'unstable-packages' overlay at 'overlays/default.nix"
-
+    nixpkgs-unstable.url =
+      "github:NixOS/nixpkgs/nixos-unstable"; # also see 'unstable-packages' overlay at 'overlays/default.nix"
 
     # MacOS packages
     nix-darwin = {
@@ -30,7 +30,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-
     # Add nicoswan packages and modules 
     # nicoswan = {
     #   url = "github:nico-swan-com/nixpkgs/main";
@@ -46,12 +45,14 @@
 
     # Secrets
     nix-secrets = {
-      url = "git+ssh://git@github.com/nico-swan-com/nix-secrets.git?ref=main&shallow=1";
+      url =
+        "git+ssh://git@github.com/nico-swan-com/nix-secrets.git?ref=main&shallow=1";
       flake = false;
     };
 
     nicoswan-nvim-config = {
-      url = "git+ssh://git@github.com/nico-swan-com/nvim.git?ref=main&shallow=1";
+      url =
+        "git+ssh://git@github.com/nico-swan-com/nvim.git?ref=main&shallow=1";
       flake = false;
     };
 
@@ -68,17 +69,10 @@
     #};
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , nixpkgs-unstable
-    , hardware
-    , nix-darwin
-    , home-manager
-    , disko
-      #, nixvim
-    , ...
-    } @inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, hardware, nix-darwin
+    , home-manager, disko
+    #, nixvim
+    , ... }@inputs:
     let
       inherit (self) outputs;
       inherit (nixpkgs) lib;
@@ -94,7 +88,8 @@
         forAllSystems (system: import inputs.nixpkgs { inherit system; });
 
       mkSystem = import ./lib/mkSystem.nix {
-        inherit nixpkgs nixpkgs-unstable outputs inputs lib nix-darwin home-manager hardware;
+        inherit nixpkgs nixpkgs-unstable outputs inputs lib nix-darwin
+          home-manager hardware;
       };
 
       # Common Configuration 
@@ -111,27 +106,19 @@
         # sharedHMModules = [
         #   nixvim.homeManagerModules.nixvim
         # ];
-        extraModules = [
-          inputs.nur.nixosModules.nur
-          #
-        ];
+        extraModules = [ inputs.nur.modules.nixos.default ];
       };
 
-    in
-    {
+    in {
       # TODO change this to something that has better looking output rules
       # Nix formatter available through 'nix fmt' https://nix-community.github.io/nixpkgs-fmt
-      formatter = forAllSystems
-        (system:
-          nixpkgs.legacyPackages.${system}.nixpkgs-fmt
-        );
+      formatter =
+        forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
 
       # Shell configured with packages that are typically only needed when working on or with nix-config.
-      devShells = forAllSystems
-        (system:
-          let pkgs = nixpkgs.legacyPackages.${system};
-          in import ./shell.nix { inherit pkgs; }
-        );
+      devShells = forAllSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in import ./shell.nix { inherit pkgs; });
 
       # darwinConfigurations.darwin = mkSystem "darwin" {
       #   system = "aarch64-darwin";

@@ -11,19 +11,7 @@
     rclone # fast copy to cloud providers like minio
     fd # Simple, fast and user-friendly alternative to find
     wget # Tool for retrieving files using HTTP, HTTPS, and FTP
-
-    # For neovim
-    #gcc
-    #fish_indent
-    #markdown-toc
-    #markdownlint-cli2
-    #prettier
-    #sqlfluff
-    #viu
-    #chafa
-    #ueberzugpp
-    #
-    #cargo
+    duf # replacement from du
 
     #    ntfy # terminal notification 
     #   iotop # io monitoring

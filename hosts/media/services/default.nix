@@ -7,7 +7,7 @@
     ./sonarr.nix
     ./radarr.nix
     ./ombi.nix
-    ./tautulli.nix
+    #./tautulli.nix
     ./qbittorrent.nix
     ./jackett.nix
 
@@ -16,7 +16,6 @@
     #./arion.nix
 
     ./nginx-proxy.nix
-
 
   ];
 

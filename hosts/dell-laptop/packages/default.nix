@@ -1,5 +1,4 @@
-{ pkgs, cfg, ... }:
-{
+{ pkgs, cfg, ... }: {
   imports = [
     #./ai.nix
     ../../../modules/cygnus-labs/read-aloud
@@ -22,5 +21,6 @@
     termshark
     portal
     sshs
+    ghost-cli
   ];
 }
