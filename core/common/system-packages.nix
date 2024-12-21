@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   environment.systemPackages = with pkgs; [
     zsh-history-substring-search
     zsh
@@ -37,10 +36,9 @@
     lsof # list open files
 
     # networking tools
+    sshs
     # iftop # network monitoring
     # dnsutils # `dig` + `nslookup`
-
-
 
     # misc
     # file
