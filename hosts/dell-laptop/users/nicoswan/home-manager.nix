@@ -59,6 +59,10 @@
   # Install addition packages via home manager
   home.packages = with pkgs;
     [
+      (writeShellScriptBin "tmux-cycle-windows"
+        (builtins.readFile ../../../../common/scripts/tmux-cycle-windows.sh))
+      (writeShellScriptBin "tmux-dashboard"
+        (builtins.readFile ../../../../common/scripts/tmux-dashboard.sh))
       systemctl-tui
       gnome-extensions-cli
       cmatrix # Some fun

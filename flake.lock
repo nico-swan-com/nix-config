@@ -27,11 +27,11 @@
       },
       "locked": {
         "dir": "pkgs/firefox-addons",
-        "lastModified": 1734149010,
-        "narHash": "sha256-KZytuAK2m+YTXnRY88sIMmVLJTpxc8yGWukkJlQiad4=",
+        "lastModified": 1734753806,
+        "narHash": "sha256-DM3G8p6T2DTB/8JsN8ij64bEarPSRBT9TuY9XyzjrBg=",
         "owner": "rycee",
         "repo": "nur-expressions",
-        "rev": "a51fd7b8d7221a806c1ece4bcca2db387d555ba1",
+        "rev": "5e77d5baa6f77bf2af14ffea4ee8be0af6e24466",
         "type": "gitlab"
       },
       "original": {
@@ -116,10 +116,10 @@
     "nicoswan-nvim-config": {
       "flake": false,
       "locked": {
-        "lastModified": 1734159009,
-        "narHash": "sha256-jvvTcmMX+RaaV+DlivkSp+e39Px2jMEp4UsyyuQJSK8=",
+        "lastModified": 1734238577,
+        "narHash": "sha256-H9QzB9grD4LJzwXIE+hbDmarSD7I31uaWU0mJfuIsm8=",
         "ref": "main",
-        "rev": "515862f0f70c781df10f0ff155ecce6b391582f3",
+        "rev": "371308304a31df07ff8bca441b9e84f12962d5ff",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/nico-swan-com/nvim.git"
@@ -204,11 +204,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1734190141,
-        "narHash": "sha256-/HUsNXtUyqZVv1BlzUsj1nIcO1oAv9nVGdsmOwZqQuo=",
+        "lastModified": 1734253085,
+        "narHash": "sha256-acxNxc8Mj1bP/XTa1H2ryKtQgvDjqDzWpzTQfaOJlE0=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "96e7226519ae9ad90d7a44cdc96eaaec8308f0a1",
+        "rev": "c2188abafab17076064b63a4f783eeb02485f8c1",
         "type": "github"
       },
       "original": {

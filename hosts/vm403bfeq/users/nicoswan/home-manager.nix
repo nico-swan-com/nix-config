@@ -18,9 +18,9 @@
   home.packages = with pkgs;
     [
       (writeShellScriptBin "update-kube-admin"
-        (builtins.readFile scripts/update-kube-admin.sh)) # Some fun
+        (builtins.readFile scripts/update-kube-admin.sh))
       (writeShellScriptBin "remove-kubernetes"
-        (builtins.readFile scripts/remove-kubernetes.sh)) # Some fun
+        (builtins.readFile scripts/remove-kubernetes.sh))
       lnav
       openssl
     ] ++ (with pkgs.unstable; [ systemctl-tui ]);
