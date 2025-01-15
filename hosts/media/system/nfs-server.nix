@@ -13,6 +13,17 @@
     options = [ "bind" ];
   };
 
+  fileSystems."/export/media-storage" = {
+    device = "/mnt/media-storage";
+    options = [ "bind" ];
+  };
+
+  fileSystems."/export/ntfs_drive" = {
+    device = "/mnt/ntfs_drive";
+    options = [ "bind" ];
+  };
+
+
   services.nfs.server = {
     enable = true;
     lockdPort = 4001;
