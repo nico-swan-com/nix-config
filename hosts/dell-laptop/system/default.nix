@@ -8,6 +8,7 @@
     ./dell-5490.nix
     ./gnome-desktop.nix
     ./nfs-client.nix
+    ./egpu.nix
   ];
 
   # Power button invokes suspend, not shutdown.

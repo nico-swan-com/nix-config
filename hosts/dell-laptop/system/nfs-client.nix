@@ -5,8 +5,8 @@
     fsType = "nfs";
     options = [ "x-systemd.automount" "noauto" ];
   };
-  fileSystems."/mnt/media" = {
-    device = "home.nicoswan.com:/export";
+  fileSystems."/mnt/media-server" = {
+    device = "192.168.1.223:/export";
     fsType = "nfs";
     options = [ "x-systemd.automount" "noauto" ];
   };

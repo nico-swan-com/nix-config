@@ -4,21 +4,22 @@
 #   cygnusLabsSecretsFile = "${secretsDirectory}/cluster-admin-secrets.yaml";
 # in
 {
-  imports =
-    [
-      ../../core/nixos
-      ./sops.nix
+  imports = [
+    ../../core/nixos
+    ./sops.nix
 
-      # Include the results of the hardware scan.
-      ./system
+    # Include the results of the hardware scan.
+    ./system
 
-      # Services 
-      ./services
+    # Services 
+    ./services
 
-      # Programs and Applications
-      ./packages
+    # Programs and Applications
+    ./packages
 
-    ];
+  ];
+
+  programs.nix-ld.enable = true;
 
   virtualisation.vmVariant = {
     # following configuration is added only when building VM with build-vm
@@ -36,6 +37,13 @@
       };
     };
   };
+
+  #programs.steam = {
+  #  enable = true;
+  #  remotePlay.openFirewall = true; # Open ports for Steam Remote Play
+  #  dedicatedServer.openFirewall =
+  #    true; # Open ports for Source Dedicated Server
+  #};
 
   # sops = {
   #   secrets = {

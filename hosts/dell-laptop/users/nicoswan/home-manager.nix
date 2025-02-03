@@ -40,6 +40,8 @@
   programs.zsh = {
     shellAliases = { nv = "NVIM_APPNAME=LazyVim nvim"; };
     initExtra = ''
+      #set-github-access-token
+
       function nvims() {
         items=("default" "kickstart" "LazyVim" "NvChad" "AstroNvim")
         config=$(printf "%s\n" "\$\{items[\@]}" | fzf --prompt=" Neovim Config  " --height=~50% --layout=reverse --border --exit-0)
@@ -59,6 +61,8 @@
   # Install addition packages via home manager
   home.packages = with pkgs;
     [
+      (writeShellScriptBin "set-github-access-token"
+        (builtins.readFile ../../scripts/set-github-access-token.sh))
       (writeShellScriptBin "tmux-cycle-windows"
         (builtins.readFile ../../../../common/scripts/tmux-cycle-windows.sh))
       (writeShellScriptBin "tmux-dashboard"
@@ -70,8 +74,23 @@
       lnav
       openssl
       mattermost-desktop
+      discord
 
-    ] ++ (with pkgs.unstable; [ devenv lunarvim cryptomator nest-cli ]);
+      #steam
+      #steam-tui
+      #steam-run
+      blender
+      #lutris-free
+      #protonup-qt
+      gimp
+
+    ] ++ (with pkgs.unstable; [
+      devenv
+      lunarvim
+      cryptomator
+      nest-cli
+      libreoffice
+    ]);
 
   # home = {
   #   file.".kube/cygnus-labs-kubernetes-ca.pem".source = "${config.sops.secrets."ca.pem".path}";

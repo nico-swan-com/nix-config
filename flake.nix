@@ -67,6 +67,8 @@
     #    # If using a stable channel you can use `url = "github:nix-community/nixvim/nixos-<version>"`
     #    inputs.nixpkgs.follows = "nixpkgs-unstable";
     #};
+    #
+    distro-grub-themes.url = "github:AdisonCavani/distro-grub-themes";
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, hardware, nix-darwin
@@ -135,11 +137,23 @@
       nixosConfigurations = {
         vm = mkSystem "vm" x86_64-config;
 
-        dell-laptop = mkSystem "dell-laptop" x86_64-config;
-        asus-laptop = mkSystem "asus-laptop" x86_64-config;
+        dell-laptop = mkSystem "dell-laptop"
+          (lib.recursiveUpdate x86_64-config {
+            extraModules =
+              [ inputs.distro-grub-themes.nixosModules.x86_64-linux.default ];
+          });
+
+        asus-laptop = mkSystem "asus-laptop"
+          (lib.recursiveUpdate x86_64-config {
+            extraModules =
+              [ inputs.distro-grub-themes.nixosModules.x86_64-linux.default ];
+          });
 
         media = mkSystem "media" (lib.recursiveUpdate x86_64-config {
-          extraModules = [ disko.nixosModules.disko ];
+          extraModules = [
+            disko.nixosModules.disko
+            inputs.distro-grub-themes.nixosModules.x86_64-linux.default
+          ];
         });
 
         vm403bfeq = mkSystem "vm403bfeq" x86_64-config;

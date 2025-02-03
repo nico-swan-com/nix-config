@@ -1,6 +1,7 @@
 { pkgs, cfg, ... }: {
   imports = [
     #./ai.nix
+    ./lutris.nix
     ../../../modules/cygnus-labs/read-aloud
   ];
 
@@ -21,6 +22,10 @@
     termshark
     portal
     sshs
-    ghost-cli
+    #ghost-cli
+
+    bottles
+
+    nixpacks
   ];
 }

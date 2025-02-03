@@ -1,0 +1,10 @@
+#!/bin/sh
+
+#If already set (e.g. in github actions); use that instead
+if [ -z "$GITHUB_TOKEN" ]; then
+	nix run nixpkgs#gh auth status || nix run nixpkgs#gh auth login
+	GITHUB_TOKEN="$(nix run nixpkgs#gh auth token)"
+	export GITHUB_TOKEN
+fi
+
+export NIX_CONFIG="access-tokens = github.com=$GITHUB_TOKEN"
