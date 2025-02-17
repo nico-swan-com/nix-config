@@ -18,11 +18,13 @@
     ./kubernetes # Miroservice container management for HA
     #./traefik.nix
     ./virtualisation.nix # Postman / Docker container management for services
+    ./attic-server.nix
 
     # User platforms
     ./platform/mattermost.nix
     #./platform/appflowy.nix
     #./platform/ghost-blog
+
   ];
 
 }

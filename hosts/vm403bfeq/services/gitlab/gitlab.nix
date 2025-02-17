@@ -29,6 +29,7 @@ in {
     ./runners/instance/docker-images.nix
     ./runners/infrastructure/alpine.nix
     ./runners/infrastructure/docker-images.nix
+    ./runners/infrastructure/nix-runner.nix
     #./runners/default-runner.nix
     ./runners/nix-runner.nix
     ./runners/docker-images.nix
@@ -102,6 +103,9 @@ in {
         forceSSL = true;
         locations."/" = {
           proxyPass = "http://unix:/run/gitlab/gitlab-workhorse.socket";
+          extraConfig = ''
+            client_max_body_size 0;
+          '';
         };
       };
       "registry.cygnus-labs.com" = {
@@ -181,6 +185,7 @@ in {
         email_display_name = "Cygnus-Labs GitLab";
         email_reply_to = "gitlab-no-reply@cygnus-labs.com";
         default_projects_features = { builds = false; };
+        artifacts.max_size = 1024;
       };
       #Keycloak SSO config 
       omniauth = {

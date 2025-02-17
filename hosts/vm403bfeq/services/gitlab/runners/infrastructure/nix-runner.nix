@@ -2,7 +2,7 @@
 
   sops = {
     secrets = {
-      "servers/cygnus-labs/gitlab/runners/nix" = {
+      "servers/cygnus-labs/gitlab/runners/infrastructure/nix" = {
         owner = "git";
         group = "git";
       };
@@ -14,12 +14,12 @@
     services = {
       # runner for building in docker via host's nix-daemon
       # nix store will be readable in runner, might be insecure
-      nix = with lib; {
+      infrastructure-nix = with lib; {
         # File should contain at least these two variables:
         # `CI_SERVER_URL`
         # `CI_SERVER_TOKEN`
         authenticationTokenConfigFile =
-          "${config.sops.secrets."servers/cygnus-labs/gitlab/runners/nix".path}";
+          "${config.sops.secrets."servers/cygnus-labs/gitlab/runners/infrastructure/nix".path}";
         dockerImage = "alpine";
         dockerVolumes = [
           "/nix/store:/nix/store:ro"
@@ -38,11 +38,11 @@
           mkdir -p -m 0755 /nix/var/nix/profiles/per-user/root
           mkdir -p -m 0700 "$HOME/.nix-defexpr"
           . ${pkgs.nix}/etc/profile.d/nix-daemon.sh
-          ${pkgs.nix}/bin/nix-channel --add https://nixos.org/channels/nixos-20.09 nixpkgs # 3
+          ${pkgs.nix}/bin/nix-channel --add https://nixos.org/channels/nixos-24.11 nixpkgs # 3
           ${pkgs.nix}/bin/nix-channel --update nixpkgs
           ${pkgs.nix}/bin/nix-env -i ${
             concatStringsSep " "
-            (with pkgs; [ nix cacert git openssh nixpacks ])
+            (with pkgs; [ nix cacert git openssh docker nixpacks ])
           }
         '';
         environmentVariables = {
