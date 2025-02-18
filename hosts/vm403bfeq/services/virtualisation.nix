@@ -46,8 +46,7 @@
       description = "Prune Containerd images";
       serviceConfig = {
         Type = "oneshot";
-        ExecStart = ''
-          ${pkgs.containerd}/bin/ctr -n k8s.io images prune --all --filter "labels.tag!=keep"'';
+        ExecStart = "${pkgs.containerd}/bin/ctr -n k8s.io images prune --all";
       };
     };
   };
