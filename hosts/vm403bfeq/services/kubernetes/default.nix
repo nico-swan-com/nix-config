@@ -30,41 +30,4 @@ in {
     my-helmfile
   ];
 
-  # This is to prevent the DiskPresure to occure because the diskspace get full because of unused images 
-  systemd.services = {
-    docker-prune = {
-      description = "Prune Docker images";
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = "${pkgs.docker}/bin/docker image prune -a -f";
-      };
-    };
-    containerd-prune = {
-      description = "Prune Containerd images";
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = "${pkgs.containerd}/bin/ctr -n k8s.io images prune --all";
-      };
-    };
-  };
-
-  systemd.timers = {
-    docker-prune = {
-      description = "Run Docker prune weekly";
-      timerConfig = {
-        OnCalendar = "weekly";
-        Persistent = true;
-      };
-      wantedBy = [ "timers.target" ];
-    };
-    containerd-prune = {
-      description = "Run Containerd prune weekly";
-      timerConfig = {
-        OnCalendar = "weekly";
-        Persistent = true;
-      };
-      wantedBy = [ "timers.target" ];
-    };
-  };
-
 }
