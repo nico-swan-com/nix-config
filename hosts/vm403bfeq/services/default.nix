@@ -25,6 +25,8 @@
     #./platform/appflowy.nix
     #./platform/ghost-blog
 
+    ./game-servers/valheim.nix
+
   ];
 
 }
