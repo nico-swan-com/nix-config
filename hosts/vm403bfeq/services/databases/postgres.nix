@@ -13,6 +13,9 @@ let
   keycloakPassword = "$(cat ${
       config.sops.secrets."servers/cygnus-labs/keycloak/dbPassword".path
     })";
+  penpotPassword = "$(cat ${
+      config.sops.secrets."servers/cygnus-labs/penpot/dbPassword".path
+    })";
 in {
   sops = {
     secrets = {
@@ -20,6 +23,7 @@ in {
       "servers/cygnus-labs/postgres/users/admin/password" = { };
       "servers/cygnus-labs/keycloak/dbUsername" = { };
       "servers/cygnus-labs/keycloak/dbPassword" = { };
+      "servers/cygnus-labs/penpot/dbPassword" = { };
     };
   };
 
@@ -37,7 +41,7 @@ in {
       port = 5432;
       listen_addresses = "*";
     };
-    ensureDatabases = [ "${cfg.username}" "keycloak" "gitlab" ];
+    ensureDatabases = [ "${cfg.username}" "keycloak" "gitlab" "penpot" ];
     ensureUsers = [
       {
         name = cfg.username;
@@ -59,6 +63,15 @@ in {
           createdb = true;
         };
       }
+      {
+        name = "penpot";
+        ensureDBOwnership = true;
+        ensureClauses = {
+          createrole = true;
+          createdb = true;
+        };
+      }
+
     ];
     extensions = ps:
       with ps; [
@@ -99,6 +112,7 @@ in {
       alter user ${cfg.username} with password '${adminPassword}';
       alter user gitlab with password '${gitlabPassword}';
       alter user ${keycloakUsername} with password '${keycloakPassword}';
+      alter user penpot with password '${penpotPassword}';
     '';
     authentication = pkgs.lib.mkOverride 10 ''
       #type    database DBuser  origin-address auth-methoda
