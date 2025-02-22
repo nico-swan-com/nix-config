@@ -1,7 +1,6 @@
 { pkgs, cfg, ... }: {
   imports = [
     #./ai.nix
-    ./lutris.nix
     ../../../modules/cygnus-labs/read-aloud
   ];
 
@@ -14,11 +13,11 @@
   environment.systemPackages = with pkgs; [
     qemu
     # gnome.polari
-    gnome-builder
+    #gnome-builder
 
     beekeeper-studio
     oci-cli
-    atac
+    #atac
     termshark
     portal
     sshs

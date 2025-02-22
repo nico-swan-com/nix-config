@@ -21,10 +21,10 @@ in {
     #./kubernetes.nix # Container management
     #./nextcloud # Own home Cloud 
     #./appflowy-cloud
-    ./postgres.nix
-    ./minio.nix
-    ./redis.nix
-    ../../../modules/gotrue/default.nix
+    #./postgres.nix
+    #./minio.nix
+    #./redis.nix
+    # ../../../modules/gotrue/default.nix
   ];
 
   services.onedrive = {
@@ -32,13 +32,13 @@ in {
     package = pkgs.unstable.onedrive;
   };
 
-  services.gotrue = {
-    enable = true;
-    databaseUrl = "postgres://admin:${adminPassword}@localhost:5432/admin";
-    adminEmail = "admin@example.com";
-    adminPassword = "adminpassword";
-    jwtSecret = "supersecret";
-    siteUrl = "http://localhost:9999";
-    smtpPassword = "${smtpPassword}";
-  };
+  #services.gotrue = {
+  #  enable = true;
+  #  databaseUrl = "postgres://admin:${adminPassword}@localhost:5432/admin";
+  #  adminEmail = "admin@example.com";
+  #  adminPassword = "adminpassword";
+  #  jwtSecret = "supersecret";
+  #  siteUrl = "http://localhost:9999";
+  #  smtpPassword = "${smtpPassword}";
+  #};
 }
