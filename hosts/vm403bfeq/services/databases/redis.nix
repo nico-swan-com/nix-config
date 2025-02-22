@@ -15,12 +15,9 @@
       "penpot" = {
         enable = true;
         openFirewall = true;
-        requirePassFile =
-          config.sops.secrets."servers/cygnus-labs/redis/requirePassFile".path;
-        #user = "nextcloud";
-        #unixSocket = "/run/redis-nextcloud/redis.sock";
         port = 6380;
         bind = null;
+        settings = { protected-mode = "no"; };
       };
     };
   };
