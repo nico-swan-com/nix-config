@@ -31,9 +31,9 @@ in {
         locations."/" = {
           proxyPass = "http://localhost:9000";
           recommendedProxySettings = true;
+          proxyWebsockets = true;
           extraConfig = ''
             proxy_connect_timeout 300;
-            proxy_http_version 1.1;
             proxy_set_header Connection "";
             chunked_transfer_encoding off;
           '';
@@ -51,11 +51,12 @@ in {
         locations."/" = {
           proxyPass = "http://localhost:9001";
           recommendedProxySettings = true;
+          proxyWebsockets = true;
+
           extraConfig = ''
             proxy_set_header X-NginX-Proxy true;
             real_ip_header X-Real-IP;
             proxy_connect_timeout 300;
-            proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
             chunked_transfer_encoding off;

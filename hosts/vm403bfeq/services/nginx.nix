@@ -39,13 +39,17 @@ in {
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
+    clientMaxBodySize = "500m";
 
     virtualHosts = {
       "~^(?<subdomain>.+)\\.(development|production|services)\\.cygnus-labs\\.com$" =
         {
           useACMEHost = "cygnus-labs.com";
           forceSSL = true;
-          locations."/".proxyPass = "https://127.0.0.1:32060";
+          locations."/" = {
+            proxyPass = "https://127.0.0.1:32060";
+            proxyWebsockets = true;
+          };
         };
     };
   };
