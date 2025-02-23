@@ -25,8 +25,8 @@
         "/opt/game-servers/valheim-server/data:/opt/valheim"
       ];
       environment = {
-        SERVER_NAME = "Server";
-        WORLD_NAME = "Neotopia";
+        SERVER_NAME = "Skyrim";
+        WORLD_NAME = "Skyrim2";
         SERVER_PASS = "secret";
       };
       #extraOptions = [ "--cap-add=sys_nice" "--stop-timeout 120" ];
