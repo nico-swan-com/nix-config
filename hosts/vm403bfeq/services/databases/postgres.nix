@@ -41,7 +41,8 @@ in {
       port = 5432;
       listen_addresses = "*";
     };
-    ensureDatabases = [ "${cfg.username}" "keycloak" "gitlab" "penpot" ];
+    ensureDatabases =
+      [ "${cfg.username}" "keycloak" "gitlab" "penpot" "docmost" ];
     ensureUsers = [
       {
         name = cfg.username;
@@ -65,6 +66,14 @@ in {
       }
       {
         name = "penpot";
+        ensureDBOwnership = true;
+        ensureClauses = {
+          createrole = true;
+          createdb = true;
+        };
+      }
+      {
+        name = "docmost";
         ensureDBOwnership = true;
         ensureClauses = {
           createrole = true;

@@ -1,4 +1,9 @@
-{
+{ config, ... }:
+let
+  passwordFile =
+    "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
+in {
+  sops = { secrets = { "servers/cygnus-labs/restic/passwordFile" = { }; }; };
 
   networking.firewall = {
     allowedTCPPorts = [
@@ -32,6 +37,18 @@
       #extraOptions = [ "--cap-add=sys_nice" "--stop-timeout 120" ];
 
       ports = [ "2456-2457:2456-2457/udp" ];
+    };
+  };
+
+  services.restic = {
+    backups = {
+      valheim-backup-home-nfs = {
+        initialize = true;
+        passwordFile = "${passwordFile}";
+        paths = [ "/opt/game-servers/valheim-server/config" ];
+        repository = "/mnt/home/backup/cygnus-labs/game-servers/valheim";
+      };
+
     };
   };
 }

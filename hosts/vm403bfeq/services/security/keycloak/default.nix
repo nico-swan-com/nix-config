@@ -34,6 +34,24 @@ in {
         forceSSL = true;
         locations."/".proxyPass = "http://localhost:38080";
       };
+      "auth.cygnus-labs.com" = {
+        useACMEHost = "cygnus-labs.com";
+        #enableACME = true;
+        forceSSL = true;
+        locations = {
+          "/" = {
+            proxyPass =
+              "https://keycloak.cygnus-labs.com/auth/realms/production/protocol/openid-connect/userinfo";
+            extraConfig = ''
+              proxy_ssl_server_name on;
+              proxy_pass_request_body off;
+              proxy_set_header Content-Length "";
+              proxy_set_header X-Original-URI $request_uri;
+            '';
+          };
+
+        };
+      };
     };
   };
 

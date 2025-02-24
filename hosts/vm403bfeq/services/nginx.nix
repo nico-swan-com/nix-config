@@ -29,6 +29,7 @@ in {
         "*.production.cygnus-labs.com"
         "*.platform.cygnus-labs.com"
         "*.security.cygnus-labs.com"
+        "*.s3.cygnus-labs.com"
       ];
     };
   };

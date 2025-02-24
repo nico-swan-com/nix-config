@@ -1,4 +1,8 @@
-{ pkgs, config, ... }: {
+{ pkgs, config, ... }:
+let
+  passwordFile =
+    "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
+in {
   sops = { secrets = { "servers/cygnus-labs/restic/passwordFile" = { }; }; };
 
   environment.systemPackages = with pkgs; [ restic ];
@@ -13,15 +17,13 @@
     backups = {
       postgres-backup-home-nfs = {
         initialize = true;
-        passwordFile =
-          "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
+        passwordFile = "${passwordFile}";
         paths = [ "/data/postgres/backup" ];
         repository = "/mnt/home/backup/cygnus-labs/postgres";
       };
       postgres-backup-google-drive = {
         initialize = true;
-        passwordFile =
-          "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
+        passwordFile = "${passwordFile}";
         paths = [ "/var/gitlab/state/backup" ];
         repository =
           "rclone:encrypted-google-drive-backup:/restic-repo/postgres";
@@ -29,18 +31,32 @@
 
       gitlab-backup-home-nfs = {
         initialize = true;
-        passwordFile =
-          "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
+        passwordFile = "${passwordFile}";
         paths = [ "/var/gitlab/state/backup" ];
         repository = "/mnt/home/backup/cygnus-labs/gitlab";
       };
+
       gitlab-backup-google-drive = {
         initialize = true;
-        passwordFile =
-          "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
+        passwordFile = "${passwordFile}";
         paths = [ "/var/gitlab/state/backup" ];
         repository = "rclone:encrypted-google-drive-backup:/restic-repo/gitlab";
       };
+
+      minio-backup-home-nfs = {
+        initialize = true;
+        passwordFile = "${passwordFile}";
+        paths = [ "/var/lib/minio/data" ];
+        repository = "/mnt/home/backup/cygnus-labs/minio";
+      };
+
+      minio-backup-google-drive = {
+        initialize = true;
+        passwordFile = "${passwordFile}";
+        paths = [ "/var/lib/minio/data" ];
+        repository = "rclone:encrypted-google-drive-backup:/restic-repo/minio";
+      };
+
     };
   };
 }
