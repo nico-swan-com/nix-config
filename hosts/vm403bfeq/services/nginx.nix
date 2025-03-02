@@ -47,9 +47,15 @@ in {
         {
           useACMEHost = "cygnus-labs.com";
           forceSSL = true;
-          locations."/" = {
-            proxyPass = "https://127.0.0.1:32060";
-            proxyWebsockets = true;
+          locations = {
+            "/" = {
+              proxyPass = "https://127.0.0.1:32060";
+              proxyWebsockets = true;
+              extraConfig = ''
+                error_page 502 @fallback;
+              '';
+            };
+            "@failover".proxyPass = "https://www.cygnus-labs.com";
           };
         };
     };
