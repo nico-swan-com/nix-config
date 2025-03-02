@@ -20,6 +20,11 @@
             extraConfig = ''
               auth_request /auth;
               auth_request_set $auth_status $upstream_status;
+              set $auth_token "";  # Initialize the variable
+              if ($cookie_auth_token) {
+                set $auth_token $cookie_auth_token;
+              }
+              proxy_set_header Authorization "Bearer $auth_token";
               error_page 401 = @handle_unauthorized;
             '';
           };
@@ -35,9 +40,8 @@
           };
 
           "@handle_unauthorized" = {
-            return = 401;
             extraConfig = ''
-              return https://keycloak.cygnus-labs.com/realms/production/protocol/openid-connect/auth?client_id=penpot&redirect_uri=$scheme://$http_host$request_uri&response_type=code&scope=openid;
+              return 302 https://keycloak.cygnus-labs.com/realms/production/protocol/openid-connect/auth?client_id=penpot&redirect_uri=$scheme://$http_host$request_uri&response_type=code&scope=openid;
             '';
           };
         };
