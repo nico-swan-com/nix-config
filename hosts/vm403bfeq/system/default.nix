@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{ inputs, ... }: {
   imports = [
     ./hardware-configuration.nix
     ./boot-loader.nix
@@ -21,6 +20,11 @@
   # Required for remote vscode
   # https://nixos.wiki/wiki/Visual_Studio_Code
   programs.nix-ld.enable = true;
+
+  nix.optimise = {
+    automatic = true;
+    dates = [ "03:45" ];
+  };
 
   system.autoUpgrade = {
     enable = true;
