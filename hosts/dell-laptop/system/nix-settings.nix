@@ -1,10 +1,5 @@
-{ inputs, lib, ... }:
-{
-  nix = {
-    settings = {
-      auto-optimise-store = lib.mkForce false;
-    };
-  };
+{ inputs, lib, ... }: {
+  nix = { settings = { auto-optimise-store = lib.mkForce true; }; };
   # Auto update
   system.autoUpgrade = {
     enable = false;
