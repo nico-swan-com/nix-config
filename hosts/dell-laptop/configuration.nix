@@ -38,12 +38,12 @@
     };
   };
 
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports for Steam Remote Play
-    dedicatedServer.openFirewall =
-      true; # Open ports for Source Dedicated Server
-  };
+  #programs.steam = {
+  #  enable = true;
+  #  remotePlay.openFirewall = true; # Open ports for Steam Remote Play
+  #  dedicatedServer.openFirewall =
+  #    true; # Open ports for Source Dedicated Server
+  #};
 
   # sops = {
   #   secrets = {

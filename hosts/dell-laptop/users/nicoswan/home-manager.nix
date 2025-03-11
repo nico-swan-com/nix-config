@@ -76,12 +76,7 @@
       mattermost-desktop
       discord
 
-      #steam
-      #steam-tui
-      #steam-run
       blender
-      #lutris-free
-      #protonup-qt
       gimp
 
     ] ++ (with pkgs.unstable; [
@@ -90,6 +85,7 @@
       cryptomator
       nest-cli
       libreoffice
+      protonvpn-gui
     ]);
 
   # home = {

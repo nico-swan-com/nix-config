@@ -13,7 +13,7 @@
   environment.systemPackages = with pkgs; [
     qemu
     # gnome.polari
-    #gnome-builder
+    # gnome-builder
 
     beekeeper-studio
     oci-cli

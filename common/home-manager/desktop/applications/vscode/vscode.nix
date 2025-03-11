@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
 
   programs.vscode = {
     enable = true;
@@ -35,7 +34,6 @@
     # };
     extensions = [
 
-
       #vscode-conventional-commits
     ] ++ (with pkgs.vscode-extensions; [
       jnoortheen.nix-ide
@@ -57,19 +55,17 @@
       donjayamanne.githistory
       gitlab.gitlab-workflow
 
-
       ms-azuretools.vscode-docker
       jnoortheen.nix-ide
       ms-vscode-remote.remote-ssh
       ms-vscode-remote.remote-containers
-
 
       gruntfuggly.todo-tree
       bierner.emojisense # Emoji int
 
       mkhl.direnv
       quicktype.quicktype # Copy JSON, paste as Go, TypeScript, C#, C++ and more.
-      christian-kohler.path-intellisense #Visual Studio Code plugin that autocompletes filenames
+      christian-kohler.path-intellisense # Visual Studio Code plugin that autocompletes filenames
       mikestead.dotenv
 
       # AI
@@ -83,10 +79,6 @@
       redhat.vscode-yaml
       redhat.vscode-xml
       shardulm94.trailing-spaces
-
-      # Angular
-      angular.ng-template
-      equinusocio.vsc-material-theme-icons
 
       # Html and CSS
       ecmel.vscode-html-css
@@ -158,12 +150,12 @@
         version = "1.4.5";
         sha256 = "sha256-liuFGnyvvVHzSv60oLkemFyv85R+RiGKErRIUz2PYKs=";
       }
-      {
-        name = "angular-console";
-        publisher = "nrwl";
-        version = "18.29.0";
-        sha256 = "sha256-NYRPT7Nr/Eue/RvXlcH7C8cPHe5Z8ktOb4Ji51ngcIU=";
-      }
+      #{
+      #  name = "angular-console";
+      #  publisher = "nrwl";
+      #  version = "18.29.0";
+      #  sha256 = "sha256-NYRPT7Nr/Eue/RvXlcH7C8cPHe5Z8ktOb4Ji51ngcIU=";
+      #}
       {
         name = "template-string-converter";
         publisher = "meganrogge";
@@ -249,70 +241,70 @@
       #
       # Angular
       #
-      {
-        name = "angular-cli";
-        publisher = "segerdekort";
-        version = "0.0.19";
-        sha256 = "sha256-SVtmVWxAbZ/0NSRlC096s5cCl+AcqG84LS1rnUFf5F8=";
-      }
-      {
-        # Angular Material 2, Flex layout 1, Covalent 1 & Material icon snippets
-        name = "angular-material";
-        publisher = "1tontech";
-        version = "0.13.0";
-        sha256 = "sha256-a0CSuKJWBAT8IzN2ld/mlsxQ4UgWuZ9I1QbzL3S6N6U=";
-      }
-
-      {
-        # Angular 18 snippets
-        name = "angular2";
-        publisher = "johnpapa";
-        version = "18.0.2";
-        sha256 = "sha256-h/qmDHG5zzDh76e4yq+s0vjNBYXupPqV5V72opEQsIs=";
-      }
-      {
-        # Easily navigate to `typescript`|`template`|`style` in angular2 project.
-        name = "angular2-switcher";
-        publisher = "infinity1207";
-        version = "0.4.0";
-        sha256 = "sha256-hTSyH/AByYUcN3Ua+106/Eq8/fD5zQMGWjj8bGFyv9Y=";
-      }
-      {
-        # Analyzes your Angular code and generates tests.
-        name = "simontest";
-        publisher = "simontest";
-        version = "1.9.10";
-        sha256 = "sha256-CISKqyWbT6Bmxt6kGtY3Knm1HOw4+5gvxwHyei3I1hE=";
-      }
-      {
-        # Ultimate Angular code generation in Visual Studio Code.
-        name = "angular-schematics";
-        publisher = "cyrilletuzi";
-        version = "6.16.0";
-        sha256 = "sha256-Qxfws7Jghu9GSWhmWm8wO5UfQxWlKtz5rcX7JUxiR9o=";
-      }
-      {
-        # This extension allows quickly scaffold angular 2 file templates in VS Code project.
-        name = "vscode-angular2-files";
-        publisher = "alexiv";
-        version = "1.6.4";
-        sha256 = "sha256-IpiPfakIfFG+sGmq7nn91mHNfPg7UkiUpDftmfwEQmI=";
-      }
-      {
-        # The extension provides refactoring tools for your Angular codebase
-        name = "arrr";
-        publisher = "obenjiro";
-        version = "0.1.3";
-        sha256 = "sha256-nUKn58pP32LSLO0zS2lS+k/qVaNOI8cDMb5EFsxxBrU=";
-      }
-
-      {
-        # Easily navigate between typescript, template, style, and associated test files in your Angular project using the Mac Touch
-        name = "angular-file-changer";
-        publisher = "john-crowson";
-        version = "0.0.4";
-        sha256 = "sha256-aBS4qn2p8Eh64EcWJJMkATNEzxt1O51QAxec5kb0Dug=";
-      }
+      #      {
+      #        name = "angular-cli";
+      #        publisher = "segerdekort";
+      #        version = "0.0.19";
+      #        sha256 = "sha256-SVtmVWxAbZ/0NSRlC096s5cCl+AcqG84LS1rnUFf5F8=";
+      #      }
+      #      {
+      #        # Angular Material 2, Flex layout 1, Covalent 1 & Material icon snippets
+      #        name = "angular-material";
+      #        publisher = "1tontech";
+      #        version = "0.13.0";
+      #        sha256 = "sha256-a0CSuKJWBAT8IzN2ld/mlsxQ4UgWuZ9I1QbzL3S6N6U=";
+      #      }
+      #
+      #      {
+      #        # Angular 18 snippets
+      #        name = "angular2";
+      #        publisher = "johnpapa";
+      #        version = "18.0.2";
+      #        sha256 = "sha256-h/qmDHG5zzDh76e4yq+s0vjNBYXupPqV5V72opEQsIs=";
+      #      }
+      #      {
+      #        # Easily navigate to `typescript`|`template`|`style` in angular2 project.
+      #        name = "angular2-switcher";
+      #        publisher = "infinity1207";
+      #        version = "0.4.0";
+      #        sha256 = "sha256-hTSyH/AByYUcN3Ua+106/Eq8/fD5zQMGWjj8bGFyv9Y=";
+      #      }
+      #      {
+      #        # Analyzes your Angular code and generates tests.
+      #        name = "simontest";
+      #        publisher = "simontest";
+      #        version = "1.9.10";
+      #        sha256 = "sha256-CISKqyWbT6Bmxt6kGtY3Knm1HOw4+5gvxwHyei3I1hE=";
+      #      }
+      #      {
+      #        # Ultimate Angular code generation in Visual Studio Code.
+      #        name = "angular-schematics";
+      #        publisher = "cyrilletuzi";
+      #        version = "6.16.0";
+      #        sha256 = "sha256-Qxfws7Jghu9GSWhmWm8wO5UfQxWlKtz5rcX7JUxiR9o=";
+      #      }
+      #      {
+      #        # This extension allows quickly scaffold angular 2 file templates in VS Code project.
+      #        name = "vscode-angular2-files";
+      #        publisher = "alexiv";
+      #        version = "1.6.4";
+      #        sha256 = "sha256-IpiPfakIfFG+sGmq7nn91mHNfPg7UkiUpDftmfwEQmI=";
+      #      }
+      #      {
+      #        # The extension provides refactoring tools for your Angular codebase
+      #        name = "arrr";
+      #        publisher = "obenjiro";
+      #        version = "0.1.3";
+      #        sha256 = "sha256-nUKn58pP32LSLO0zS2lS+k/qVaNOI8cDMb5EFsxxBrU=";
+      #      }
+      #
+      #      {
+      #        # Easily navigate between typescript, template, style, and associated test files in your Angular project using the Mac Touch
+      #        name = "angular-file-changer";
+      #        publisher = "john-crowson";
+      #        version = "0.0.4";
+      #        sha256 = "sha256-aBS4qn2p8Eh64EcWJJMkATNEzxt1O51QAxec5kb0Dug=";
+      #      }
 
       # HTML and CSS
       {
@@ -360,12 +352,12 @@
         version = "1.4.0";
         sha256 = "sha256-03c4FShGO+kmrlRQRsk8Siob/Fmvbppsgpg7Sq+P4w4=";
       }
-      {
-        name = "vscode-nestjs-generator";
-        publisher = "imgildev";
-        version = "2.5.0";
-        sha256 = "sha256-+0X/gwC8N5Ne1jwVYyShc4UhgV5crwxH3eV6fsEpRew=";
-      }
+      #      {
+      #        name = "vscode-nestjs-generator";
+      #        publisher = "imgildev";
+      #        version = "2.5.0";
+      #        sha256 = "sha256-+0X/gwC8N5Ne1jwVYyShc4UhgV5crwxH3eV6fsEpRew=";
+      #      }
       {
         name = "vscode-nestjs-swagger-snippets";
         publisher = "imgildev";
