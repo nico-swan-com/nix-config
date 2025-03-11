@@ -1,5 +1,4 @@
-{
-
+{ pkgs, ... }: {
 
   system.activationScripts.transmissiondatalink.text = ''
     mkdir -p /data/media
@@ -9,6 +8,7 @@
 
   services.transmission = {
     enable = true;
+    package = pkgs.unstable.transmission;
     user = "media";
     group = "media";
     openFirewall = true;

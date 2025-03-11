@@ -1,8 +1,9 @@
-{
+{ pkgs, ... }: {
 
   services.jackett = {
     enable = true;
     openFirewall = true;
+    package = pkgs.unstable.jackett;
     dataDir = "/data/media/jackett";
     user = "media";
     group = "media";

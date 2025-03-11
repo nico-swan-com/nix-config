@@ -1,4 +1,4 @@
-{
+{ pkgs, ... }: {
 
   nixpkgs.config.permittedInsecurePackages = [
     "aspnetcore-runtime-6.0.36"
@@ -9,6 +9,7 @@
 
   services.sonarr = {
     enable = true;
+    package = pkgs.unstable.sonarr;
     openFirewall = true;
     dataDir = "/data/media/sonarr";
     user = "media";

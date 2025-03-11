@@ -6,11 +6,8 @@ let
   user = "media";
   group = "media";
   port = 9010;
-in
-{
-  environment.systemPackages = with pkgs; [
-    qbittorrent
-  ];
+in {
+  environment.systemPackages = with pkgs.unstable; [ qbittorrent ];
 
   nixpkgs.overlays = [
     (final: prev: {

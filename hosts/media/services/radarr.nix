@@ -1,7 +1,8 @@
-{
+{ pkgs, ... }: {
   services.radarr = {
     enable = true;
     openFirewall = true;
+    package = pkgs.unstable.radarr;
     dataDir = "/data/media/radarr";
     user = "media";
     group = "media";

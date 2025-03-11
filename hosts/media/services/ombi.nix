@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
 
   system.activationScripts.ombidatalink.text = ''
     mkdir -p /data/media
@@ -9,6 +8,7 @@
 
   services.ombi = {
     enable = true;
+    package = pkgs.unstable.ombi;
     user = "media";
     group = "media";
     dataDir = "/data/media/ombi";
