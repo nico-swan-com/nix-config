@@ -21,6 +21,7 @@
     #./attic-server.nix
 
     # User platforms
+    ./platform/solidtime
     #./platform/mattermost.nix
     ./platform/docmost.nix
     #./platform/appflowy.nix

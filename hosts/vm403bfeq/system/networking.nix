@@ -16,6 +16,7 @@
       4002 # NFS
       20048 # gitlab
       9000 # minio
+      10250 # metrics server
 
       #5000 # gitlab container registry
       #8153 8154i gitlab kas

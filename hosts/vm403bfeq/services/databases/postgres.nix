@@ -16,6 +16,9 @@ let
   penpotPassword = "$(cat ${
       config.sops.secrets."servers/cygnus-labs/penpot/dbPassword".path
     })";
+  solidtimePassword = "$(cat ${
+      config.sops.secrets."servers/cygnus-labs/solidtime/dbPassword".path
+    })";
 in {
   sops = {
     secrets = {
@@ -24,6 +27,7 @@ in {
       "servers/cygnus-labs/keycloak/dbUsername" = { };
       "servers/cygnus-labs/keycloak/dbPassword" = { };
       "servers/cygnus-labs/penpot/dbPassword" = { };
+      "servers/cygnus-labs/solidtime/dbPassword" = { };
     };
   };
 
@@ -42,7 +46,7 @@ in {
       listen_addresses = "*";
     };
     ensureDatabases =
-      [ "${cfg.username}" "keycloak" "gitlab" "penpot" "docmost" ];
+      [ "${cfg.username}" "keycloak" "gitlab" "penpot" "docmost" "solidtime" ];
     ensureUsers = [
       {
         name = cfg.username;
@@ -74,6 +78,14 @@ in {
       }
       {
         name = "docmost";
+        ensureDBOwnership = true;
+        ensureClauses = {
+          createrole = true;
+          createdb = true;
+        };
+      }
+      {
+        name = "solidtime";
         ensureDBOwnership = true;
         ensureClauses = {
           createrole = true;
@@ -122,6 +134,7 @@ in {
       alter user gitlab with password '${gitlabPassword}';
       alter user ${keycloakUsername} with password '${keycloakPassword}';
       alter user penpot with password '${penpotPassword}';
+      alter user solidtime with password '${solidtimePassword}';
     '';
     authentication = pkgs.lib.mkOverride 10 ''
       #type    database DBuser  origin-address auth-methoda
