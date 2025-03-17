@@ -7,28 +7,30 @@
     hardware.url = "github:nixos/nixos-hardware";
 
     # NixOS
-    nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/release-24.11";
     nixpkgs-unstable.url =
       "github:NixOS/nixpkgs/nixos-unstable"; # also see 'unstable-packages' overlay at 'overlays/default.nix"
 
     # MacOS packages
     nix-darwin = {
       url = "github:lnl7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
     # User packages
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
-      inputs.nixpkgs.follows = "nixpkgs";
+      #url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/master";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
     # Nix User Repository
-    nur.url = "github:nix-community/NUR";
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    #nur.url = "github:nix-community/NUR";
+    #firefox-addons = {
+    #  url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+    #  inputs.nixpkgs.follows = "nixpkgs";
+    #};
 
     # Add nicoswan packages and modules 
     # nicoswan = {
@@ -50,14 +52,14 @@
       flake = false;
     };
 
-    nicoswan-nvim-config = {
-      url =
-        "git+ssh://git@github.com/nico-swan-com/nvim.git?ref=main&shallow=1";
-      flake = false;
-    };
+    #nicoswan-nvim-config = {
+    #  url =
+    #    "git+ssh://git@github.com/nico-swan-com/nvim.git?ref=main&shallow=1";
+    #  flake = false;
+    #};
 
     # Declarative partitioning and formatting
-    disko.url = "github:nix-community/disko";
+    #disko.url = "github:nix-community/disko";
 
     #neovim
     # Neve.url = "github:redyf/Neve";
@@ -68,11 +70,15 @@
     #    inputs.nixpkgs.follows = "nixpkgs-unstable";
     #};
     #
-    distro-grub-themes.url = "github:AdisonCavani/distro-grub-themes";
+    distro-grub-themes = {
+      url = "github:AdisonCavani/distro-grub-themes";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, hardware, nix-darwin
-    , home-manager, disko
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixpkgs-stable, hardware, nix-darwin
+    , home-manager, distro-grub-themes 
+    #, disko
     #, nixvim
     , ... }@inputs:
     let
@@ -90,8 +96,8 @@
         forAllSystems (system: import inputs.nixpkgs { inherit system; });
 
       mkSystem = import ./lib/mkSystem.nix {
-        inherit nixpkgs nixpkgs-unstable outputs inputs lib nix-darwin
-          home-manager hardware;
+        inherit nixpkgs nixpkgs-unstable nixpkgs-stable outputs inputs lib nix-darwin
+          home-manager hardware distro-grub-themes;
       };
 
       # Common Configuration 
@@ -151,7 +157,7 @@
 
         media = mkSystem "media" (lib.recursiveUpdate x86_64-config {
           extraModules = [
-            disko.nixosModules.disko
+            #disko.nixosModules.disko
             inputs.distro-grub-themes.nixosModules.x86_64-linux.default
           ];
         });

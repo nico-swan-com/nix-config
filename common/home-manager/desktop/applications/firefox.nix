@@ -41,14 +41,14 @@
         /* some css */                        
       '';
 
-      extensions = with inputs.firefox-addons.packages."x86_64-linux"; [
-        bitwarden
-        ublock-origin
-        sponsorblock
-        darkreader
-        tridactyl
-        youtube-shorts-block
-      ];
+#      extensions = with inputs.firefox-addons.packages."x86_64-linux"; [
+#        bitwarden
+#        ublock-origin
+#        sponsorblock
+#        darkreader
+#        tridactyl
+#        youtube-shorts-block
+#      ];
 
     };
   };

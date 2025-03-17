@@ -18,7 +18,7 @@
 
     # Desktop application
     ../../../../common/home-manager/desktop/applications/lens.nix
-    ../../../../common/home-manager/desktop/applications/firefox.nix
+    #../../../../common/home-manager/desktop/applications/firefox.nix
     ../../../../common/home-manager/desktop/applications/google-chrome.nix
 
     #../../../../common/home-manager/desktop/applications/libraoffice.nix

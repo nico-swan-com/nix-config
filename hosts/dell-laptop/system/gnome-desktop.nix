@@ -1,9 +1,5 @@
 { pkgs, ... }: {
 
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
   # Gnome default application
   environment.systemPackages = with pkgs;
     [ gtop libgtop gparted gnome-extension-manager ]
@@ -44,7 +40,13 @@
   # systemd.services."getty@tty1".enable = false;
   # systemd.services."autovt@tty1".enable = false;
 
+  services.xserver.displayManager.gdm = {
+    enable = true;
+    wayland = true;
+  };
+
   services.xserver.desktopManager.gnome = {
+    enable = true;
     extraGSettingsOverrides = ''
       [org/gnome/desktop/interface]
       color-scheme='prefer-dark'

@@ -6,8 +6,7 @@ let
   secretsFile = "${secretsDirectory}/secrets.yaml";
   clusterAdminSecretsFile = "${secretsDirectory}/cluster-admin-secrets.yaml";
   homeDirectory = config.home.homeDirectory;
-in
-{
+in {
 
   sops.age.keyFile = "${homeDirectory}/.config/sops/age/keys.txt";
   sops.defaultSopsFile = secretsFile;
@@ -15,6 +14,12 @@ in
   #sops.defaultSymlinkPath = "/run/user/1000/secrets";
   #sops.defaultSecretsMountPoint = "/run/user/1000/secrets.d";
 
+  sops.secrets = {
+    "users/nicoswan/access-token/gitHub" = {
+      path = "${homeDirectory}/.secrets/access-token/gitHub.enc";
+    };
+  };
+  #sops.secrets = { "users/nicoswan/access-tokens/gitHub" = { }; };
 
   # sops.secrets = {
   #   "host/private-key" = {
@@ -39,7 +44,5 @@ in
   # home.activation.updateSecrets = ''
   #   /run/current-system/sw/bin/systemctl --user restart sops-nix
   # '';
-
-
 
 }

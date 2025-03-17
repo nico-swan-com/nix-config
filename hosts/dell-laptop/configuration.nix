@@ -20,7 +20,7 @@
   ];
 
   programs.nix-ld.enable = true;
-
+  home-manager.backupFileExtension = "backup";
   virtualisation.vmVariant = {
     # following configuration is added only when building VM with build-vm
     virtualisation = {
