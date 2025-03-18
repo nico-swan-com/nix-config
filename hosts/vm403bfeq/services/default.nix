@@ -14,22 +14,22 @@
     ./restic.nix # Backupd services
 
     # SDLC (Development)
-    ./gitlab/gitlab.nix # Source code control and SDLC
-    ./kubernetes # Miroservice container management for HA
+    #./gitlab/gitlab.nix # Source code control and SDLC
+    #./kubernetes # Miroservice container management for HA
     #./traefik.nix
     ./virtualisation.nix # Postman / Docker container management for services
     #./attic-server.nix
 
     # User platforms
-    ./platform/solidtime
+    #./platform/solidtime
     #./platform/mattermost.nix
-    ./platform/docmost.nix
+    #./platform/docmost.nix
     #./platform/appflowy.nix
     #./platform/ghost-blog
 
     ./game-servers/valheim.nix
 
-    ./test-service.nix
+    #./test-service.nix
 
   ];
 

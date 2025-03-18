@@ -26,7 +26,7 @@
     };
 
     # Nix User Repository
-    #nur.url = "github:nix-community/NUR";
+    nur.url = "github:nix-community/NUR";
     #firefox-addons = {
     #  url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     #  inputs.nixpkgs.follows = "nixpkgs";
@@ -76,8 +76,8 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nixpkgs-stable, hardware, nix-darwin
-    , home-manager, distro-grub-themes 
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixpkgs-stable, hardware
+    , nix-darwin, home-manager, distro-grub-themes
     #, disko
     #, nixvim
     , ... }@inputs:
@@ -96,8 +96,8 @@
         forAllSystems (system: import inputs.nixpkgs { inherit system; });
 
       mkSystem = import ./lib/mkSystem.nix {
-        inherit nixpkgs nixpkgs-unstable nixpkgs-stable outputs inputs lib nix-darwin
-          home-manager hardware distro-grub-themes;
+        inherit nixpkgs nixpkgs-unstable nixpkgs-stable outputs inputs lib
+          nix-darwin home-manager hardware distro-grub-themes;
       };
 
       # Common Configuration 
