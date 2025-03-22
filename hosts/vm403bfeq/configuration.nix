@@ -10,7 +10,14 @@
     ./extra-users.nix
 
   ];
-  environment.systemPackages = with pkgs; [ clang ];
+  environment.systemPackages = with pkgs; [
+    clang
+    # Added the below because hostname from net-tools doens pick up the domain
+    inetutils
+    (pkgs.writeShellScriptBin "hostname" ''
+      exec ${pkgs.inetutils}/bin/hostname "$@"
+    '')
+  ];
 
   virtualisation.vmVariant = {
     # following configuration is added only when building VM with build-vm

@@ -23,6 +23,18 @@
       };
     };
   };
+  services.redis = {
+    servers = {
+      "docmost" = {
+        enable = true;
+        openFirewall = true;
+        port = 6381;
+        bind = null;
+        settings = { protected-mode = "no"; };
+      };
+
+    };
+  };
 
   virtualisation.oci-containers.containers = {
     docmost = {

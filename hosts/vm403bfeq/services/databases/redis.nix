@@ -12,22 +12,6 @@
         port = 6379;
         bind = null;
       };
-      "penpot" = {
-        enable = true;
-        openFirewall = true;
-        port = 6380;
-        bind = null;
-        settings = { protected-mode = "no"; };
-      };
-
-      "docmost" = {
-        enable = true;
-        openFirewall = true;
-        port = 6381;
-        bind = null;
-        settings = { protected-mode = "no"; };
-      };
-
     };
   };
 }

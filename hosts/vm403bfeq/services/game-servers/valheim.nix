@@ -32,7 +32,7 @@ in {
       environment = {
         SERVER_NAME = "Skyrim";
         WORLD_NAME = "Skyrim2";
-        SERVER_PASS = "secret";
+        SERVER_PASS = "secrets";
       };
       #extraOptions = [ "--cap-add=sys_nice" "--stop-timeout 120" ];
 

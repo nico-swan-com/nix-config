@@ -10,9 +10,7 @@ let
   # certFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/certFile".path}";
   # caFile = "${config.sops.secrets."servers/cygnus-labs/kubernetes/caFile".path}";
 
-in
-{
-
+in {
 
   # resolve master hostname
   networking.extraHosts = "${kubeMasterIP} ${kubeMasterHostname}";
@@ -29,21 +27,22 @@ in
   ];
 
   # Fixes for longhorn
-  systemd.tmpfiles.rules = [
-    "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
-    "d /data/openebs/local 0755 root root"
-  ];
+  #  systemd.tmpfiles.rules = [
+  #    "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
+  #    "d /data/openebs/local 0755 root root"
+  #  ];
   #virtualisation.docker.logDriver = "json-file";
 
-  services.openiscsi = {
-    enable = true;
-    name = "iqn.2016-04.com.open-iscsi:${config.networking.hostName}";
-  };
-
+  #  services.openiscsi = {
+  #    enable = true;
+  #    name = "iqn.2016-04.com.open-iscsi:${config.networking.hostName}";
+  #  };
+  #
   services.kubernetes = {
     roles = [ "master" "node" ];
     masterAddress = kubeMasterHostname;
-    apiserverAddress = "https://${kubeMasterHostname}:${toString kubeMasterAPIServerPort}";
+    apiserverAddress =
+      "https://${kubeMasterHostname}:${toString kubeMasterAPIServerPort}";
     easyCerts = true;
     # caFile = lib.mkDefault caFile;
     # path

@@ -12,14 +12,14 @@
     enable = true;
     autoPrune = {
       enable = true;
-      flags = [ "--all" ];
-      dates = "daily";
+      flags = [ ];
+      dates = "weekly";
     };
-    daemon.settings = {
-      "storage-opts" = [ "dm.min_free_space=2%" ];
-      "image-gc-high-threshold" = 90;
-      "image-gc-low-threshold" = 80;
-    };
+    #daemon.settings = {
+    #  "storage-opts" = [ "dm.min_free_space=2%" ];
+    #  "image-gc-high-threshold" = 90;
+    #  "image-gc-low-threshold" = 80;
+    #};
   };
 
   virtualisation.containerd = {
