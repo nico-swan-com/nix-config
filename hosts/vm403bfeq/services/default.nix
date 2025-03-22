@@ -19,7 +19,6 @@
 
     # SDLC (Development)
     #./gitlab/gitlab.nix # Source code control and SDLC
-    #./kubernetes # Miroservice container management for HA
     #./traefik.nix
     #./attic-server.nix
 
