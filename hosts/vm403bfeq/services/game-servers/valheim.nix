@@ -33,6 +33,7 @@ in {
         SERVER_NAME = "Skyrim";
         WORLD_NAME = "Skyrim2";
         SERVER_PASS = "secrets";
+        BACKUPS_MAX_COUNT = "2";
       };
       #extraOptions = [ "--cap-add=sys_nice" "--stop-timeout 120" ];
 

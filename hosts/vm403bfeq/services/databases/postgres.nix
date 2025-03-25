@@ -19,9 +19,12 @@ let
   solidtimePassword = "$(cat ${
       config.sops.secrets."servers/cygnus-labs/solidtime/dbPassword".path
     })";
+  resticPasswordFile =
+    "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
 in {
   sops = {
     secrets = {
+      "servers/cygnus-labs/restic/passwordFile" = { };
       "servers/cygnus-labs/gitlab/databasePasswordFile" = { };
       "servers/cygnus-labs/postgres/users/admin/password" = { };
       "servers/cygnus-labs/keycloak/dbUsername" = { };
@@ -166,5 +169,23 @@ in {
     enable = true;
     location = "/data/postgres/backup";
     backupAll = true;
+  };
+
+  services.restic = {
+    backups = {
+      postgres-backup-home-nfs = {
+        initialize = true;
+        passwordFile = "${resticPasswordFile}";
+        paths = [ "/data/postgres/backup" ];
+        repository = "/mnt/home/backup/cygnus-labs/postgres";
+      };
+      postgres-backup-google-drive = {
+        initialize = true;
+        passwordFile = "${resticPasswordFile}";
+        paths = [ "/data/postgres/backup" ];
+        repository =
+          "rclone:encrypted-google-drive-backup:/restic-repo/postgres";
+      };
+    };
   };
 }

@@ -20,7 +20,7 @@
     p7zip
 
     # terminal file managers
-    mc
+    #mc
 
     # utils
     ripgrep # recursively searches directories for a regex pattern

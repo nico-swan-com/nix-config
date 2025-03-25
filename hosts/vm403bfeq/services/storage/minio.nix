@@ -1,5 +1,4 @@
 { pkgs, config, ... }:
-
 let
   commonExtraConfig = ''
     # Allow special characters in headers
@@ -13,10 +12,17 @@ let
     proxy_buffering off;
     proxy_request_buffering off;
   '';
+  passwordFile =
+    "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
 in {
   sops = {
-    secrets = { "servers/cygnus-labs/minio/rootCredentialsFiles" = { }; };
+    secrets = {
+      "servers/cygnus-labs/minio/rootCredentialsFiles" = { };
+      "servers/cygnus-labs/restic/passwordFile" = { };
+    };
   };
+
+  environment.systemPackages = with pkgs; [ minio-client ];
 
   services.nginx = {
     virtualHosts = {
@@ -74,5 +80,23 @@ in {
     rootCredentialsFile =
       config.sops.secrets."servers/cygnus-labs/minio/rootCredentialsFiles".path;
   };
+  services.restic = {
+    backups = {
 
+      minio-backup-home-nfs = {
+        initialize = true;
+        passwordFile = "${passwordFile}";
+        paths = [ "/var/lib/minio/data" "/var/lib/minio/config" ];
+        repository = "/mnt/home/backup/cygnus-labs/minio";
+      };
+
+      minio-backup-google-drive = {
+        initialize = true;
+        passwordFile = "${passwordFile}";
+        paths = [ "/var/lib/minio/data" "/var/lib/minio/config" ];
+        repository = "rclone:encrypted-google-drive-backup:/restic-repo/minio";
+      };
+
+    };
+  };
 }
