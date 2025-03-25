@@ -27,6 +27,7 @@
   };
 
   system.autoUpgrade = {
+    enable = true;
     flake = inputs.self.outPath;
     #flake = "/root/.config/nix-config#vm403bfeq";
     flags = [ "-L" ];
