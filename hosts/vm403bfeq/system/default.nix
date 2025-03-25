@@ -26,9 +26,9 @@
     dates = [ "03:45" ];
   };
 
-  system.autoUpgrade = {
-    enable = true;
-    flake = "/root/.config/nix-config#vm403bfeq";
+  system.autoupgrade = {
+    flake = inputs.self.outPath;
+    #flake = "/root/.config/nix-config#vm403bfeq";
     flags = [ "-L" ];
     dates = "02:00";
     randomizedDelaySec = "45min";
