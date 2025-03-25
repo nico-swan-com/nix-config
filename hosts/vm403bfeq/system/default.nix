@@ -26,7 +26,7 @@
     dates = [ "03:45" ];
   };
 
-  system.autoupgrade = {
+  system.autoUpgrade = {
     flake = inputs.self.outPath;
     #flake = "/root/.config/nix-config#vm403bfeq";
     flags = [ "-L" ];
