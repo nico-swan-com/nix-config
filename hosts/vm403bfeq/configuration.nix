@@ -12,6 +12,7 @@
   ];
   environment.systemPackages = with pkgs; [
     clang
+    opentofu
     # Added the below because hostname from net-tools doens pick up the domain
     inetutils
     (pkgs.writeShellScriptBin "hostname" ''

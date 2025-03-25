@@ -28,6 +28,7 @@ in {
     kail
     my-kubernetes-helm
     my-helmfile
+    vcluster
   ];
 
 }
