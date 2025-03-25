@@ -86,6 +86,8 @@
       nest-cli
       libreoffice
       protonvpn-gui
+      opentofu
+      vcluster
     ]);
 
   # home = {

@@ -11,20 +11,16 @@ in {
   };
 
   nix = { settings = { auto-optimise-store = lib.mkForce true; }; };
+  nix.optimise = {
+    automatic = true;
+    dates = [ "03:45" ];
+  };
+
   # Auto update
   system.autoUpgrade = {
-    enable = false;
-    # To see the status of the timer run
-    #  systemctl status nixos-upgrade.timer
-
-    # The upgrade log can be printed with this command
-    #  systemctl status nixos-upgrade.service
+    enable = true;
     flake = inputs.self.outPath;
-    flags = [
-      "--update-input"
-      "nixpkgs"
-      "-L" # print build logs
-    ];
+    flags = [ "-L" ];
     dates = "02:00";
     randomizedDelaySec = "45min";
   };
