@@ -1,5 +1,4 @@
-{ pkgs, inputs, config, ... }:
-{
+{ pkgs, inputs, config, ... }: {
 
   #Import your own custom modules
   imports = [
@@ -17,46 +16,47 @@
   fonts.fontconfig.enable = true;
 
   # Install addition packages via home manager
-  home.packages = with pkgs.unstable; [
-    process-compose
-    # openapi-tui # seems to not work with files
-  ] ++ (with pkgs; [
-    sops
-    lunarvim
-    vimPlugins.neogit
+  home.packages = with pkgs.unstable;
+    [
+      process-compose
+      # openapi-tui # seems to not work with files
+    ] ++ (with pkgs; [
+      sops
+      lunarvim
+      vimPlugins.neogit
 
+      # Utils
+      lazydocker # Terninal UI for docker
+      podman-tui # Podman terminal UI
+      portal # Copy files
+      sshs # SSH session manager
 
-    # Utils
-    lazydocker # Terninal UI for docker
-    podman-tui # Podman terminal UI
-    portal # Copy files
-    sshs # SSH session manager
+      # Productivity tools
+      slides
+      visidata
+      glow # Terminal marckdown viewer
 
-    # Productivity tools
-    slides
-    visidata
-    glow # Terminal marckdown viewer
+      # Development
+      devenv # development environments
+      git-extras
+      nodejs_20 # Node 20 (setup as default)
+      nodePackages.npm-check-updates # ncu updater for node packages in projects
+      atac # Postman for the terminal
 
-    # Development
-    devenv # development environments
-    git-extras
-    nodejs_20 # Node 20 (setup as default)
-    nodePackages.npm-check-updates # ncu updater for node packages in projects
-    atac # Postman for the terminal
+      # Fonts
+      #fira-code-nerdfont # Font installation
+      nerd-fonts.fira-code
+      noto-fonts
+      meslo-lgs-nf
 
-    # Fonts
-    fira-code-nerdfont # Font installation
-    noto-fonts
-    meslo-lgs-nf
+      #ceryx
+      # Network security
+      termshark
 
-    #ceryx
-    # Network security
-    termshark
+      # AI
+      oterm
 
-    # AI
-    oterm
-
-  ]);
+    ]);
 
   programs.nnn.bookmarks = {
     D = "~/Documents";
@@ -72,9 +72,7 @@
       ngs = "ng serve";
     };
 
-    sessionVariables = {
-      NVM_DIR = "$HOME/.nvm";
-    };
+    sessionVariables = { NVM_DIR = "$HOME/.nvm"; };
 
     # This is added for when you have nvm install via homebrew
     # Also the manual install for iterm2

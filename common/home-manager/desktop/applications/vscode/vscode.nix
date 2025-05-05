@@ -32,8 +32,7 @@
     #     };
     #   };
     # };
-    extensions = [
-
+    profiles.default.extensions = [
       #vscode-conventional-commits
     ] ++ (with pkgs.vscode-extensions; [
       jnoortheen.nix-ide

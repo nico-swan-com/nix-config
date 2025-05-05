@@ -12,19 +12,12 @@
 
   environment.systemPackages = with pkgs; [
     qemu
-    # gnome.polari
-    # gnome-builder
-
-    beekeeper-studio
+    lima
     oci-cli
     #atac
     termshark
     portal
     sshs
-    #ghost-cli
-
-    bottles
-
     nixpacks
   ];
 }

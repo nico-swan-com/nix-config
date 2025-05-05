@@ -75,10 +75,13 @@
       openssl
       mattermost-desktop
       discord
+      postman
+      bottles
 
       blender
       gimp
-
+      flameshot
+      rust-analyzer
     ] ++ (with pkgs.unstable; [
       devenv
       lunarvim
@@ -88,7 +91,7 @@
       protonvpn-gui
       opentofu
       vcluster
-    ]);
+    ]) ++ (with pkgs.stable; [ beekeeper-studio ]);
 
   # home = {
   #   file.".kube/cygnus-labs-kubernetes-ca.pem".source = "${config.sops.secrets."ca.pem".path}";
