@@ -1,5 +1,8 @@
-{ pkgs, ... }: {
-
+{ pkgs, inputs, ... }:
+let
+  gitProjectUpdaterPkg =
+    inputs.git-project-updater.packages.${pkgs.system}.default;
+in {
   imports = [
 
     ../../../../common/home-manager/desktop/common-desktop.nix
@@ -39,7 +42,7 @@
 
   programs.zsh = {
     shellAliases = { nv = "NVIM_APPNAME=LazyVim nvim"; };
-    initExtra = ''
+    initContent = ''
       #set-github-access-token
 
       function nvims() {
@@ -67,6 +70,8 @@
         (builtins.readFile ../../../../common/scripts/tmux-cycle-windows.sh))
       (writeShellScriptBin "tmux-dashboard"
         (builtins.readFile ../../../../common/scripts/tmux-dashboard.sh))
+
+      gitProjectUpdaterPkg
       systemctl-tui
       gnome-extensions-cli
       cmatrix # Some fun
@@ -91,10 +96,27 @@
       protonvpn-gui
       opentofu
       vcluster
+      code-cursor
+      obsidian
     ]) ++ (with pkgs.stable; [ beekeeper-studio ]);
 
   # home = {
   #   file.".kube/cygnus-labs-kubernetes-ca.pem".source = "${config.sops.secrets."ca.pem".path}";
   # };
+  # /home/nicoswan/bin/screenshot.sh
+  #
+  dconf.settings = {
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenprint/"
+      ];
+    };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenprint" =
+      {
+        binding = "<Print>";
+        command = "/home/nicoswan/bin/screenshot.sh";
+        name = "Screen capture";
+      };
+  };
 
 }

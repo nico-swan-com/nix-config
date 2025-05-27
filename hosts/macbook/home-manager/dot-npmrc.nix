@@ -1,10 +1,8 @@
 { config, ... }:
-let
-  accessTokenPath = "${config.sops.secrets."git-lab/access-token".path}";
-in
-{
+let accessTokenPath = "${config.sops.secrets."git-lab/access-token".path}";
+in {
   programs.zsh = {
-    initExtra = ''
+    initContent = ''
       if [ -f ${accessTokenPath} ] ; then
         export CI_JOB_TOKEN=$(cat ${accessTokenPath})
         export NPM_TOKEN=$(cat ${accessTokenPath})

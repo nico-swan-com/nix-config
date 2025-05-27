@@ -76,7 +76,7 @@
 
     # This is added for when you have nvm install via homebrew
     # Also the manual install for iterm2
-    initExtra = ''
+    initContent = ''
       export SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt
 
       [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm

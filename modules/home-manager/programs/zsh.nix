@@ -1,9 +1,7 @@
 { config, lib, pkgs, ... }:
 with lib;
-let
-  cfg = config.programs.nicoswan.zsh;
-in
-{
+let cfg = config.programs.nicoswan.zsh;
+in {
 
   options.programs.nicoswan.zsh = {
     enable = mkEnableOption "Nico Swan zsh shell setup.";
@@ -15,7 +13,8 @@ in
         enable = true;
         shellAliases = {
           nix-shell = "nix-shell --run zsh";
-          la = "eza  --long -a --group-directories-first --icons=always --color=auto --almost-all --time-style=long-iso";
+          la =
+            "eza  --long -a --group-directories-first --icons=always --color=auto --almost-all --time-style=long-iso";
           ll = "la --long --no-user --no-time --no-permissions --no-filesize";
           cat = "bat -p";
           grep = "grep --color=auto";
@@ -34,10 +33,11 @@ in
 
         sessionVariables = {
           EDITOR = "vi";
-          SOPS_AGE_KEY_FILE = "${config.xdg.dataHome}/.config/sops/age/keys.txt";
+          SOPS_AGE_KEY_FILE =
+            "${config.xdg.dataHome}/.config/sops/age/keys.txt";
         };
 
-        initExtra = ''
+        initContent = ''
           # Add a .zshrc-custom file to the home directory for customizations.
           # This is a good place to add aliases, functions and other things that
           # you don't want in your config. 

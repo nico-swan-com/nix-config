@@ -74,6 +74,11 @@
       url = "github:AdisonCavani/distro-grub-themes";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
+
+    git-project-updater = {
+      url = "github:/nico-swan-com/git-project-updater";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, nixpkgs-stable, hardware
