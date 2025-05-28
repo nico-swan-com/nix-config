@@ -1,4 +1,4 @@
-{ inputs, ... }: {
+{ inputs, lib, ... }: {
   imports = [
     ./hardware-configuration.nix
     ./boot-loader.nix
@@ -21,6 +21,7 @@
   # https://nixos.wiki/wiki/Visual_Studio_Code
   programs.nix-ld.enable = true;
 
+  nix = { settings = { auto-optimise-store = lib.mkForce true; }; };
   nix.optimise = {
     automatic = true;
     dates = [ "03:45" ];
