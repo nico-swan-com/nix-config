@@ -21,6 +21,7 @@
     ./automation/n8n.nix
     # SDLC (Development)
     #./gitlab/gitlab.nix # Source code control and SDLC
+    ./gitlab/runners/gitlabcom/default.nix
     #./traefik.nix
     #./attic-server.nix
 
