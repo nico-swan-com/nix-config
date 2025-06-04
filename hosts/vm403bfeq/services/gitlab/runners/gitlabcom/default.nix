@@ -1,5 +1,11 @@
 { config, ... }: {
 
+  users.users.git = {
+    isSystemUser = true;
+    group = "git";
+  };
+  users.groups.git = { };
+
   sops = {
     secrets = {
       "servers/cygnus-labs/gitlab/runners/gitlabcom/default" = {
