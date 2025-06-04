@@ -98,6 +98,7 @@ in {
       vcluster
       code-cursor
       obsidian
+      ollama
     ]) ++ (with pkgs.stable; [ beekeeper-studio ]);
 
   # home = {

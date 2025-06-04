@@ -22,6 +22,7 @@
       #8153 8154i gitlab kas
       #5572 # Rclone GUI
       #8000 # Restic
+      6379 # Redis Password protected
       2456 # Valheim server
       2457 # Valheim server
     ];

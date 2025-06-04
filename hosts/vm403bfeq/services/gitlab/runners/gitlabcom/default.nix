@@ -19,7 +19,8 @@
         authenticationTokenConfigFile =
           "${config.sops.secrets."servers/cygnus-labs/gitlab/runners/gitlabcom/default".path}";
 
-        dockerImage = "alpine:latest";
+        dockerImage = "docker:dind";
+        dockerVolumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
 
       };
     };

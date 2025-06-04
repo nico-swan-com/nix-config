@@ -43,4 +43,11 @@
     enable = true;
     package = pkgs.stable.etcd;
   };
+
+  users.users.git = {
+    isSystemUser = true;
+    group = "git";
+  };
+  users.groups.git = { };
+
 }
