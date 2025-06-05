@@ -118,7 +118,6 @@ in {
         pgvector
         hypopg
         plv8
-        uuid-ossp
         # Missing supabase plugins
         #    index_advisor
         #    pg_tle
