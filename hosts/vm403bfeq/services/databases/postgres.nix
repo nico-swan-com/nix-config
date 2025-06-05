@@ -133,6 +133,7 @@ in {
 
       ];
     initialScript = pkgs.writeText "init-sql-script" ''
+      CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
       alter user ${cfg.username} with password '${adminPassword}';
       alter user gitlab with password '${gitlabPassword}';
       alter user ${keycloakUsername} with password '${keycloakPassword}';
