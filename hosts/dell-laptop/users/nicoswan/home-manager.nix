@@ -87,6 +87,8 @@ in {
       gimp
       flameshot
       rust-analyzer
+      playwright
+      playwright-test
     ] ++ (with pkgs.unstable; [
       devenv
       lunarvim

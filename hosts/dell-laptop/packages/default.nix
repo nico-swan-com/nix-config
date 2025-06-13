@@ -19,5 +19,29 @@
     portal
     sshs
     nixpacks
+    # for playwright
+    glib
+    gobject-introspection
+    nspr
+    nss
+    dbus
+    atk
+    atkmm
+    cups
+    expat
+    xorg.libxcb
+    libxkbcommon
+    at-spi2-core
+    xorg.libX11
+    xorg.libXcomposite
+    xorg.libXdamage
+    xorg.libXext
+    xorg.libXfixes
+    xorg.libXrandr
+    mesa
+    cairo
+    pango
+    udev
+    alsa-lib
   ];
 }

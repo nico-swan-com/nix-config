@@ -4,7 +4,6 @@
     wget
     gcc
     fish
-    vimPlugins.vim-markdown-toc
     markdownlint-cli2
     prettierd
     sqlfluff
