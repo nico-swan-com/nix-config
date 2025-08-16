@@ -24,6 +24,7 @@ in {
     cifs-utils
     cryptsetup
     lvm2
+    fluxcd
   ];
 
   # Fixes for longhorn
@@ -59,6 +60,9 @@ in {
       securePort = kubeMasterAPIServerPort;
       advertiseAddress = kubeMasterIP;
       allowPrivileged = true;
+      extraOpts = ''
+        "--requestheader-client-ca-file=/var/lib/kubernetes/secrets/front-proxy-ca.pem"
+      '';
       # webhookConfig
       # verbosity
       # tokenAuthFile
