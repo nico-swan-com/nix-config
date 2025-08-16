@@ -29,6 +29,7 @@ in {
     my-kubernetes-helm
     my-helmfile
     vcluster
+    kubeseal
   ];
 
 }
