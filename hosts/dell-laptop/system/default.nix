@@ -14,13 +14,13 @@
 
   # Power button invokes suspend, not shutdown.
 
-  services.logind = {
-
-    extraConfig = "HandlePowerKey=suspend";
-
-    lidSwitch = "suspend";
-
-  };
+  #services.logind = {
+  #
+  #  extraConfig = "HandlePowerKey=suspend";
+  #
+  #  lidSwitch = "suspend";
+  #
+  #};
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;

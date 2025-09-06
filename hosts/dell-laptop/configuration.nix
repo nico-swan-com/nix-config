@@ -1,4 +1,4 @@
-{ cfg, inputs, ... }:
+{ ... }:
 # let
 #   secretsDirectory = builtins.toString inputs.nix-secrets;
 #   cygnusLabsSecretsFile = "${secretsDirectory}/cluster-admin-secrets.yaml";
@@ -11,7 +11,7 @@
     # Include the results of the hardware scan.
     ./system
 
-    # Services 
+    # Services
     ./services
 
     # Programs and Applications

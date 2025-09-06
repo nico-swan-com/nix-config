@@ -101,6 +101,7 @@ in {
       code-cursor
       obsidian
       ollama
+      zed-editor
     ]) ++ (with pkgs.stable; [ beekeeper-studio ]);
 
   # home = {

@@ -59,7 +59,7 @@
     #};
 
     # Declarative partitioning and formatting
-    #disko.url = "github:nix-community/disko";
+    disko.url = "github:nix-community/disko";
 
     #neovim
     # Neve.url = "github:redyf/Neve";
@@ -82,8 +82,7 @@
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, nixpkgs-stable, hardware
-    , nix-darwin, home-manager, distro-grub-themes
-    #, disko
+    , nix-darwin, home-manager, distro-grub-themes, disko
     #, nixvim
     , ... }@inputs:
     let
@@ -162,7 +161,7 @@
 
         media = mkSystem "media" (lib.recursiveUpdate x86_64-config {
           extraModules = [
-            #disko.nixosModules.disko
+            disko.nixosModules.disko
             inputs.distro-grub-themes.nixosModules.x86_64-linux.default
           ];
         });
