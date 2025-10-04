@@ -102,6 +102,8 @@ in {
       obsidian
       ollama
       zed-editor
+      rpi-imager
+      shotcut
     ]) ++ (with pkgs.stable; [ beekeeper-studio ]);
 
   # home = {
