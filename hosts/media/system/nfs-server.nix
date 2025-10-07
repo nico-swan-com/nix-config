@@ -5,6 +5,9 @@
 
   systemd.tmpfiles.rules = [
     "d /export 0755 nobody nogroup"
+    "d /export/wetink 0755 nobody nogroup"
+    "d /export/wetink/pretoria 0755 nobody nogroup"
+    "d /export/wetink/capetown 0755 nobody nogroup"
     "d /mnt/ntfs_drive/wetink/pretoria 0777 nobody nogroup"
     "d /mnt/ntfs_drive/wetink/capetown 0777 nobody nogroup"
   ];
@@ -25,12 +28,12 @@
   };
 
 
-  fileSystems."/wetink/pretoria" = {
+  fileSystems."/export/wetink/pretoria" = {
     device = "/mnt/ntfs_drive/wetink/pretoria";
     options = [ "bind" ];
   };
 
-  fileSystems."/wetink/capetown" = {
+  fileSystems."/export/wetink/capetown" = {
     device = "/mnt/ntfs_drive/wetink/capetown";
     options = [ "bind" ];
   };
@@ -44,8 +47,8 @@
 
   services.nfs.server.exports = ''
     /export               192.168.1.0/24(rw,fsid=0,no_subtree_check) 102.33.35.54(rw,fsid=0,no_subtree_check) 102.135.163.95(rw,fsid=0,no_subtree_check) 169.239.182.94(rw,fsid=0,no_subtree_check)
-    /wetink/pretoria      169.239.182.94(rw,no_root_squash,no_subtree_check)
-    /wetink/capetown      169.239.182.94(rw,no_root_squash,no_subtree_check) 
+    /export/wetink/pretoria      169.239.182.94(rw,no_root_squash,no_subtree_check)
+    /export/wetink/capetown      169.239.182.94(rw,no_root_squash,no_subtree_check) 
   '';
 
 }
