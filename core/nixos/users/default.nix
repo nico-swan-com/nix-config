@@ -6,7 +6,7 @@ let
   pubKeys = lib.filesystem.listFilesRecursive (./keys);
 
   rootPassword =
-    if (rootHashedPasswordFile != null) then {
+    if (rootHashedPasswordFile != "") then {
       hashedPasswordFile = rootHashedPasswordFile;
     } else {
       password = "nixos";
@@ -15,7 +15,7 @@ let
   # these are values we don't want to set if the environment is minimal. E.g. ISO or nixos-installer
   # isMinimal is true in the nixos-installer/flake.nix
   userPassword =
-    if (userHashedPasswordFile != null) then {
+    if (userHashedPasswordFile != "") then {
       hashedPasswordFile = userHashedPasswordFile;
     } else {
       password = "nixos";
@@ -68,7 +68,6 @@ in
       users.users.root = lib.recursiveUpdate rootPassword {
         # root's ssh keys are mainly used for remote deployment.
         openssh.authorizedKeys.keys = config.users.users.${cfg.username}.openssh.authorizedKeys.keys;
-        initialPassword = "nixos";
       };
 
       # No matter what environment we are in we want these tools for root, and the user(s)

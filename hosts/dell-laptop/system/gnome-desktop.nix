@@ -40,12 +40,12 @@
   # systemd.services."getty@tty1".enable = false;
   # systemd.services."autovt@tty1".enable = false;
 
-  services.xserver.displayManager.gdm = {
+  services.displayManager.gdm = {
     enable = true;
     wayland = true;
   };
 
-  services.xserver.desktopManager.gnome = {
+  services.desktopManager.gnome = {
     enable = true;
     extraGSettingsOverrides = ''
       [org/gnome/desktop/interface]
