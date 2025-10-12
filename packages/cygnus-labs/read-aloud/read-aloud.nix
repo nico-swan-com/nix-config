@@ -2,13 +2,15 @@
 let
 
   defaultVoice = pkgs.fetchurl {
-    url = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/joe/medium/en_US-joe-medium.onnx?download=true";
+    url =
+      "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/joe/medium/en_US-joe-medium.onnx?download=true";
     name = "en_US-joe-medium.onnx";
     sha256 = "sha256-WK/OAyG42cRtfN+cFlAMxVp5O0IgIS26a3D7eIs7rwY=";
   };
 
   defaultVoiceConfig = pkgs.fetchurl {
-    url = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/joe/medium/en_US-joe-medium.onnx.json?download=true.json";
+    url =
+      "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/joe/medium/en_US-joe-medium.onnx.json";
     name = "en_US-joe-medium.onnx.json";
     sha256 = "sha256-PW1UELN5XLGVBZUkfvjwYZBxnm/b+jojVtjsNo4arTM=";
   };
@@ -73,8 +75,7 @@ let
 
   '';
 
-in
-stdenv.mkDerivation rec {
+in stdenv.mkDerivation rec {
   name = "read-aloud-${version}";
   pname = "read-aloud";
   version = "1.0";
