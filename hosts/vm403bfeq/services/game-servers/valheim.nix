@@ -47,7 +47,8 @@ in {
         initialize = true;
         passwordFile = "${passwordFile}";
         paths = [ "/opt/game-servers/valheim-server/config" ];
-        repository = "/mnt/home/backup/cygnus-labs/game-servers/valheim";
+        repository =
+          "/mnt/home/ntfs_drive/backup/cygnus-labs/game-servers/valheim";
       };
 
     };

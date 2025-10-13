@@ -87,7 +87,7 @@ in {
         initialize = true;
         passwordFile = "${passwordFile}";
         paths = [ "/var/lib/minio/data" "/var/lib/minio/config" ];
-        repository = "/mnt/home/backup/cygnus-labs/minio";
+        repository = "/mnt/home/ntfs_drive/backup/cygnus-labs/minio";
       };
 
       minio-backup-google-drive = {

@@ -122,6 +122,10 @@
       };
 
     in {
+      packages = forAllSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in import ./packages/default.nix { inherit pkgs; });
+
       # TODO change this to something that has better looking output rules
       # Nix formatter available through 'nix fmt' https://nix-community.github.io/nixpkgs-fmt
       formatter =

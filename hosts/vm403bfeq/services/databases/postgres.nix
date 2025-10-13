@@ -113,7 +113,7 @@ in {
         pgtap
         pg_cron
         pgsql-http
-        pg_net
+        #pg_net
         pgsodium
         pgvector
         hypopg
@@ -178,7 +178,7 @@ in {
         initialize = true;
         passwordFile = "${resticPasswordFile}";
         paths = [ "/data/postgres/backup" ];
-        repository = "/mnt/home/backup/cygnus-labs/postgres";
+        repository = "/mnt/home/ntfs_drive/backup/cygnus-labs/postgres";
       };
       postgres-backup-google-drive = {
         initialize = true;
