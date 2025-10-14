@@ -194,24 +194,35 @@ in {
       fi
       mc admin policy attach local staff-full-access-policy --user "$MINIO_APP_ACCESS_KEY" || true
 
-      # Replication user and policy
-      if ! mc admin user info local "$MINIO_REPLICATION_ACCESS_KEY" >/dev/null 2>&1; then
-        mc admin user add local "$MINIO_REPLICATION_ACCESS_KEY" "$MINIO_REPLICATION_SECRET_KEY" || true
+      # Replication user and policy (only if credentials are available)
+      if [ -n "''${MINIO_REPLICATION_ACCESS_KEY:-}" ] && [ -n "''${MINIO_REPLICATION_SECRET_KEY:-}" ]; then
+        if ! mc admin user info local "$MINIO_REPLICATION_ACCESS_KEY" >/dev/null 2>&1; then
+          mc admin user add local "$MINIO_REPLICATION_ACCESS_KEY" "$MINIO_REPLICATION_SECRET_KEY" || true
+        fi
+        mc admin policy attach local staff-full-access-policy --user "$MINIO_REPLICATION_ACCESS_KEY" || true
+        mc admin policy attach local bucket-replication-policy --user "$MINIO_REPLICATION_ACCESS_KEY" || true
+      else
+        echo "Warning: MINIO_REPLICATION_ACCESS_KEY or MINIO_REPLICATION_SECRET_KEY not set. Skipping replication user creation."
       fi
-      mc admin policy attach local staff-full-access-policy --user "$MINIO_REPLICATION_ACCESS_KEY" || true
-      mc admin policy attach local bucket-replication-policy --user "$MINIO_REPLICATION_ACCESS_KEY" || true
 
       ###########################################################
-      # Create bucket replication
+      # Create bucket replication (only if credentials are available)
       ###########################################################
 
-      # Bucket replication policy
-      if ! mc replicate info local/pretoria-files >/dev/null 2>&1; then
-        mc replicate add local/pretoria-files --remote-bucket "http://$MINIO_REPLICATION_ACCESS_KEY:$MINIO_REPLICATION_SECRET_KEY@169.239.182.94:9000/pretoria-files"
+      # Check if replication credentials are available
+      if [ -n "''${MINIO_REPLICATION_ACCESS_KEY:-}" ] && [ -n "''${MINIO_REPLICATION_SECRET_KEY:-}" ]; then
+        echo "Setting up bucket replication with credentials..."
+        
+        # Bucket replication policy
+        if ! mc replicate info local/pretoria-files >/dev/null 2>&1; then
+          mc replicate add local/pretoria-files --remote-bucket "http://$MINIO_REPLICATION_ACCESS_KEY:$MINIO_REPLICATION_SECRET_KEY@169.239.182.94:9000/pretoria-files"
+        fi
+        # if ! mc replicate info local/capetown-files >/dev/null 2>&1; then
+        #  mc replicate add local/capetown-files --remote-bucket "http://$MINIO_REPLICATION_ACCESS_KEY:$MINIO_REPLICATION_SECRET_KEY@169.239.182.94:9000/capetown-files"
+        # fi
+      else
+        echo "Warning: MINIO_REPLICATION_ACCESS_KEY or MINIO_REPLICATION_SECRET_KEY not set. Skipping bucket replication setup."
       fi
-      # if ! mc replicate info local/capetown-files >/dev/null 2>&1; then
-      #  mc replicate add local/capetown-files --remote-bucket "http://$MINIO_REPLICATION_ACCESS_KEY:$MINIO_REPLICATION_SECRET_KEY@169.239.182.94:9000/capetown-files"
-      # fi
 
     '';
   };
