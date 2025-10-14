@@ -29,6 +29,8 @@ in {
 
     # Just for fun
     ../../../../common/home-manager/terminal/fun.nix
+
+    ./rclone.nix
   ];
 
   programs.nicoswan = {

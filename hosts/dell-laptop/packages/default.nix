@@ -42,5 +42,7 @@
     alsa-lib
     gnumake
     gitlab-ci-ls
+
+    minio-client
   ];
 }
