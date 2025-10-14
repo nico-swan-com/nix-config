@@ -207,7 +207,7 @@ in {
 
       # Bucket replication policy
       if ! mc replicate info local/pretoria-files >/dev/null 2>&1; then
-        mc replicate add local/pretoria-files --remote-bucket "http://$MINIO_REPLICATION_ACCESS_KEY:$MINIO_REPLICATION_SECRET_KEYY@http://169.239.182.94:9000/pretoria-files"
+        mc replicate add local/pretoria-files --remote-bucket "http://$MINIO_REPLICATION_ACCESS_KEY:$MINIO_REPLICATION_SECRET_KEY@http://169.239.182.94:9000/pretoria-files"
       fi
       # if ! mc replicate info local/capetown-files >/dev/null 2>&1; then
       #  mc replicate add local/capetown-files --remote-bucket "http://$MINIO_REPLICATION_ACCESS_KEY:$MINIO_REPLICATION_SECRET_KEY@http://169.239.182.94:9000/capetown-files"
