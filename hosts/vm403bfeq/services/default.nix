@@ -10,7 +10,7 @@
     #./security/kerberbos # Kerberos is a computer-network authentication protocol that works on the basis of tickets to allow nodes communicating over a non-secure network to prove their identity to one another in a secure manner.
 
     ./storage/minio.nix # Object storage solution like S3
-    ../../../modules/services/minio-sso.nix # MinIO with OpenID Connect SSO support
+
     ./databases/postgres.nix # Application databases for platform and services
     ./databases/redis.nix # Caching database.
     #./databases/mongodb.nix # is a source-available, cross-platform, document-oriented database program. Classified as a NoSQL database.

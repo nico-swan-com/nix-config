@@ -43,6 +43,7 @@ let
   specialArgs = {
     inherit nixpkgs inputs outputs cfg configLib nixpkgs-unstable hardware
       nix-darwin;
+    pkgs-stable = inputs.nixpkgs-stable;
   };
 
 in systemFunc rec {

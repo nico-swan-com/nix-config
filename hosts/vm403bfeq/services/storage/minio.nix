@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, pkgs-stable, config, ... }:
 let
   commonExtraConfig = ''
     # Allow special characters in headers
@@ -43,6 +43,19 @@ let
     }
   '';
 
+  staffPretoriaPolicyJson = pkgs.writeText "minio-pretoria-staff-full-access-policy.json" ''
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": ["s3:*"],
+          "Resource": ["arn:aws:s3:::pretoria-files/*"]
+        }
+      ]
+    }
+  '';
+
   bucketReplicationPolicyJson = pkgs.writeText "minio-bucket-replication-policy.json" ''
     {
       "Version": "2012-10-17",
@@ -63,17 +76,29 @@ let
         {
           "Effect": "Allow",
           "Action": ["s3:*"],
-          "Resource": ["arn:aws:s3:::*"]
+          "Resource": [
+            "arn:aws:s3:::*",
+            "arn:aws:s3:::*/*"
+          ]
         },
         {
           "Effect": "Allow",
           "Action": ["admin:*"],
-          "Resource": ["*"]
+          "Resource": [
+            "arn:aws:s3:::*",
+            "arn:aws:s3:::*/*"
+          ]
         }
       ]
     }
   '';   
 in {
+
+  imports = [
+    ./minio-sso.nix # MinIO with OpenID Connect SSO support
+  ];
+
+
   sops = {
     secrets = {
       "servers/cygnus-labs/minio/rootCredentialsFiles" = { };
@@ -141,7 +166,7 @@ in {
   # S3 compatible storage service
   services.minio = {
     enable = true;
-    package = pkgs.stable.minio;
+    package = pkgs.stable.minio; #Version "2024-09-22T00-33-43Z" with Admin and SSO support
     region = "af-south-1";
     rootCredentialsFile =
       config.sops.secrets."servers/cygnus-labs/minio/rootCredentialsFiles".path;
@@ -183,6 +208,7 @@ in {
         config.sops.secrets."servers/cygnus-labs/minio/uiCredentials".path
         config.sops.secrets."servers/cygnus-labs/minio/appCredentials".path
         config.sops.secrets."servers/cygnus-labs/minio/replicationCredentials".path
+        config.sops.secrets."servers/cygnus-labs/minio/openIdClientSecret".path
       ];
       Environment = "HOME=/root";
     };
@@ -191,50 +217,7 @@ in {
       set -euo pipefail
 
       mc alias set local http://localhost:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" || true
-
-      ###########################################################
-      # Debug: Print important environment variables (mask secrets)
-      ###########################################################
-      print_env_var() {
-        var_name="$1"
-        val="$(printenv "$var_name" 2>/dev/null || true)"
-        if [ -n "$val" ]; then
-          case "$var_name" in
-            *SECRET*|*PASSWORD*|*KEY*)
-              printf '%s=%s\n' "$var_name" "[REDACTED]" ;;
-            *)
-              printf '%s=%s\n' "$var_name" "$val" ;;
-          esac
-        else
-          printf '%s=\n' "$var_name"
-        fi
-      }
-
-      echo "[minio-bootstrap] Debug: Selected environment variables"
-      for v in \
-        MINIO_SERVER_URL \
-        MINIO_BROWSER_REDIRECT_URL \
-        MINIO_IDENTITY_OPENID_CONFIG_URL \
-        MINIO_IDENTITY_OPENID_CLIENT_ID \
-        MINIO_IDENTITY_OPENID_CLIENT_SECRET \
-        MINIO_IDENTITY_OPENID_SCOPES \
-        MINIO_IDENTITY_OPENID_VENDOR \
-        MINIO_IDENTITY_OPENID_KEYCLOAK_REALM \
-        MINIO_IDENTITY_OPENID_KEYCLOAK_ADMIN_URL \
-        MINIO_REPLICATION_ACCESS_KEY \
-        MINIO_REPLICATION_SECRET_KEY \
-      ; do
-        print_env_var "$v"
-      done
-
-      # Quick probe: OIDC discovery URL reachable (non-fatal)c
-      if [ -n "''${MINIO_IDENTITY_OPENID_CONFIG_URL-}" ]; then
-        if curl -sfL "$MINIO_IDENTITY_OPENID_CONFIG_URL" >/dev/null; then
-          echo "[minio-bootstrap] OIDC discovery URL reachable"
-        else
-          echo "[minio-bootstrap] Warning: OIDC discovery URL NOT reachable: $MINIO_IDENTITY_OPENID_CONFIG_URL"
-        fi
-      fi
+ 
 
       ###########################################################
       # Create buckets
@@ -275,6 +258,16 @@ in {
       mc admin policy create local staff-full-access-policy ${staffPolicyJson} || true
       mc admin policy create local bucket-replication-policy ${bucketReplicationPolicyJson} || true
       mc admin policy create local minio-admin-policy ${adminPolicyJson} || true
+
+      # Configure group-based policy mapping
+      echo "Setting up group-based policy mapping..."    
+      mc admin policy create local "/admin@minio-console.platform.cygnus-labs.com" ${adminPolicyJson} || true
+      mc admin policy create local "/pretoria-staff@minio-console.platform.cygnus-labs.com" ${staffPretoriaPolicyJson} || true
+      
+
+      # List all policies to verify creation
+      echo "Current policies:"
+      mc admin policy ls local || true
 
       ###########################################################
       # Create users and attach policies
@@ -349,14 +342,10 @@ in {
             claim_prefix="''${MINIO_IDENTITY_OPENID_CLAIM_PREFIX:-groups}" \
             redirect_uri_dynamic="''${MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC:-on}" || true
           
-          # Configure group-based policy mapping
-          echo "Setting up group-based policy mapping..."
-          mc admin config set local identity_openid \
-            group_claim_name="admin@minio-console.platform.cygnus-labs.com" \
-            group_policy="minio-admin-policy" || true
-          mc admin config set local identity_openid \
-            group_claim_name="staff@minio-console.platform.cygnus-labs.com" \
-            group_policy="staff-full-access-policy" || true
+
+          # First, let's check what the actual group claim structure looks like
+          echo "Current OIDC configuration:"
+          mc admin config get local identity_openid --json | jq '.identity_openid // {}' || true
           # Restart MinIO to apply identity provider config (avoid TTY requirement in mc)
           systemctl restart minio.service || true
           # Wait for API to be ready
