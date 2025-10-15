@@ -26,8 +26,16 @@ in
       
       clientSecret = mkOption {
         type = types.str;
-        description = "OpenID Connect client secret";
+        default = "";
+        description = "OpenID Connect client secret (deprecated - use clientSecretFile instead)";
         example = "your-client-secret";
+      };
+      
+      clientSecretFile = mkOption {
+        type = types.nullOr types.path;
+        default = null;
+        description = "File containing the OpenID Connect client secret";
+        example = "/run/secrets/minio-openid-secret";
       };
       
       scopes = mkOption {
@@ -81,15 +89,18 @@ in
         Environment = [
           "MINIO_IDENTITY_OPENID_CONFIG_URL=${cfg.openid.configUrl}"
           "MINIO_IDENTITY_OPENID_CLIENT_ID=${cfg.openid.clientId}"
-          "MINIO_IDENTITY_OPENID_CLIENT_SECRET=${cfg.openid.clientSecret}"
           "MINIO_IDENTITY_OPENID_SCOPES=${cfg.openid.scopes}"
           "MINIO_IDENTITY_OPENID_DISPLAY_NAME=${cfg.openid.displayName}"
           "MINIO_IDENTITY_OPENID_CLAIM_NAME=${cfg.openid.claimName}"
           "MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC=${if cfg.openid.redirectUriDynamic then "on" else "off"}"
-        ] ++ (optional (cfg.openid.redirectUri != null) "MINIO_IDENTITY_OPENID_REDIRECT_URI=${cfg.openid.redirectUri}");
+        ] ++ (optional (cfg.openid.redirectUri != null) "MINIO_IDENTITY_OPENID_REDIRECT_URI=${cfg.openid.redirectUri}")
+          ++ (optional (cfg.openid.clientSecret != "") "MINIO_IDENTITY_OPENID_CLIENT_SECRET=${cfg.openid.clientSecret}");
         
-        # Load additional environment file if provided
-        EnvironmentFile = mkIf (cfg.environmentFile != null) cfg.environmentFile;
+        # Load environment files
+        EnvironmentFile = let
+          envFiles = (optional (cfg.environmentFile != null) cfg.environmentFile)
+                   ++ (optional (cfg.openid.clientSecretFile != null) cfg.openid.clientSecretFile);
+        in if envFiles != [] then envFiles else null;
       };
     };
   };

@@ -14,6 +14,7 @@ let
   '';
   passwordFile =
     "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
+  openIdSecret = config.sops.secrets."servers/cygnus-labs/minio/openIdSecret".path;
 
 ########################################################
 # Policies
@@ -66,6 +67,7 @@ in {
       "servers/cygnus-labs/minio/appCredentials" = { };
       # Replication credentials env file must define MINIO_REPLICATION_ACCESS_KEY and MINIO_REPLICATION_SECRET_KEY
       "servers/cygnus-labs/minio/replicationCredentials" = { };
+      "servers/cygnus-labs/minio/openIdSecret" = { };
     };
   };
 
@@ -135,7 +137,7 @@ in {
     openid = {
       configUrl = "https://keycloak.cygnus-labs.com/realms/production/.well-known/openid-configuration";
       clientId = "minio-openid";
-      clientSecret = "H5h6afFQx2hqfKxsZxYudWxvzBOYFZHx";
+      clientSecretFile = config.sops.secrets."servers/cygnus-labs/minio/openIdSecret".path;
       scopes = "openid,profile,email";
       displayName = "Cygnus SSO";
       claimName = "preferred_username";
