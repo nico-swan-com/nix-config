@@ -140,6 +140,7 @@ in {
       scopes = "openid,profile,email";
       displayName = "Cygnus SSO";
       claimName = "preferred_username";
+      rolePolicy = "staff-full-access-policy";
       redirectUri = "https://minio-console.platform.cygnus-labs.com/oauth_callback";
       redirectUriDynamic = true;
     };

@@ -56,6 +56,13 @@ in
         description = "Claim name for user identification";
       };
       
+      rolePolicy = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Default policy to assign to all OpenID Connect users";
+        example = "readwrite";
+      };
+      
       redirectUri = mkOption {
         type = types.nullOr types.str;
         default = null;
@@ -94,7 +101,8 @@ in
           "MINIO_IDENTITY_OPENID_CLAIM_NAME=${cfg.openid.claimName}"
           "MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC=${if cfg.openid.redirectUriDynamic then "on" else "off"}"
         ] ++ (optional (cfg.openid.redirectUri != null) "MINIO_IDENTITY_OPENID_REDIRECT_URI=${cfg.openid.redirectUri}")
-          ++ (optional (cfg.openid.clientSecret != "") "MINIO_IDENTITY_OPENID_CLIENT_SECRET=${cfg.openid.clientSecret}");
+          ++ (optional (cfg.openid.clientSecret != "") "MINIO_IDENTITY_OPENID_CLIENT_SECRET=${cfg.openid.clientSecret}")
+          ++ (optional (cfg.openid.rolePolicy != null) "MINIO_IDENTITY_OPENID_ROLE_POLICY=${cfg.openid.rolePolicy}");
         
         # Load environment files
         EnvironmentFile = let

@@ -102,4 +102,4 @@ rebuild-media:
   nixos-rebuild switch --target-host nicoswan@192.168.1.223 --flake .#media --sudo --ask-sudo-password 
 	
 rebuild-vps:
-  nixos-rebuild switch --target-host nicoswan@vm403bfeq.cygnus-labs.com --flake .#vm403bfeq --sudo --ask-sudo-password
+  nixos-rebuild switch --target-host nicoswan@vm403bfeq.cygnus-labs.com --flake .#vm403bfeq --sudo
