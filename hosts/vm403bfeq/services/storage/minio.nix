@@ -123,7 +123,7 @@ in {
   # S3 compatible storage service
   services.minio = {
     enable = true;
-    package = pkgs.unstable.minio;
+    package = pkgs.stable.minio;
     region = "af-south-1";
     rootCredentialsFile =
       config.sops.secrets."servers/cygnus-labs/minio/rootCredentialsFiles".path;
