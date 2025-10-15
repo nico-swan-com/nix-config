@@ -14,6 +14,8 @@
     settings.PermitRootLogin = "no";
   };
 
+  security.sudo.wheelNeedsPassword = false;
+
   # Quemu guest agent
   services.qemuGuest.enable = true;
 

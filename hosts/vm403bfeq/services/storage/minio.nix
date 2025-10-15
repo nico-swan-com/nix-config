@@ -128,6 +128,25 @@ in {
       config.sops.secrets."servers/cygnus-labs/minio/rootCredentialsFiles".path;
   };
 
+  # MinIO with OpenID Connect SSO support
+  services.minio-sso = {
+    enable = true;
+    
+    openid = {
+      configUrl = "https://keycloak.cygnus-labs.com/realms/production/.well-known/openid-configuration";
+      clientId = "minio-openid";
+      clientSecret = "H5h6afFQx2hqfKxsZxYudWxvzBOYFZHx";
+      scopes = "openid,profile,email";
+      displayName = "Cygnus SSO";
+      claimName = "preferred_username";
+      redirectUri = "https://minio-console.platform.cygnus-labs.com/oauth_callback";
+      redirectUriDynamic = true;
+    };
+    
+    # Use the same environment file for consistency
+    environmentFile = config.sops.secrets."servers/cygnus-labs/minio/rootCredentialsFiles".path;
+  };
+
     # Bootstrap MinIO: create buckets, enable versioning, add example policies
   systemd.services.minio-bootstrap = {
     description = "Bootstrap MinIO resources for file-management";
@@ -158,11 +177,11 @@ in {
       ###########################################################
       print_env_var() {
         var_name="$1"
-        val="${!var_name-}"
-        if [ -n "${val-}" ]; then
+        val="$(printenv "$var_name" 2>/dev/null || true)"
+        if [ -n "$val" ]; then
           case "$var_name" in
             *SECRET*|*PASSWORD*|*KEY*)
-              printf '%s=%s\n' "$var_name" "${val%%????????????}********" ;;
+              printf '%s=%s\n' "$var_name" "[REDACTED]" ;;
             *)
               printf '%s=%s\n' "$var_name" "$val" ;;
           esac
@@ -188,8 +207,8 @@ in {
         print_env_var "$v"
       done
 
-      # Quick probe: OIDC discovery URL reachable (non-fatal)
-      if [ -n "${MINIO_IDENTITY_OPENID_CONFIG_URL-}" ]; then
+      # Quick probe: OIDC discovery URL reachable (non-fatal)c
+      if [ -n "''${MINIO_IDENTITY_OPENID_CONFIG_URL-}" ]; then
         if curl -sfL "$MINIO_IDENTITY_OPENID_CONFIG_URL" >/dev/null; then
           echo "[minio-bootstrap] OIDC discovery URL reachable"
         else
@@ -292,38 +311,40 @@ in {
       # Configure SSO (OpenID Connect) for MinIO Console (idempotent, at end)
       ###########################################################
 
-      # if [ -n "''${MINIO_IDENTITY_OPENID_CONFIG_URL:-}" ] \
-      #   && [ -n "''${MINIO_IDENTITY_OPENID_CLIENT_ID:-}" ] \
-      #   && [ -n "''${MINIO_IDENTITY_OPENID_CLIENT_SECRET:-}" ]; then
-      #   echo "Configuring MinIO OIDC (SSO) using identity_openid..."
-      #   oidc_cfg_json="$(mc admin config get local identity_openid --json 2>/dev/null || true)"
-      #   existing_client_id="$(printf '%s' "$oidc_cfg_json" | jq -r '(.identity_openid.client_id // .client_id // empty)' 2>/dev/null || true)"
-      #   if [ -z "$existing_client_id" ] || [ "$existing_client_id" = "null" ]; then
-      #     mc admin config set local identity_openid \
-      #       config_url="$MINIO_IDENTITY_OPENID_CONFIG_URL" \
-      #       client_id="$MINIO_IDENTITY_OPENID_CLIENT_ID" \
-      #       client_secret="$MINIO_IDENTITY_OPENID_CLIENT_SECRET" \
-      #       scopes="''${MINIO_IDENTITY_OPENID_SCOPES:-openid,profile,email}" || true
-      #     # Restart MinIO to apply identity provider config (avoid TTY requirement in mc)
-      #     systemctl restart minio.service || true
-      #     # Wait for API to be ready
-      #     echo "Waiting for minio.service to become active..."
-      #     for i in $(seq 1 60); do
-      #       if systemctl is-active --quiet minio.service && curl -sf http://localhost:9000/minio/health/ready >/dev/null; then
-      #         echo "minio.service is active and ready."
-      #         break
-      #       fi
-      #       sleep 1
-      #     done
-      #     if ! systemctl is-active --quiet minio.service; then
-      #       echo "Warning: minio.service did not become active within timeout; continuing anyway"
-      #     fi
-      #   else
-      #     echo "OIDC already configured (client_id=$existing_client_id); skipping"
-      #   fi
-      # else
-      #   echo "OIDC env vars not fully set; skipping OIDC configuration"
-      # fi
+      if [ -n "''${MINIO_IDENTITY_OPENID_CONFIG_URL:-}" ] \
+        && [ -n "''${MINIO_IDENTITY_OPENID_CLIENT_ID:-}" ] \
+        && [ -n "''${MINIO_IDENTITY_OPENID_CLIENT_SECRET:-}" ]; then
+        echo "Configuring MinIO OIDC (SSO) using identity_openid..."
+        oidc_cfg_json="$(mc admin config get local identity_openid --json 2>/dev/null || true)"
+        existing_client_id="$(printf '%s' "$oidc_cfg_json" | jq -r '(.identity_openid.client_id // .client_id // empty)' 2>/dev/null || true)"
+        if [ -z "$existing_client_id" ] || [ "$existing_client_id" = "null" ]; then
+          mc admin config set local identity_openid \
+            config_url="$MINIO_IDENTITY_OPENID_CONFIG_URL" \
+            client_id="$MINIO_IDENTITY_OPENID_CLIENT_ID" \
+            client_secret="$MINIO_IDENTITY_OPENID_CLIENT_SECRET" \
+            scopes="''${MINIO_IDENTITY_OPENID_SCOPES:-openid,profile,email}" \
+            display_name="''${MINIO_IDENTITY_OPENID_DISPLAY_NAME:-SSO Login}" \
+            redirect_uri_dynamic="''${MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC:-on}" || true
+          # Restart MinIO to apply identity provider config (avoid TTY requirement in mc)
+          systemctl restart minio.service || true
+          # Wait for API to be ready
+          echo "Waiting for minio.service to become active..."
+          for i in $(seq 1 60); do
+            if systemctl is-active --quiet minio.service && curl -sf http://localhost:9000/minio/health/ready >/dev/null; then
+              echo "minio.service is active and ready."
+              break
+            fi
+            sleep 1
+          done
+          if ! systemctl is-active --quiet minio.service; then
+            echo "Warning: minio.service did not become active within timeout; continuing anyway"
+          fi
+        else
+          echo "OIDC already configured (client_id=$existing_client_id); skipping"
+        fi
+      else
+        echo "OIDC env vars not fully set; skipping OIDC configuration"
+      fi
 
 
     '';
