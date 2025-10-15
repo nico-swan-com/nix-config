@@ -63,6 +63,19 @@ in
         example = "readwrite";
       };
       
+      claimUserinfo = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Enable userinfo endpoint for group claims";
+      };
+      
+      claimPrefix = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Prefix for claims (used for group mapping)";
+        example = "groups";
+      };
+      
       redirectUri = mkOption {
         type = types.nullOr types.str;
         default = null;
@@ -99,10 +112,12 @@ in
           "MINIO_IDENTITY_OPENID_SCOPES=${cfg.openid.scopes}"
           "MINIO_IDENTITY_OPENID_DISPLAY_NAME=${cfg.openid.displayName}"
           "MINIO_IDENTITY_OPENID_CLAIM_NAME="
+          "MINIO_IDENTITY_OPENID_CLAIM_USERINFO=${if cfg.openid.claimUserinfo then "on" else "off"}"
           "MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC=${if cfg.openid.redirectUriDynamic then "on" else "off"}"
         ] ++ (optional (cfg.openid.redirectUri != null) "MINIO_IDENTITY_OPENID_REDIRECT_URI=${cfg.openid.redirectUri}")
           ++ (optional (cfg.openid.clientSecret != "") "MINIO_IDENTITY_OPENID_CLIENT_SECRET=${cfg.openid.clientSecret}")
-          ++ (optional (cfg.openid.rolePolicy != null) "MINIO_IDENTITY_OPENID_ROLE_POLICY=${cfg.openid.rolePolicy}");
+          ++ (optional (cfg.openid.rolePolicy != null) "MINIO_IDENTITY_OPENID_ROLE_POLICY=${cfg.openid.rolePolicy}")
+          ++ (optional (cfg.openid.claimPrefix != null) "MINIO_IDENTITY_OPENID_CLAIM_PREFIX=${cfg.openid.claimPrefix}");
         
         # Load environment files
         EnvironmentFile = let

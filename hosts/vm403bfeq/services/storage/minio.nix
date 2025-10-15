@@ -54,6 +54,24 @@ let
         }
       ]
     }
+  '';
+
+  adminPolicyJson = pkgs.writeText "minio-admin-policy.json" ''
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": ["s3:*"],
+          "Resource": ["arn:aws:s3:::*"]
+        },
+        {
+          "Effect": "Allow",
+          "Action": ["admin:*"],
+          "Resource": ["*"]
+        }
+      ]
+    }
   '';   
 in {
   sops = {
@@ -137,9 +155,10 @@ in {
       configUrl = "https://keycloak.cygnus-labs.com/realms/production/.well-known/openid-configuration";
       clientId = "minio-openid";
       clientSecretFile = config.sops.secrets."servers/cygnus-labs/minio/openIdClientSecret".path;
-      scopes = "openid,profile,email";
+      scopes = "openid,profile,email,groups";
       displayName = "Cygnus SSO";
-      rolePolicy = "staff-full-access-policy";
+      claimUserinfo = true;
+      claimPrefix = "groups";
       redirectUri = "https://minio-console.platform.cygnus-labs.com/oauth_callback";
       redirectUriDynamic = true;
     };
@@ -255,6 +274,7 @@ in {
       mc admin policy create local client-upload-policy ${clientPolicyJson} || true
       mc admin policy create local staff-full-access-policy ${staffPolicyJson} || true
       mc admin policy create local bucket-replication-policy ${bucketReplicationPolicyJson} || true
+      mc admin policy create local minio-admin-policy ${adminPolicyJson} || true
 
       ###########################################################
       # Create users and attach policies
@@ -323,9 +343,20 @@ in {
             config_url="$MINIO_IDENTITY_OPENID_CONFIG_URL" \
             client_id="$MINIO_IDENTITY_OPENID_CLIENT_ID" \
             client_secret="$MINIO_IDENTITY_OPENID_CLIENT_SECRET" \
-            scopes="''${MINIO_IDENTITY_OPENID_SCOPES:-openid,profile,email}" \
+            scopes="''${MINIO_IDENTITY_OPENID_SCOPES:-openid,profile,email,groups}" \
             display_name="''${MINIO_IDENTITY_OPENID_DISPLAY_NAME:-SSO Login}" \
+            claim_userinfo="''${MINIO_IDENTITY_OPENID_CLAIM_USERINFO:-on}" \
+            claim_prefix="''${MINIO_IDENTITY_OPENID_CLAIM_PREFIX:-groups}" \
             redirect_uri_dynamic="''${MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC:-on}" || true
+          
+          # Configure group-based policy mapping
+          echo "Setting up group-based policy mapping..."
+          mc admin config set local identity_openid \
+            group_claim_name="admin@minio-console.platform.cygnus-labs.com" \
+            group_policy="minio-admin-policy" || true
+          mc admin config set local identity_openid \
+            group_claim_name="staff@minio-console.platform.cygnus-labs.com" \
+            group_policy="staff-full-access-policy" || true
           # Restart MinIO to apply identity provider config (avoid TTY requirement in mc)
           systemctl restart minio.service || true
           # Wait for API to be ready
