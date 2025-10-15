@@ -98,7 +98,7 @@ in
           "MINIO_IDENTITY_OPENID_CLIENT_ID=${cfg.openid.clientId}"
           "MINIO_IDENTITY_OPENID_SCOPES=${cfg.openid.scopes}"
           "MINIO_IDENTITY_OPENID_DISPLAY_NAME=${cfg.openid.displayName}"
-          "MINIO_IDENTITY_OPENID_CLAIM_NAME=${cfg.openid.claimName}"
+          "MINIO_IDENTITY_OPENID_CLAIM_NAME="
           "MINIO_IDENTITY_OPENID_REDIRECT_URI_DYNAMIC=${if cfg.openid.redirectUriDynamic then "on" else "off"}"
         ] ++ (optional (cfg.openid.redirectUri != null) "MINIO_IDENTITY_OPENID_REDIRECT_URI=${cfg.openid.redirectUri}")
           ++ (optional (cfg.openid.clientSecret != "") "MINIO_IDENTITY_OPENID_CLIENT_SECRET=${cfg.openid.clientSecret}")
