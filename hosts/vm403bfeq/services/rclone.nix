@@ -96,6 +96,7 @@ in {
       enable = true;
       description = "Mount rclone google-drive unencrypted folder.";
       after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
       preStart = "/usr/bin/env mkdir -p /mnt/google-drive-unencrypted";
       serviceConfig = {
         Type = "notify";
@@ -114,6 +115,7 @@ in {
       enable = true;
       description = "Mount rclone google-drive encrypted folder.";
       after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
       preStart = "/usr/bin/env mkdir -p /mnt/google-drive-encrypted";
       serviceConfig = {
         Type = "notify";
@@ -132,6 +134,7 @@ in {
       enable = true;
       description = "Mount rclone google-drive shared backup folder.";
       after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
       preStart =
         "/usr/bin/env mkdir -p /mnt/google-drive-shared-encrypted-backup";
       serviceConfig = {

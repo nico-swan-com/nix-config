@@ -38,7 +38,7 @@
       # Enhanced diffs
       # delta.enable = true;
       difftastic.enable = true;
-      difftastic.display = "inline";
+      difftastic.options.display = "inline";
     };
 
     lazygit = {
