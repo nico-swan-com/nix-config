@@ -154,6 +154,50 @@ in {
       mc alias set local http://localhost:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" || true
 
       ###########################################################
+      # Debug: Print important environment variables (mask secrets)
+      ###########################################################
+      print_env_var() {
+        var_name="$1"
+        val="${!var_name-}"
+        if [ -n "${val-}" ]; then
+          case "$var_name" in
+            *SECRET*|*PASSWORD*|*KEY*)
+              printf '%s=%s\n' "$var_name" "${val%%????????????}********" ;;
+            *)
+              printf '%s=%s\n' "$var_name" "$val" ;;
+          esac
+        else
+          printf '%s=\n' "$var_name"
+        fi
+      }
+
+      echo "[minio-bootstrap] Debug: Selected environment variables"
+      for v in \
+        MINIO_SERVER_URL \
+        MINIO_BROWSER_REDIRECT_URL \
+        MINIO_IDENTITY_OPENID_CONFIG_URL \
+        MINIO_IDENTITY_OPENID_CLIENT_ID \
+        MINIO_IDENTITY_OPENID_CLIENT_SECRET \
+        MINIO_IDENTITY_OPENID_SCOPES \
+        MINIO_IDENTITY_OPENID_VENDOR \
+        MINIO_IDENTITY_OPENID_KEYCLOAK_REALM \
+        MINIO_IDENTITY_OPENID_KEYCLOAK_ADMIN_URL \
+        MINIO_REPLICATION_ACCESS_KEY \
+        MINIO_REPLICATION_SECRET_KEY \
+      ; do
+        print_env_var "$v"
+      done
+
+      # Quick probe: OIDC discovery URL reachable (non-fatal)
+      if [ -n "${MINIO_IDENTITY_OPENID_CONFIG_URL-}" ]; then
+        if curl -sfL "$MINIO_IDENTITY_OPENID_CONFIG_URL" >/dev/null; then
+          echo "[minio-bootstrap] OIDC discovery URL reachable"
+        else
+          echo "[minio-bootstrap] Warning: OIDC discovery URL NOT reachable: $MINIO_IDENTITY_OPENID_CONFIG_URL"
+        fi
+      fi
+
+      ###########################################################
       # Create buckets
       ###########################################################
 
