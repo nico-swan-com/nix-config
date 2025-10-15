@@ -147,7 +147,7 @@ in {
       ];
       Environment = "HOME=/root";
     };
-    path = [ pkgs.minio-client pkgs.coreutils pkgs.gnugrep pkgs.bash pkgs.glibc ];
+    path = [ pkgs.minio-client pkgs.coreutils pkgs.gnugrep pkgs.bash pkgs.glibc pkgs.jq pkgs.curl ];
     script = ''
       set -euo pipefail
 
@@ -160,12 +160,28 @@ in {
       # Create pretoria bucket
       mc mb --ignore-existing local/pretoria-files || true
       mc version enable local/pretoria-files || true
-      mc ilm rule add local/pretoria-files --noncurrent-expire-days "30" --expire-delete-marker
+      # Add lifecycle rule only if no rules exist (preserve any user-defined rules)
+      pretoria_ilm_json="$(mc ilm rule ls local/pretoria-files --json 2>/dev/null || true)"
+      [ -z "$pretoria_ilm_json" ] && pretoria_ilm_json='{"config":{"Rules":[]}}'
+      pretoria_ilm_count="$(printf '%s' "$pretoria_ilm_json" | jq -r '.config.Rules | length // 0')"
+      if [ "$pretoria_ilm_count" = "0" ]; then
+        mc ilm rule add local/pretoria-files --noncurrent-expire-days "30" --expire-delete-marker || true
+      else
+        echo "ILM: existing rules detected on pretoria-files; not adding bootstrap rule"
+      fi
       
       # Create cape town bucket
       mc mb --ignore-existing local/capetown-files || true
       mc version enable local/capetown-files || true
-      mc ilm rule add local/capetown-files --noncurrent-expire-days "30" --expire-delete-marker
+      # Add lifecycle rule only if no rules exist (preserve any user-defined rules)
+      capetown_ilm_json="$(mc ilm rule ls local/capetown-files --json 2>/dev/null || true)"
+      [ -z "$capetown_ilm_json" ] && capetown_ilm_json='{"config":{"Rules":[]}}'
+      capetown_ilm_count="$(printf '%s' "$capetown_ilm_json" | jq -r '.config.Rules | length // 0')"
+      if [ "$capetown_ilm_count" = "0" ]; then
+        mc ilm rule add local/capetown-files --noncurrent-expire-days "30" --expire-delete-marker || true
+      else
+        echo "ILM: existing rules detected on capetown-files; not adding bootstrap rule"
+      fi
       
       ###########################################################
       # Create policies
@@ -213,9 +229,13 @@ in {
       if [ -n "''${MINIO_REPLICATION_ACCESS_KEY:-}" ] && [ -n "''${MINIO_REPLICATION_SECRET_KEY:-}" ]; then
         echo "Setting up bucket replication with credentials..."
         
-        # Bucket replication policy
-        if ! mc replicate info local/pretoria-files >/dev/null 2>&1; then
-          mc replicate add local/pretoria-files --remote-bucket "http://$MINIO_REPLICATION_ACCESS_KEY:$MINIO_REPLICATION_SECRET_KEY@169.239.182.94:9000/pretoria-files"
+        # Bucket replication policy: list existing rules; if any exist, skip add
+        pretoria_repl_stream="$(mc replicate list local/pretoria-files --json 2>/dev/null || true)"
+        pretoria_repl_count="$(printf '%s' "$pretoria_repl_stream" | jq -s 'map(select(.status=="success") | .rule) | length')"
+        if [ "$pretoria_repl_count" = "0" ]; then
+          mc replicate add local/pretoria-files --priority 1 --remote-bucket "http://$MINIO_REPLICATION_ACCESS_KEY:$MINIO_REPLICATION_SECRET_KEY@169.239.182.94:9000/pretoria-files" || true
+        else
+          echo "Replication: rules already present for pretoria-files; skipping add"
         fi
         # if ! mc replicate info local/capetown-files >/dev/null 2>&1; then
         #  mc replicate add local/capetown-files --remote-bucket "http://$MINIO_REPLICATION_ACCESS_KEY:$MINIO_REPLICATION_SECRET_KEY@169.239.182.94:9000/capetown-files"
@@ -223,6 +243,44 @@ in {
       else
         echo "Warning: MINIO_REPLICATION_ACCESS_KEY or MINIO_REPLICATION_SECRET_KEY not set. Skipping bucket replication setup."
       fi
+
+      ###########################################################
+      # Configure SSO (OpenID Connect) for MinIO Console (idempotent, at end)
+      ###########################################################
+
+      # if [ -n "''${MINIO_IDENTITY_OPENID_CONFIG_URL:-}" ] \
+      #   && [ -n "''${MINIO_IDENTITY_OPENID_CLIENT_ID:-}" ] \
+      #   && [ -n "''${MINIO_IDENTITY_OPENID_CLIENT_SECRET:-}" ]; then
+      #   echo "Configuring MinIO OIDC (SSO) using identity_openid..."
+      #   oidc_cfg_json="$(mc admin config get local identity_openid --json 2>/dev/null || true)"
+      #   existing_client_id="$(printf '%s' "$oidc_cfg_json" | jq -r '(.identity_openid.client_id // .client_id // empty)' 2>/dev/null || true)"
+      #   if [ -z "$existing_client_id" ] || [ "$existing_client_id" = "null" ]; then
+      #     mc admin config set local identity_openid \
+      #       config_url="$MINIO_IDENTITY_OPENID_CONFIG_URL" \
+      #       client_id="$MINIO_IDENTITY_OPENID_CLIENT_ID" \
+      #       client_secret="$MINIO_IDENTITY_OPENID_CLIENT_SECRET" \
+      #       scopes="''${MINIO_IDENTITY_OPENID_SCOPES:-openid,profile,email}" || true
+      #     # Restart MinIO to apply identity provider config (avoid TTY requirement in mc)
+      #     systemctl restart minio.service || true
+      #     # Wait for API to be ready
+      #     echo "Waiting for minio.service to become active..."
+      #     for i in $(seq 1 60); do
+      #       if systemctl is-active --quiet minio.service && curl -sf http://localhost:9000/minio/health/ready >/dev/null; then
+      #         echo "minio.service is active and ready."
+      #         break
+      #       fi
+      #       sleep 1
+      #     done
+      #     if ! systemctl is-active --quiet minio.service; then
+      #       echo "Warning: minio.service did not become active within timeout; continuing anyway"
+      #     fi
+      #   else
+      #     echo "OIDC already configured (client_id=$existing_client_id); skipping"
+      #   fi
+      # else
+      #   echo "OIDC env vars not fully set; skipping OIDC configuration"
+      # fi
+
 
     '';
   };
