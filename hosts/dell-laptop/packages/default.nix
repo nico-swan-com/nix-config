@@ -44,5 +44,11 @@
     gitlab-ci-ls
 
     minio-client
+
+    # read-aloud extention
+    xclip
+    piper-tts
+    alsa-utils
+    glib
   ];
 }
