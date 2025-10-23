@@ -1,64 +1,48 @@
-# RustFS object storage service for vm895mqys
-# This is an example configuration - customize as needed
+# RustFS object storage service for dell-laptop
+# Simple configuration using systemd service instead of complex module
 
 { config, pkgs, ... }:
 
 {
-  # Import the RustFS module
-  imports = [ ../../../../modules/rustfs/rustfs.nix ];
-
-  # RustFS configuration
-  services.rustfs = {
+  # RustFS systemd service configuration
+  systemd.services.rustfs = {
     enable = true;
-    package = pkgs.rustfs;
+    description = "RustFS Object Storage Server";
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
     
-    # Choose deployment mode based on your needs:
-    # - "snsd": Single Node Single Disk (simplest)
-    # - "snmd": Single Node Multiple Disk (better performance)
-    # - "mnmd": Multiple Node Multiple Disk (production cluster)
-    deploymentMode = "snsd";
-    
-    # Network configuration
-    address = "0.0.0.0";
-    port = 9000;
-    
-    # Data storage
-    dataDir = "/data/rustfs";
-    
-    # Authentication (change these in production!)
-    accessKey = "rustfsadmin";
-    secretKey = "rustfsadmin";
-    
-    # Web console
-    console = {
-      enable = true;
-      port = 9001;
+    serviceConfig = {
+      Type = "simple";
+      User = "rustfs";
+      Group = "rustfs";
+      WorkingDirectory = "/data/rustfs";
+      ExecStart = "${pkgs.rustfs}/bin/rustfs server --data-dir /data/rustfs --address 0.0.0.0:9000";
+      Restart = "always";
+      RestartSec = "10s";
     };
     
-    # Logging
-    logLevel = "info";
-    
-    # Optional: TLS encryption
-    # tls = {
-    #   enable = true;
-    #   certFile = "/opt/tls/public.crt";
-    #   keyFile = "/opt/tls/private.key";
-    # };
-    
-    # Optional: Custom erasure coding settings
-    # erasureCoding = {
-    #   dataBlocks = 12;
-    #   parityBlocks = 4;
-    # };
+    wantedBy = [ "multi-user.target" ];
   };
 
-  # Ensure the data directory exists and has proper permissions
+  # Create rustfs user and group
+  users.users.rustfs = {
+    isSystemUser = true;
+    group = "rustfs";
+    description = "RustFS object storage service user";
+  };
+
+  users.groups.rustfs = {};
+
+  # Create data directory
   systemd.tmpfiles.rules = [
     "d /data/rustfs 0750 rustfs rustfs"
   ];
 
-  # Optional: If you want to use a different data directory
-  # systemd.tmpfiles.rules = [
-  #   "d /mnt/storage/rustfs 0750 rustfs rustfs"
-  # ];
+  # Firewall configuration
+  networking.firewall = {
+    allowedTCPPorts = [ 9000 ];
+  };
+
+  # Environment packages
+  environment.systemPackages = [ pkgs.rustfs ];
 }
