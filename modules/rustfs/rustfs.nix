@@ -46,7 +46,6 @@ in
 
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.rustfs;
       description = "The RustFS package to use.";
     };
 

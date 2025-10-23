@@ -10,6 +10,7 @@
   # RustFS configuration
   services.rustfs = {
     enable = true;
+    package = pkgs.rustfs;
     
     # Choose deployment mode based on your needs:
     # - "snsd": Single Node Single Disk (simplest)

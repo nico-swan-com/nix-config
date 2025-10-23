@@ -16,7 +16,7 @@ in {
 
   imports = [
     # Core services
-    ../../../common/nixos/services/virtualisation
+    ../../../common/nixos/services/virtualisation/default.nix
     #./hydra.nix  # CI tool 
     #./kubernetes.nix # Container management
     #./nextcloud # Own home Cloud 
@@ -25,7 +25,7 @@ in {
     #./minio.nix
     #./redis.nix
     # ../../../modules/gotrue/default.nix
-    ./rustfs.nix
+    # ./rustfs.nix
   ];
 
   services.onedrive = {
