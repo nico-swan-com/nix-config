@@ -25,7 +25,6 @@ in {
     #./minio.nix
     #./redis.nix
     # ../../../modules/gotrue/default.nix
-    # ./rustfs.nix
   ];
 
   services.onedrive = {
