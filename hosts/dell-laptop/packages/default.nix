@@ -4,6 +4,7 @@
   gnome-read-aloud = {
     enable = true;
     user = cfg.username;
+    model-voice = "/home/nicoswan/.local/share/read-aloud/voices/en_US-joe-medium.onnx";
     #model-voice = "/home/nicoswan/Downloads/en_GB-alan-medium.onnx";
   };
 

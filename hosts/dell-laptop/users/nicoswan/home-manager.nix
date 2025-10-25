@@ -104,9 +104,9 @@ in {
       obsidian
       ollama
       zed-editor
-      rpi-imager
+
       shotcut
-    ]) ++ (with pkgs.stable; [ beekeeper-studio ]);
+    ]) ++ (with pkgs.stable; [ beekeeper-studio  rpi-imager ]);
 
   # home = {
   #   file.".kube/cygnus-labs-kubernetes-ca.pem".source = "${config.sops.secrets."ca.pem".path}";

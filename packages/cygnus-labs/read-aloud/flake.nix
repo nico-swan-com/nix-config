@@ -3,7 +3,7 @@
   description = "read aloud - is a script that reads the clibboard and reads it aloud for the user.";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
 
     defaultVoice = {
@@ -12,7 +12,7 @@
     };
 
     defaultVoiceConfig = {
-      url = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/john/medium/en_US-john-medium.onnx.json?download=true.json";
+      url = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/john/medium/en_US-john-medium.onnx.json?download=true";
       flake = false;
     };
 

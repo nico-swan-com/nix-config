@@ -10,7 +10,7 @@ let
 
   defaultVoiceConfig = pkgs.fetchurl {
     url =
-      "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/joe/medium/en_US-joe-medium.onnx.json";
+      "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/joe/medium/en_US-joe-medium.onnx.json?download=true";
     name = "en_US-joe-medium.onnx.json";
     sha256 = "sha256-PW1UELN5XLGVBZUkfvjwYZBxnm/b+jojVtjsNo4arTM=";
   };

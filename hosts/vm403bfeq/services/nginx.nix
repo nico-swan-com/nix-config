@@ -43,6 +43,30 @@ in {
     clientMaxBodySize = "500m";
 
     virtualHosts = {
+      "api.cygnus-labs.com" = {
+        useACMEHost = "cygnus-labs.com";
+        forceSSL = true;
+        locations = {
+          "/health" = {
+            extraConfig = ''
+              add_header Content-Type application/json;
+              return 200 '{"status":"healthy","timestamp":"$time_iso8601","service":"api.cygnus-labs.com"}';
+            '';
+          };
+        };
+      };
+
+      "102.135.163.95" = {
+        locations = {
+          "/health" = {
+            extraConfig = ''
+              add_header Content-Type application/json;
+              return 200 '{"status":"healthy","timestamp":"$time_iso8601","service":"vm403bfeq","ip":"102.135.163.95","hostname":"vm403bfeq.cygnus-labs.com"}';
+            '';
+          };
+        };
+      };
+
       "~^(?<subdomain>.+)\\.(development|production|services)\\.cygnus-labs\\.com$" =
         {
           useACMEHost = "cygnus-labs.com";
