@@ -50,7 +50,5 @@
     piper-tts
     alsa-utils
     glib
-
-    rustfs
   ];
 }

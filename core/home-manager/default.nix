@@ -17,9 +17,9 @@
     # Git configuration
     git = {
       enable = true;
-      userName = cfg.fullname;
-      userEmail = cfg.email;
-      extraConfig = {
+      settings = {
+        user.name = cfg.fullname;
+        user.email = cfg.email;
         init.defaultBranch = "main";
         diff.colorMoved = "default";
         pull.rebase = true;
@@ -37,8 +37,13 @@
       ignores = [ "*~" ".DS_Store" ];
       # Enhanced diffs
       # delta.enable = true;
-      difftastic.enable = true;
-      difftastic.options.display = "inline";
+    };
+
+    # Difftastic configuration (moved from git.difftastic)
+    difftastic = {
+      enable = true;
+      options.display = "inline";
+      git.enable = true;
     };
 
     lazygit = {
