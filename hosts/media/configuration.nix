@@ -10,6 +10,7 @@
       ./services
 
     ];
+  security.sudo.wheelNeedsPassword = false;  
 
   virtualisation.vmVariant = {
     # following configuration is added only when building VM with build-vm

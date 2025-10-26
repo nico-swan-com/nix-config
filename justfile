@@ -98,8 +98,26 @@ nixos-clean:
   rm /nix/var/nix/gcroots/auto/* 
   nix-collect-garbage -d 
 
-rebuild-media:
+rebuild-media-remote:
   nixos-rebuild switch --target-host nicoswan@192.168.1.223 --flake .#media --sudo --ask-sudo-password 
+
+rebuild-media:
+    nixos-installer rebuild -v \
+        --host 192.168.1.223 \
+        --user nicoswan \
+        --flake-path  /home/nicoswan/.config/nix-config \
+        --flake-host media \
+        --action switch \
+        --yes    
 	
 rebuild-vps:
   nixos-rebuild switch --target-host nicoswan@vm403bfeq.cygnus-labs.com --flake .#vm403bfeq --sudo
+
+rebuild-vps-nicoswan:
+    nixos-installer rebuild -v \
+        --host 102.135.163.95 \
+        --user nicoswan \
+        --flake-path  /home/nicoswan/.config/nix-config \
+        --flake-host vm403bfeq \
+        --action test \
+        --yes  

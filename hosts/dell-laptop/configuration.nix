@@ -19,6 +19,8 @@
 
   ];
 
+  security.sudo.wheelNeedsPassword = false;
+
   programs.nix-ld.enable = true;
   home-manager.backupFileExtension = "backup";
 
