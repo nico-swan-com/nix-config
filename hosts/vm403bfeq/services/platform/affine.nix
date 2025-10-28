@@ -14,7 +14,6 @@
         AFFINE_SERVER_EXTERNAL_URL = "https://affine.platform.cygnus-labs.com";
         PORT = "3010";
         MAILER_IGNORE_TLS = "false";
-        NODE_OPTIONS = "--openssl-legacy-provider";
       };
       cmd = [ "sh" "-c" "node ./scripts/self-host-predeploy.js" ];
       volumes = [
@@ -34,7 +33,6 @@
         AFFINE_SERVER_EXTERNAL_URL = "https://affine.platform.cygnus-labs.com";
         PORT = "3010";
         MAILER_IGNORE_TLS = "false";
-        NODE_OPTIONS = "--openssl-legacy-provider";
       };
       volumes = [
         "/data/affine/storage:/root/.affine/storage"
