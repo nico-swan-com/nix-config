@@ -80,7 +80,7 @@ in {
       glow # Terminal marckdown viewer
       lnav
       openssl
-      mattermost-desktop
+      # mattermost-desktop
       discord
       postman
       bottles
@@ -91,6 +91,7 @@ in {
       rust-analyzer
       playwright
       playwright-test
+      affine
     ] ++ (with pkgs.unstable; [
       devenv
       lunarvim
@@ -99,7 +100,7 @@ in {
       libreoffice
       protonvpn-gui
       opentofu
-      vcluster
+      #vcluster
       code-cursor
       obsidian
       ollama

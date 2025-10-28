@@ -21,6 +21,9 @@ let
     })";
   resticPasswordFile =
     "${config.sops.secrets."servers/cygnus-labs/restic/passwordFile".path}";
+  affinePassword = "$(cat ${
+      config.sops.secrets."servers/cygnus-labs/affine/dbPassword".path
+    })";
 in {
   sops = {
     secrets = {
@@ -31,6 +34,7 @@ in {
       "servers/cygnus-labs/keycloak/dbPassword" = { };
       "servers/cygnus-labs/penpot/dbPassword" = { };
       "servers/cygnus-labs/solidtime/dbPassword" = { };
+      "servers/cygnus-labs/affine/dbPassword" = { };
     };
   };
 
@@ -49,7 +53,7 @@ in {
       listen_addresses = "*";
     };
     ensureDatabases =
-      [ "${cfg.username}" "keycloak" "gitlab" "penpot" "docmost" "solidtime" ];
+      [ "${cfg.username}" "keycloak" "gitlab" "penpot" "docmost" "solidtime" "affine" ];
     ensureUsers = [
       {
         name = cfg.username;
@@ -95,7 +99,14 @@ in {
           createdb = true;
         };
       }
-
+      {
+        name = "affine";
+        ensureDBOwnership = true;
+        ensureClauses = {
+          createrole = true;
+          createdb = true;
+        };
+      }
     ];
     extensions = ps:
       with ps; [
@@ -139,6 +150,7 @@ in {
       alter user ${keycloakUsername} with password '${keycloakPassword}';
       alter user penpot with password '${penpotPassword}';
       alter user solidtime with password '${solidtimePassword}';
+      alter user affine with password '${affinePassword}';
     '';
     authentication = pkgs.lib.mkOverride 10 ''
       #type    database DBuser  origin-address auth-methoda
