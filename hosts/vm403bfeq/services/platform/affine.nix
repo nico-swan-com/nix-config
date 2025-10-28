@@ -24,12 +24,12 @@
     };
 
     affine = {
-      image = "ghcr.io/toeverything/affine:stable";
+      image = "ghcr.io/toeverything/affine:latest";
       environmentFiles =
         [ config.sops.secrets."servers/cygnus-labs/affine/envFile".path ];
       environment = {
         AFFINE_INDEXER_ENABLED = "true";
-        AFFINE_REVISION = "stable";
+        AFFINE_REVISION = "latest";
         AFFINE_SERVER_HOST = "affine.platform.cygnus-labs.com";
         AFFINE_SERVER_EXTERNAL_URL = "https://affine.platform.cygnus-labs.com";
         PORT = "3010";
