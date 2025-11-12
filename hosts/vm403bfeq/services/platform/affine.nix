@@ -3,7 +3,29 @@
   sops = { secrets = { "servers/cygnus-labs/affine/envFile" = { }; }; };
 
   virtualisation.oci-containers.containers = {
-    affine_migration = {
+    # affine_migration = {
+    #   image = "ghcr.io/toeverything/affine:stable";
+    #   environmentFiles =
+    #     [ config.sops.secrets."servers/cygnus-labs/affine/envFile".path ];
+    #   environment = {
+    #     AFFINE_INDEXER_ENABLED = "true";
+    #     AFFINE_REVISION = "stable";
+    #     AFFINE_SERVER_HOST = "affine.platform.cygnus-labs.com";
+    #     AFFINE_SERVER_EXTERNAL_URL = "https://affine.platform.cygnus-labs.com";
+    #     MAILER_IGNORE_TLS = "false";
+    #     NODE_OPTIONS = "--openssl-legacy-provider";
+    #   };
+    #   cmd = [ "sh" "-c" "node ./scripts/self-host-predeploy.js" ];
+    #   volumes = [
+    #     "/data/affine/storage:/root/.affine/storage"
+    #     "/data/affine/config:/root/.affine/config"
+    #   ];
+    #   extraOptions = [
+    #     "--network=host"
+    #   ];
+    # };
+
+    affine = {
       image = "ghcr.io/toeverything/affine:stable";
       environmentFiles =
         [ config.sops.secrets."servers/cygnus-labs/affine/envFile".path ];
@@ -12,27 +34,6 @@
         AFFINE_REVISION = "stable";
         AFFINE_SERVER_HOST = "affine.platform.cygnus-labs.com";
         AFFINE_SERVER_EXTERNAL_URL = "https://affine.platform.cygnus-labs.com";
-        PORT = "3010";
-        MAILER_IGNORE_TLS = "false";
-        NODE_OPTIONS = "--openssl-legacy-provider";
-      };
-      cmd = [ "sh" "-c" "node ./scripts/self-host-predeploy.js" ];
-      volumes = [
-        "/data/affine/storage:/root/.affine/storage"
-        "/data/affine/config:/root/.affine/config"
-      ];
-    };
-
-    affine = {
-      image = "ghcr.io/toeverything/affine:latest";
-      environmentFiles =
-        [ config.sops.secrets."servers/cygnus-labs/affine/envFile".path ];
-      environment = {
-        AFFINE_INDEXER_ENABLED = "true";
-        AFFINE_REVISION = "latest";
-        AFFINE_SERVER_HOST = "affine.platform.cygnus-labs.com";
-        AFFINE_SERVER_EXTERNAL_URL = "https://affine.platform.cygnus-labs.com";
-        PORT = "3010";
         MAILER_IGNORE_TLS = "false";
         NODE_OPTIONS = "--openssl-legacy-provider";
       };
@@ -40,9 +41,11 @@
         "/data/affine/storage:/root/.affine/storage"
         "/data/affine/config:/root/.affine/config"
       ];
-      ports = [ "3010:3010" ];
+      extraOptions = [
+        "--network=host"
+      ];
     };
-  };
+ };
 
   services.nginx = {
     virtualHosts = {
@@ -66,6 +69,7 @@
         openFirewall = false;
         port = 6390;
         bind = null;
+        settings = { protected-mode = "no"; };
       };
     };
   };
@@ -81,10 +85,10 @@
   ];
 
   # Ensure main service starts after migration completes (podman units)
-  systemd.services."podman-affine" = {
-    after = [ "podman-affine_migration.service" ];
-    requires = [ "podman-affine_migration.service" ];
-  };
+  # systemd.services."podman-affine" = {
+  #   after = [ "podman-affine_migration.service" ];
+  #   requires = [ "podman-affine_migration.service" ];
+  # };
 }
 
 

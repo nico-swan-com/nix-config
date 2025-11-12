@@ -107,7 +107,22 @@ in {
       # replicas
       # reconcileMode
       # enable
-      # corefile
+      corefile = ''
+        .:10053 {
+          errors
+          health :10054
+          kubernetes cluster.local in-addr.arpa ip6.arpa {
+            pods insecure
+            fallthrough in-addr.arpa ip6.arpa
+          }
+          prometheus :10055
+          forward . 1.1.1.1 1.0.0.1 8.8.8.8
+          cache 30
+          loop
+          reload
+          loadbalance
+        }
+      '';
       # coredns
       # clusterIp
       # clusterDomain = "cluster.private";
@@ -148,6 +163,10 @@ in {
       # address
       extraOpts = ''
         --fail-swap-on=false
+        --eviction-hard=memory.available<100Mi,nodefs.available<5%,imagefs.available<5%
+        --eviction-soft=memory.available<200Mi,nodefs.available<10%,imagefs.available<10%
+        --eviction-soft-grace-period=memory.available=30s,nodefs.available=30s,imagefs.available=30s
+        --eviction-pressure-transition-period=30s
       '';
     };
 
