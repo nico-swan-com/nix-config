@@ -16,10 +16,7 @@ in {
     ./rclone.nix
   ];
 
-  programs.dconf.enable = true;
-
   programs.nicoswan = {
-    utils.google-cloud-sdk.enable = true;
     utils.kubernetes = {
       enable = true;
       additional-utils = true;
