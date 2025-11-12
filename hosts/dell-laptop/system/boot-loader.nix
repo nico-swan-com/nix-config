@@ -12,7 +12,7 @@
       device = "nodev";
       useOSProber = true;
       efiSupport = true;
-      configurationLimit = 10;
+      configurationLimit = 5; # Reduced from 10 to save space
       copyKernels = false;
       fsIdentifier = "label";
       #splashImage = ./backgrounds/grub-nixos-3.png;

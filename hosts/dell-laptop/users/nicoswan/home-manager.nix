@@ -68,7 +68,6 @@ in {
       rust-analyzer
       playwright
       playwright-test
-      affine
     ] ++ (with pkgs.unstable; [
       devenv
       lunarvim
@@ -76,7 +75,7 @@ in {
       nest-cli
       libreoffice
       protonvpn-gui
-      opentofu
+      #opentofu
       code-cursor
       obsidian
       ollama
