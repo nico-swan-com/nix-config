@@ -8,7 +8,7 @@ let
   };
 
   defaultVoiceConfig = pkgs.fetchurl {
-    url = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/joe/medium/en_US-joe-medium.onnx.json?download=true.json";
+    url = "https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/en/en_US/joe/medium/en_US-joe-medium.onnx.json?download=true";
     name = "en_US-joe-medium.onnx.json";
     sha256 = "sha256-PW1UELN5XLGVBZUkfvjwYZBxnm/b+jojVtjsNo4arTM=";
   };
@@ -79,13 +79,21 @@ stdenv.mkDerivation rec {
   pname = "read-aloud";
   version = "1.0";
 
-  src = [ readAloud ];
+  src = readAloud;
 
   buildInputs = [ readAloud ];
 
   installPhase = ''
     mkdir -p $out/bin
-    cp $src/bin/${pname} $out/bin/${pname}
+    cp ${readAloud}/bin/${pname} $out/bin/${pname}
+
+    mkdir -p $out/share/read-aloud
+    cp ${defaultVoice} $out/share/read-aloud/${defaultVoice.name}
+    cp ${defaultVoiceConfig} $out/share/read-aloud/${defaultVoiceConfig.name}
+
+    substituteInPlace $out/bin/${pname} \
+      --replace 'VOICE_MODEL_PATH=${defaultVoice}' "VOICE_MODEL_PATH=$out/share/read-aloud/${defaultVoice.name}" \
+      --replace 'VOICE_CONFIG_PATH=${defaultVoiceConfig}' "VOICE_CONFIG_PATH=$out/share/read-aloud/${defaultVoiceConfig.name}"
   '';
 
   meta = with lib; {

@@ -1,4 +1,4 @@
-{ nixpkgs, nixpkgs-unstable, inputs, outputs, lib, home-manager, nix-darwin
+{ nixpkgs, nixpkgs-unstable, inputs, outputs, lib, home-manager
 , hardware, ... }:
 name:
 { system, username, fullname, email, locale, timezone, extraModules
@@ -29,8 +29,13 @@ let
   homeManagerConfig = ../hosts/${name}/home-manager.nix;
 
   # NixOS vs nix-darwin functions
+  # Check if nix-darwin is available in inputs
+  hasNixDarwin = builtins.hasAttr "nix-darwin" inputs;
   systemFunc = if darwin then
-    inputs.nix-darwin.lib.darwinSystem
+    (if !hasNixDarwin then
+      throw "nix-darwin input is required when darwin = true. Add it to your flake inputs."
+    else
+      inputs.nix-darwin.lib.darwinSystem)
   else
     nixpkgs.lib.nixosSystem;
   homeManagerModules = if darwin then
@@ -41,10 +46,9 @@ let
     if darwin then "/Users/${username}" else "/home/${username}";
 
   specialArgs = {
-    inherit nixpkgs inputs outputs cfg configLib nixpkgs-unstable hardware
-      nix-darwin;
+    inherit nixpkgs inputs outputs cfg configLib nixpkgs-unstable hardware;
     pkgs-stable = inputs.nixpkgs-stable;
-  };
+  } // (if darwin && hasNixDarwin then { nix-darwin = inputs.nix-darwin; } else { });
 
 in systemFunc rec {
   inherit specialArgs;

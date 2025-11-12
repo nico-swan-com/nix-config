@@ -4,34 +4,19 @@ let
     inputs.git-project-updater.packages.${pkgs.system}.default;
 in {
   imports = [
-
     ../../../../common/home-manager/desktop/common-desktop.nix
-
-    # Terminal applictions
-    ../../../../common/home-manager/terminal/lazygit.nix # Git UI
-    #../../../../common/home-manager/development/lunarvim # VIM IDE
-    #../../../../common/home-manager/development/neovim # NEOVIM IDE
-    #../../../../common/home-manager/development/nixvim # NEOVIM IDE
+    ../../../../common/home-manager/terminal/lazygit.nix
     ../../../../common/home-manager/neovim.nix
-
-    # Software Development
     ../../../../common/home-manager/development/github.nix
     ../../../../common/home-manager/desktop/applications/vscode/vscode.nix
     ../../../../common/home-manager/development/node/node_20.nix
-
-    # Desktop application
     ../../../../common/home-manager/desktop/applications/lens.nix
-    #../../../../common/home-manager/desktop/applications/firefox.nix
     ../../../../common/home-manager/desktop/applications/google-chrome.nix
-
-    #../../../../common/home-manager/desktop/applications/libraoffice.nix
-    #../../../../common/home-manager/desktop/applications/obsidian.nix
-
-    # Just for fun
     ../../../../common/home-manager/terminal/fun.nix
-
     ./rclone.nix
   ];
+
+  programs.dconf.enable = true;
 
   programs.nicoswan = {
     utils.google-cloud-sdk.enable = true;
@@ -45,8 +30,6 @@ in {
   programs.zsh = {
     shellAliases = { nv = "NVIM_APPNAME=LazyVim nvim"; };
     initContent = ''
-      #set-github-access-token
-
       function nvims() {
         items=("default" "kickstart" "LazyVim" "NvChad" "AstroNvim")
         config=$(printf "%s\n" "\$\{items[\@]}" | fzf --prompt=" Neovim Config  " --height=~50% --layout=reverse --border --exit-0)
@@ -58,8 +41,6 @@ in {
         fi
         NVIM_APPNAME=$config nvim $@
       }
-      #bindkey -s ^a "nvims\n"
-
     '';
   };
 
@@ -80,7 +61,6 @@ in {
       glow # Terminal marckdown viewer
       lnav
       openssl
-      # mattermost-desktop
       discord
       postman
       bottles
@@ -100,7 +80,6 @@ in {
       libreoffice
       protonvpn-gui
       opentofu
-      #vcluster
       code-cursor
       obsidian
       ollama
@@ -109,23 +88,46 @@ in {
       shotcut
     ]) ++ (with pkgs.stable; [ beekeeper-studio  rpi-imager ]);
 
-  # home = {
-  #   file.".kube/cygnus-labs-kubernetes-ca.pem".source = "${config.sops.secrets."ca.pem".path}";
-  # };
-  # /home/nicoswan/bin/screenshot.sh
-  #
   dconf.settings = {
     "org/gnome/settings-daemon/plugins/media-keys" = {
       custom-keybindings = [
-        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenprint/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
       ];
     };
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/screenprint" =
-      {
-        binding = "<Print>";
-        command = "/home/nicoswan/bin/screenshot.sh";
-        name = "Screen capture";
-      };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+      binding = "<Print>";
+      command = "/home/nicoswan/bin/screenshot.sh";
+      name = "Screenshot";
+    };
+  };
+
+  # Systemd user service to ensure keybinding is set after GNOME starts
+  # This runs after login and ensures the keybinding persists across reboots
+  # The issue is that GNOME might reset dconf settings on startup, so we re-apply them
+  systemd.user.services.set-screenshot-keybinding = {
+    Unit = {
+      Description = "Set screenshot keybinding after GNOME starts";
+      After = [ "graphical-session.target" ];
+      Wants = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "set-screenshot-keybinding" ''
+        # Wait for GNOME settings daemon to be ready
+        sleep 3
+        
+        # Ensure dconf database is accessible
+        export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+        export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
+        
+        # Set the custom keybinding using dconf
+        ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+        ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name "'Screenshot'"
+        ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command "'/home/nicoswan/bin/screenshot.sh'"
+        ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding "'<Print>'"
+      '';
+    };
+    Install.WantedBy = [ "default.target" ];
   };
 
 }
