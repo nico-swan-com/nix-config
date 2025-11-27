@@ -72,7 +72,12 @@ in systemFunc rec {
     } else
       { })
     {
-      nixpkgs.config.allowUnfree = true;
+      nixpkgs.config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          "beekeeper-studio-5.3.4"  # Electron 31 is EOL, but package is still useful
+        ];
+      };
       nix = {
         settings = {
           experimental-features = "nix-command flakes";
@@ -105,6 +110,13 @@ in systemFunc rec {
           inputs = inputs;
         };
         sharedModules = [ ../modules/home-manager ] ++ sharedHMModules;
+      };
+      # Ensure nixpkgs config applies to Home Manager as well
+      nixpkgs.config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          "beekeeper-studio-5.3.4"  # Electron 31 is EOL, but package is still useful
+        ];
       };
     }
     # We expose some extra arguments so that our modules can parameterize

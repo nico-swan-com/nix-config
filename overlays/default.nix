@@ -26,7 +26,12 @@
   stable-packages = final: _prev: {
     stable = import inputs.nixpkgs-stable {
       system = final.stdenv.hostPlatform.system;
-      config.allowUnfree = true;
+      config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          "beekeeper-studio-5.3.4"  # Electron 31 is EOL, but package is still useful
+        ];
+      };
     };
   };
 
