@@ -1,16 +1,16 @@
-{ cfg, ... }:
-{
-  imports =
-    [
-      # Core configuration
-      ../../core/nixos
-      ./sops.nix
+{ pkgs, ... }: {
+  imports = [
+    # Core configuration
+    ../../core/nixos
+    ./sops.nix
 
-      ./system
-      ./services
+    ./system
+    ./services
 
-    ];
-  security.sudo.wheelNeedsPassword = false;  
+  ];
+  security.sudo.wheelNeedsPassword = false;
+
+  environment.systemPackages = with pkgs; [ fuse3 ];
 
   virtualisation.vmVariant = {
     # following configuration is added only when building VM with build-vm
@@ -35,7 +35,8 @@
         };
         plex = {
           source = "/tmp";
-          target = "/mnt/media_storage/Media/Plex/plexmediaserver/Library/Application Support/Plex Media Server";
+          target =
+            "/mnt/media_storage/Media/Plex/plexmediaserver/Library/Application Support/Plex Media Server";
         };
         qbittorrent = {
           source = "/tmp";
