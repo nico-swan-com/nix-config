@@ -27,6 +27,7 @@ in {
   programs.zsh = {
     shellAliases = { nv = "NVIM_APPNAME=LazyVim nvim"; };
     initContent = ''
+      export PATH=$PATH:~/.cargo/bin
       function nvims() {
         items=("default" "kickstart" "LazyVim" "NvChad" "AstroNvim")
         config=$(printf "%s\n" "\$\{items[\@]}" | fzf --prompt=" Neovim Config  " --height=~50% --layout=reverse --border --exit-0)
@@ -60,7 +61,6 @@ in {
       openssl
       discord
       postman
-      
 
       blender
       gimp
@@ -69,6 +69,7 @@ in {
       playwright
       playwright-test
       kubelogin-oidc
+      antigravity
     ] ++ (with pkgs.unstable; [
       devenv
       lunarvim
@@ -94,17 +95,20 @@ in {
       ];
     };
     # Screenshot keybinding
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      binding = "<Print>";
-      command = "/home/nicoswan/bin/screenshot.sh";
-      name = "Screenshot";
-    };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" =
+      {
+        binding = "<Print>";
+        command = "/home/nicoswan/bin/screenshot.sh";
+        name = "Screenshot";
+      };
     # Read-aloud keybinding
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0" = {
-      binding = "<Control>Escape";
-      command = "read-aloud --voice=/home/nicoswan/.local/share/read-aloud/voices/en_US-joe-medium.onnx";
-      name = "Read aloud";
-    };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0" =
+      {
+        binding = "<Control>Escape";
+        command =
+          "read-aloud --voice=/home/nicoswan/.local/share/read-aloud/voices/en_US-joe-medium.onnx";
+        name = "Read aloud";
+      };
   };
 
   # Systemd user service to ensure keybinding is set after GNOME fully initializes
@@ -113,7 +117,10 @@ in {
   systemd.user.services.set-screenshot-keybinding = {
     Unit = {
       Description = "Set screenshot keybinding after GNOME starts";
-      After = [ "org.gnome.SettingsDaemon.MediaKeys.target" "graphical-session.target" ];
+      After = [
+        "org.gnome.SettingsDaemon.MediaKeys.target"
+        "graphical-session.target"
+      ];
       Wants = [ "org.gnome.SettingsDaemon.MediaKeys.target" ];
     };
     Service = {
@@ -121,32 +128,32 @@ in {
       ExecStart = pkgs.writeShellScript "set-screenshot-keybinding" ''
         # Wait for GNOME to be fully initialized
         sleep 5
-        
+
         # Ensure environment is set
         export XDG_RUNTIME_DIR="/run/user/$(id -u)"
         export DBUS_SESSION_BUS_ADDRESS="unix:path=$XDG_RUNTIME_DIR/bus"
-        
+
         # Use gsettings to set both keybindings (more reliable than dconf for GNOME)
         ${pkgs.glib}/bin/gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0/']"
-        
+
         # Screenshot keybinding
         ${pkgs.glib}/bin/gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name "'Screenshot'"
         ${pkgs.glib}/bin/gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command "'/home/nicoswan/bin/screenshot.sh'"
         ${pkgs.glib}/bin/gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding "'<Print>'"
-        
+
         # Read-aloud keybinding
         ${pkgs.glib}/bin/gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0/ name "'Read aloud'"
         ${pkgs.glib}/bin/gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0/ command "'read-aloud --voice=/home/nicoswan/.local/share/read-aloud/voices/en_US-joe-medium.onnx'"
         ${pkgs.glib}/bin/gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0/ binding "'<Control>Escape'"
-        
+
         # Also set using dconf as backup
         ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0/']"
-        
+
         # Screenshot
         ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name "'Screenshot'"
         ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command "'/home/nicoswan/bin/screenshot.sh'"
         ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding "'<Print>'"
-        
+
         # Read-aloud
         ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0/name "'Read aloud'"
         ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0/command "'read-aloud --voice=/home/nicoswan/.local/share/read-aloud/voices/en_US-joe-medium.onnx'"

@@ -1,12 +1,5 @@
-{ ... }:
-{
-  imports = [
-    ../../core/nixos
-    ./sops.nix
-    ./system
-    ./services
-    ./packages
-  ];
+{ ... }: {
+  imports = [ ../../core/nixos ./sops.nix ./system ./services ./packages ];
 
   security.sudo.wheelNeedsPassword = false;
 
@@ -14,6 +7,8 @@
   home-manager.backupFileExtension = "backup";
 
   services.gvfs.enable = true;
+
+  virtualisation.virtualbox.host.enable = true;
 
   # VM configuration for nixos-build-vm
   virtualisation.vmVariant = {
