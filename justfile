@@ -79,6 +79,9 @@ disko-install HOST DISK:
    sudo nix --experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- \
    --flake .#{{HOST}} --disk main {{DISK}}
 
+disko-install-media: 
+  just disko-install media /dev/mmcblk0
+	
 create-iso HOST:
   rm -rf result
   nix build ./nixos-installer#nixosConfigurations.{{HOST}}.config.system.build.isoImage   
