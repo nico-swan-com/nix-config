@@ -6,8 +6,6 @@ let
   cloudflareEmail = "hi@nicoswan.com";
 in {
 
-  sops.secrets."servers/home/cloudflare/envFile".neededForUsers = true;
-
   security.acme = {
     acceptTerms = true;
     defaults.email = cloudflareEmail;
@@ -24,6 +22,7 @@ in {
         domain = "pi-cluster.nicoswan.com";
         dnsProvider = "cloudflare";
         credentialsFile = cloudflareEnvFile;
+        dnsPropagationCheck = true;
         group = "nginx";
         extraDomainNames = [ "*.pi-cluster.nicoswan.com" ];
       };
