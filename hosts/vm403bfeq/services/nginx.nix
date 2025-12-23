@@ -23,7 +23,7 @@ in {
       credentialsFile = "${cloudflareEnvFile}";
       group = "nginx";
       extraDomainNames = [
-        "*.cygnus-healthlabs.com"
+        "*.cygnus-labs.com"
         "*.services.cygnus-labs.com"
         "*.development.cygnus-labs.com"
         "*.production.cygnus-labs.com"
