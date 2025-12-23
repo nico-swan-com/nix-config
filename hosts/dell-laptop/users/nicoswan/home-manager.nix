@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 let
   gitProjectUpdaterPkg =
-    inputs.git-project-updater.packages.${pkgs.system}.default;
+    inputs.git-project-updater.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in {
   imports = [
 
@@ -107,7 +107,7 @@ in {
       zed-editor
 
       shotcut
-    ]) ++ (with pkgs.stable; [ beekeeper-studio  rpi-imager ]);
+    ]) ++ (with pkgs.stable; [ beekeeper-studio rpi-imager ]);
 
   # home = {
   #   file.".kube/cygnus-labs-kubernetes-ca.pem".source = "${config.sops.secrets."ca.pem".path}";
