@@ -54,5 +54,6 @@
     glib
 
     fuse3
+    sqlite
   ];
 }
