@@ -11,7 +11,7 @@
     nix-output-monitor # it provides the command `nom` works just like `nix` with more details log output
     nixd
     nixpkgs-fmt
-    nixfmt-classic
+    nixfmt
 
     # archives
     zip
