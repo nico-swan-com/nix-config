@@ -7,7 +7,7 @@
     hardware.url = "github:nixos/nixos-hardware";
 
     # NixOS
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/release-25.11";
     nixpkgs-unstable.url =
       "github:NixOS/nixpkgs/nixos-unstable"; # also see 'unstable-packages' overlay at 'overlays/default.nix"
@@ -20,9 +20,7 @@
 
     # Nix User Repository
     nur.url = "github:nix-community/NUR";
-    sops-nix = {
-      url = "github:mic92/sops-nix";
-    };
+    sops-nix = { url = "github:mic92/sops-nix"; };
 
     # Secrets
     nix-secrets = {
@@ -45,8 +43,8 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, hardware
-    , home-manager, ... }@inputs:
+  outputs =
+    { self, nixpkgs, nixpkgs-unstable, hardware, home-manager, ... }@inputs:
     let
       inherit (self) outputs;
       inherit (nixpkgs) lib;
@@ -55,8 +53,8 @@
       forAllSystems = inputs.nixpkgs.lib.genAttrs [ "x86_64-linux" ];
 
       mkSystem = import ./lib/mkSystem.nix {
-        inherit nixpkgs nixpkgs-unstable outputs inputs lib
-          home-manager hardware;
+        inherit nixpkgs nixpkgs-unstable outputs inputs lib home-manager
+          hardware;
       };
 
       # Common system configuration
@@ -86,10 +84,11 @@
 
       # NixOS configurations
       nixosConfigurations = {
-        dell-laptop = mkSystem "dell-laptop" (lib.recursiveUpdate x86_64-config {
-          extraModules =
-            [ inputs.distro-grub-themes.nixosModules.x86_64-linux.default ];
-        });
+        dell-laptop = mkSystem "dell-laptop"
+          (lib.recursiveUpdate x86_64-config {
+            extraModules =
+              [ inputs.distro-grub-themes.nixosModules.x86_64-linux.default ];
+          });
       };
 
     };

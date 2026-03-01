@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 let
   gitProjectUpdaterPkg =
-    inputs.git-project-updater.packages.${pkgs.system}.default;
+    inputs.git-project-updater.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in {
   imports = [
     ../../../../common/home-manager/desktop/common-desktop.nix
