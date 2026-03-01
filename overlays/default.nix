@@ -8,12 +8,16 @@
   # This one contains whatever you want to overlay
   # You can change versions, add patches, set compilation flags, anything really.
   # https://nixos.wiki/wiki/Overlays
-  modifications = final: prev:
-    {
-      # example = prev.example.overrideAttrs (oldAttrs: let ... in {
-      # ...
-      # });
-    };
+  modifications = final: prev: {
+    # Workaround for noto-fonts-subset build failure (cp: missing destination file operand).
+    # Upstream derivation can fail when the copy step has no source files.
+    # Replace with a minimal output so fonts.conf and dependent packages build.
+    # Remove this override when nixpkgs fixes the derivation.
+    noto-fonts-subset = prev.runCommand "noto-fonts-subset" { } ''
+      mkdir -p $out/share/fonts/noto
+      touch $out/share/fonts/noto/.keep
+    '';
+  };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
   # be accessible through 'pkgs.unstable'
