@@ -13,6 +13,7 @@ in {
     ../../../../common/home-manager/desktop/applications/lens.nix
     ../../../../common/home-manager/desktop/applications/google-chrome.nix
     ../../../../common/home-manager/terminal/fun.nix
+    ../../../../common/home-manager/desktop/applications/libraoffice.nix
     ./rclone.nix
   ];
 
@@ -75,7 +76,7 @@ in {
       lunarvim
       cryptomator
       nest-cli
-      libreoffice
+      
       protonvpn-gui
       #opentofu
       code-cursor
@@ -152,7 +153,7 @@ in {
         # Screenshot
         ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name "'Screenshot'"
         ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command "'/home/nicoswan/bin/screenshot.sh'"
-        ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding "'<Print>'"
+        ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding "'<PrintScr>'"
 
         # Read-aloud
         ${pkgs.dconf}/bin/dconf write /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0/name "'Read aloud'"

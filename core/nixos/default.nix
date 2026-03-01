@@ -5,12 +5,7 @@
   ];
 
   system.stateVersion = "25.11";
-  nixpkgs.config = {
-    allowUnfree = true;
-    permittedInsecurePackages = [
-      "beekeeper-studio-5.3.4"  # Electron 31 is EOL, but package is still useful
-    ];
-  };
+  # nixpkgs.config set when building pkgs in mkSystem (pkgsWithOverlays).
 
   programs = {
     zsh = {

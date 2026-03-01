@@ -1,23 +1,21 @@
 # This file defines overlays/custom modifications to upstream packages
 #
 { inputs, ... }: {
-  # This one brings our custom packages from the 'pkgs' directory
-  additions = final: _prev: {
+  # This one brings our custom packages from the 'pkgs' directory.
+  # noto-fonts-subset override must be in the first overlay so it's in the final pkgs.
+  additions = final: prev: {
     read-aloud = final.callPackage ../modules/cygnus-labs/read-aloud/read-aloud.nix { };
-  };
-  # This one contains whatever you want to overlay
-  # You can change versions, add patches, set compilation flags, anything really.
-  # https://nixos.wiki/wiki/Overlays
-  modifications = final: prev: {
-    # Workaround for noto-fonts-subset build failure (cp: missing destination file operand).
-    # Upstream derivation can fail when the copy step has no source files.
-    # Replace with a minimal output so fonts.conf and dependent packages build.
-    # Remove this override when nixpkgs fixes the derivation.
-    noto-fonts-subset = prev.runCommand "noto-fonts-subset" { } ''
+    # Workaround: noto-fonts-subset build fails in nixpkgs (cp: missing destination).
+    # Stub so fonts.conf and dependents build. Remove when nixpkgs fixes the derivation.
+    noto-fonts-subset = prev.runCommand "noto-fonts-subset-workaround" { } ''
       mkdir -p $out/share/fonts/noto
       touch $out/share/fonts/noto/.keep
     '';
   };
+  # This one contains whatever you want to overlay
+  # You can change versions, add patches, set compilation flags, anything really.
+  # https://nixos.wiki/wiki/Overlays
+  modifications = final: _prev: { };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
   # be accessible through 'pkgs.unstable'

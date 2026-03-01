@@ -50,13 +50,33 @@ let
     pkgs-stable = inputs.nixpkgs-stable;
   } // (if darwin && hasNixDarwin then { nix-darwin = inputs.nix-darwin; } else { });
 
+  # Build pkgs explicitly with our overlays and pass to nixosSystem so the same
+  # package set (including noto-fonts-subset workaround) is used for fonts.conf,
+  # home-manager-path, and all modules. Otherwise the nixpkgs module may use
+  # a different base (e.g. from another input) and our overlay is not applied.
+  pkgsWithOverlays =
+    import nixpkgs {
+      inherit system;
+      overlays = [
+        overlays.additions
+        overlays.modifications
+        overlays.unstable-packages
+        overlays.stable-packages
+      ];
+      config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          "beekeeper-studio-5.3.4"
+        ];
+      };
+    };
+
 in systemFunc rec {
   inherit specialArgs;
   inherit system;
+  pkgs = pkgsWithOverlays;
   modules = [
-    # Apply our overlays. Overlays are keyed by system type so we have
-    # to go through and apply our system type. We do this first so
-    # the overlays are available globally.
+    # Overlays are applied via pkgs above; keep option in sync for any code that reads it.
     {
       nixpkgs.overlays = [
         overlays.additions
@@ -72,12 +92,7 @@ in systemFunc rec {
     } else
       { })
     {
-      nixpkgs.config = {
-        allowUnfree = true;
-        permittedInsecurePackages = [
-          "beekeeper-studio-5.3.4"  # Electron 31 is EOL, but package is still useful
-        ];
-      };
+      # nixpkgs.config omitted: we pass pkgs = pkgsWithOverlays (built with that config).
       nix = {
         settings = {
           experimental-features = "nix-command flakes";
@@ -106,17 +121,10 @@ in systemFunc rec {
         extraSpecialArgs = specialArgs;
         users.${username} = import homeManagerConfig {
           inherit cfg;
-          pkgs = nixpkgs;
+          pkgs = pkgsWithOverlays;
           inputs = inputs;
         };
         sharedModules = [ ../modules/home-manager ] ++ sharedHMModules;
-      };
-      # Ensure nixpkgs config applies to Home Manager as well
-      nixpkgs.config = {
-        allowUnfree = true;
-        permittedInsecurePackages = [
-          "beekeeper-studio-5.3.4"  # Electron 31 is EOL, but package is still useful
-        ];
       };
     }
     # We expose some extra arguments so that our modules can parameterize
