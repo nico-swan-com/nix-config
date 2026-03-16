@@ -77,12 +77,10 @@ in
       playwright
       playwright-test
       kubelogin-oidc
-      antigravity
       poppler-utils
     ]
     ++ (with pkgs.unstable; [
       devenv
-      lunarvim
       cryptomator
       nest-cli
 
@@ -93,6 +91,7 @@ in
       ollama
       zed-editor
 
+      antigravity
       shotcut
       bottles
     ])
