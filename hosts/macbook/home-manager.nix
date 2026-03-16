@@ -22,7 +22,7 @@
       # openapi-tui # seems to not work with files
     ] ++ (with pkgs; [
       sops
-      lunarvim
+      #lunarvim
       vimPlugins.neogit
 
       # Utils

@@ -39,7 +39,7 @@
   home.packages = with pkgs.unstable; [
     # Some fun 
     lnav
-    lunarvim
+    #lunarvim
     openssl
     sshs
     mattermost-desktop

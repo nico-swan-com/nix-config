@@ -13,7 +13,7 @@
       (builtins.readFile ../../../../common/scripts/tmux-dashboard.sh))
     systemctl-tui
     lnav
-    lunarvim
+    #lunarvim
   ];
 
   # home = {

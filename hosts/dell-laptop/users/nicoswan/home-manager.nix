@@ -94,7 +94,7 @@ in {
       affine
     ] ++ (with pkgs.unstable; [
       devenv
-      lunarvim
+      #lunarvim
       cryptomator
       nest-cli
       libreoffice

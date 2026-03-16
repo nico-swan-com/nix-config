@@ -1,3 +1,8 @@
+# Cloudflare env secret: decrypted content must be an env file lego can read.
+# Use either:
+#   CLOUDFLARE_DNS_API_TOKEN=your_token
+# or (legacy) CLOUDFLARE_EMAIL=... and CLOUDFLARE_API_KEY=...
+# See: https://go-acme.github.io/lego/dns/cloudflare/
 { config, pkgs, ... }:
 
 let
