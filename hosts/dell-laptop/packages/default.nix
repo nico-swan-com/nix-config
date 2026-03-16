@@ -11,7 +11,7 @@
 
   environment.systemPackages = with pkgs; [
     qemu
-    lima
+    #lima # EOL / marked insecure in nixpkgs
     oci-cli
     #atac
     termshark

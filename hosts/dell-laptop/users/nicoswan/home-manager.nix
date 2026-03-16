@@ -2,7 +2,8 @@
 let
   gitProjectUpdaterPkg =
     inputs.git-project-updater.packages.${pkgs.stdenv.hostPlatform.system}.default;
-in {
+in
+{
   imports = [
     ../../../../common/home-manager/desktop/common-desktop.nix
     ../../../../common/home-manager/terminal/lazygit.nix
@@ -26,7 +27,9 @@ in {
   };
 
   programs.zsh = {
-    shellAliases = { nv = "NVIM_APPNAME=LazyVim nvim"; };
+    shellAliases = {
+      nv = "NVIM_APPNAME=LazyVim nvim";
+    };
     initContent = ''
       export PATH=$PATH:~/.cargo/bin
       function nvims() {
@@ -44,14 +47,18 @@ in {
   };
 
   # Install addition packages via home manager
-  home.packages = with pkgs;
+  home.packages =
+    with pkgs;
     [
-      (writeShellScriptBin "set-github-access-token"
-        (builtins.readFile ../../scripts/set-github-access-token.sh))
-      (writeShellScriptBin "tmux-cycle-windows"
-        (builtins.readFile ../../../../common/scripts/tmux-cycle-windows.sh))
-      (writeShellScriptBin "tmux-dashboard"
-        (builtins.readFile ../../../../common/scripts/tmux-dashboard.sh))
+      (writeShellScriptBin "set-github-access-token" (
+        builtins.readFile ../../scripts/set-github-access-token.sh
+      ))
+      (writeShellScriptBin "tmux-cycle-windows" (
+        builtins.readFile ../../../../common/scripts/tmux-cycle-windows.sh
+      ))
+      (writeShellScriptBin "tmux-dashboard" (
+        builtins.readFile ../../../../common/scripts/tmux-dashboard.sh
+      ))
 
       gitProjectUpdaterPkg
       systemctl-tui
@@ -71,12 +78,14 @@ in {
       playwright-test
       kubelogin-oidc
       antigravity
-    ] ++ (with pkgs.unstable; [
+      poppler-utils
+    ]
+    ++ (with pkgs.unstable; [
       devenv
       lunarvim
       cryptomator
       nest-cli
-      
+
       protonvpn-gui
       #opentofu
       code-cursor
@@ -86,7 +95,11 @@ in {
 
       shotcut
       bottles
-    ]) ++ (with pkgs.stable; [ beekeeper-studio rpi-imager ]);
+    ])
+    ++ (with pkgs.stable; [
+      beekeeper-studio
+      rpi-imager
+    ]);
 
   dconf.settings = {
     "org/gnome/settings-daemon/plugins/media-keys" = {
@@ -96,20 +109,17 @@ in {
       ];
     };
     # Screenshot keybinding
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" =
-      {
-        binding = "<Print>";
-        command = "/home/nicoswan/bin/screenshot.sh";
-        name = "Screenshot";
-      };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+      binding = "<Print>";
+      command = "/home/nicoswan/bin/screenshot.sh";
+      name = "Screenshot";
+    };
     # Read-aloud keybinding
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0" =
-      {
-        binding = "<Control>Escape";
-        command =
-          "read-aloud --voice=/home/nicoswan/.local/share/read-aloud/voices/en_US-joe-medium.onnx";
-        name = "Read aloud";
-      };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/cygnus-labs/custom0" = {
+      binding = "<Control>Escape";
+      command = "read-aloud --voice=/home/nicoswan/.local/share/read-aloud/voices/en_US-joe-medium.onnx";
+      name = "Read aloud";
+    };
   };
 
   # Systemd user service to ensure keybinding is set after GNOME fully initializes
