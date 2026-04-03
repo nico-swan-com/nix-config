@@ -1,4 +1,10 @@
-{ config, lib, pkgs, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
 
   boot.supportedFilesystems = [ "nfs" ];
   services.rpcbind.enable = true;
@@ -27,7 +33,6 @@
     options = [ "bind" ];
   };
 
-
   fileSystems."/export/wetink/pretoria" = {
     device = "/mnt/ntfs_drive/wetink/pretoria";
     options = [ "bind" ];
@@ -46,13 +51,13 @@
   };
 
   services.nfs.server.exports = ''
-    /export                      192.168.1.0/24(rw,fsid=0,crossmnt,no_subtree_check) 102.33.35.54(rw,fsid=0,crossmnt,no_subtree_check) 102.135.163.95(rw,fsid=0,crossmnt,no_subtree_check) 169.239.182.94(rw,fsid=0,crossmnt,no_subtree_check)
+    /export                      192.168.1.0/24(rw,fsid=0,crossmnt,no_subtree_check) 102.33.35.54(rw,fsid=0,crossmnt,no_subtree_check) 102.135.163.95(rw,fsid=0,crossmnt,no_subtree_check) 169.239.182.94(rw,fsid=0,crossmnt,no_subtree_check) 169.239.182.94(rw,fsid=0,crossmnt,no_subtree_check) 102.209.118.39(rw,fsid=0,crossmnt,no_subtree_check)
     /export/media                192.168.1.0/24(rw,no_subtree_check) 102.33.35.54(rw,no_subtree_check) 102.135.163.95(rw,no_subtree_check) 169.239.182.94(rw,no_root_squash,no_subtree_check) 
     /export/media-storage        192.168.1.0/24(rw,no_subtree_check) 102.33.35.54(rw,no_subtree_check) 102.135.163.95(rw,no_subtree_check) 169.239.182.94(rw,no_root_squash,no_subtree_check) 
     /export/ntfs_drive           192.168.1.0/24(rw,no_subtree_check) 102.33.35.54(rw,no_subtree_check) 102.135.163.95(rw,no_subtree_check) 169.239.182.94(rw,no_root_squash,no_subtree_check) 
-    /export/wetink/pretoria      169.239.182.94(rw,no_root_squash,no_subtree_check)
-    /export/wetink/capetown      169.239.182.94(rw,no_root_squash,no_subtree_check) 
+    /export/wetink/pretoria      169.239.182.94(rw,no_root_squash,no_subtree_check) 102.209.118.39(rw,no_root_squash,no_subtree_check)
+    /export/wetink/capetown      169.239.182.94(rw,no_root_squash,no_subtree_check) 102.209.118.39(rw,no_root_squash,no_subtree_check)
+
   '';
 
 }
-
