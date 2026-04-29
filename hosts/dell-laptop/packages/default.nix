@@ -1,5 +1,8 @@
 { pkgs, cfg, ... }: {
-  imports = [ ./ai.nix ../../../modules/cygnus-labs/read-aloud ];
+  imports = [ 
+    ./ai.nix 
+    ../../../modules/cygnus-labs/read-aloud 
+  ];
 
   gnome-read-aloud = {
     enable = true;

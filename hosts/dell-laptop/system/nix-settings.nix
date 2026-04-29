@@ -1,16 +1,23 @@
 { pkgs, inputs, config, lib, ... }:
 let
-  accessTokenPath =
-    config.sops.secrets."users/nicoswan/access-token/gitHub".path;
+  gitHubTokenSecret = "users/nicoswan/access-token/gitHub";
 in {
-  sops.secrets = { "users/nicoswan/access-token/gitHub" = { mode = "744"; }; };
-
-  environment.variables = {
-    NIX_CONFIG = "access-tokens = github.com:$(cat ${accessTokenPath})";
-    GITHUB_TOKEN = "$(cat ${accessTokenPath})";
+  sops.secrets = {
+    ${gitHubTokenSecret} = {
+      mode = "0400";
+      owner = "root";
+      group = "root";
+    };
   };
 
+  sops.templates."nix-github-access-tokens.conf".content = ''
+    access-tokens = github.com=${config.sops.placeholder.${gitHubTokenSecret}}
+  '';
+
   nix = {
+    extraOptions = ''
+      !include ${config.sops.templates."nix-github-access-tokens.conf".path}
+    '';
     settings = {
       auto-optimise-store = lib.mkForce true;
       # Reduce disk usage by using hard links more efficiently

@@ -1,6 +1,7 @@
 # This file defines overlays/custom modifications to upstream packages
 #
-{ inputs, ... }: {
+{ inputs, ... }:
+{
   # This one brings our custom packages from the 'pkgs' directory.
   # noto-fonts-subset override must be in the first overlay so it's in the final pkgs.
   additions = final: prev: {
@@ -22,7 +23,13 @@
   unstable-packages = final: _prev: {
     unstable = import inputs.nixpkgs-unstable {
       system = final.stdenv.hostPlatform.system;
-      config.allowUnfree = true;
+      config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          # Same pin as nixpkgs meta; OpenClaw is flagged until upstream rotates deps.
+          #"openclaw-2026.4.11"
+        ];
+      };
     };
   };
   stable-packages = final: _prev: {
@@ -31,7 +38,7 @@
       config = {
         allowUnfree = true;
         permittedInsecurePackages = [
-          "beekeeper-studio-5.3.4"  # Electron 31 is EOL, but package is still useful
+          "beekeeper-studio-5.3.4" # Electron 31 is EOL, but package is still useful
         ];
       };
     };

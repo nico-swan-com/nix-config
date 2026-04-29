@@ -78,13 +78,14 @@ in
       playwright-test
       kubelogin-oidc
       poppler-utils
+      telegram-desktop
     ]
     ++ (with pkgs.unstable; [
       devenv
       cryptomator
       nest-cli
 
-      protonvpn-gui
+      proton-vpn
       #opentofu
       code-cursor
       obsidian

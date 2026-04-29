@@ -41,6 +41,9 @@
       url = "github:/nico-swan-com/git-project-updater";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # OpenClaw (AI gateway) — Nix packaging + Home Manager module
+    nix-openclaw.url = "github:openclaw/nix-openclaw";
   };
 
   outputs =

@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  home.packages = with pkgs.unstable; [
-    nodePackages.npm-check-updates
+  home.packages = [
+    pkgs.unstable."npm-check-updates"
   ];
 }

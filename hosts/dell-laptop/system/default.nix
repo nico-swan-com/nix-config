@@ -9,5 +9,6 @@
     ./gnome-desktop.nix
     ./nfs-client.nix
     ./nix-settings.nix
+    ./tmp.nix
   ];
 }
