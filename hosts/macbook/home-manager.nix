@@ -40,7 +40,7 @@
       devenv # development environments
       git-extras
       nodejs_20 # Node 20 (setup as default)
-      nodePackages.npm-check-updates # ncu updater for node packages in projects
+      npm-check-updates # ncu updater for node packages in projects
       atac # Postman for the terminal
 
       # Fonts

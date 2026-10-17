@@ -43,6 +43,7 @@
     openssl
     sshs
     code-cursor
+    grok-bot # Grok Bot desktop agent
   ];
 
   # home = {

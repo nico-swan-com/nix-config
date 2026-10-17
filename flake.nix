@@ -151,12 +151,6 @@
       nixosConfigurations = {
         vm = mkSystem "vm" x86_64-config;
 
-        dell-laptop = mkSystem "dell-laptop"
-          (lib.recursiveUpdate x86_64-config {
-            extraModules =
-              [ inputs.distro-grub-themes.nixosModules.x86_64-linux.default ];
-          });
-
         asus-laptop = mkSystem "asus-laptop"
           (lib.recursiveUpdate x86_64-config {
             extraModules =
@@ -169,8 +163,6 @@
             inputs.distro-grub-themes.nixosModules.x86_64-linux.default
           ];
         });
-
-        vm403bfeq = mkSystem "vm403bfeq" x86_64-config;
       };
     };
 }

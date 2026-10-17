@@ -111,16 +111,4 @@ rebuild-media:
         --flake-path  /home/nicoswan/.config/nix-config \
         --flake-host media \
         --action switch \
-        --yes    
-	
-rebuild-vps:
-  nixos-rebuild switch --target-host nicoswan@vm403bfeq.cygnus-labs.com --flake .#vm403bfeq --sudo
-
-rebuild-vps-nicoswan:
-    nixos-installer rebuild -v \
-        --host 102.135.163.95 \
-        --user nicoswan \
-        --flake-path  /home/nicoswan/.config/nix-config \
-        --flake-host vm403bfeq \
-        --action test \
-        --yes  
+        --yes
