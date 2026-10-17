@@ -13,7 +13,7 @@
     # Software Development
     ../../../../common/home-manager/development/github.nix
     #../../../../common/home-manager/desktop/applications/vscode/vscode.nix
-    ../../../../common/home-manager/development/node/node_20.nix
+    ../../../../common/home-manager/development/node/node_22.nix
 
     # Desktop application
     #../../../../common/home-manager/desktop/applications/lens.nix

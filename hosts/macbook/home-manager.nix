@@ -39,7 +39,7 @@
       # Development
       devenv # development environments
       git-extras
-      nodejs_20 # Node 20 (setup as default)
+      nodejs_22 # Node 22 (setup as default)
       npm-check-updates # ncu updater for node packages in projects
       atac # Postman for the terminal
 
