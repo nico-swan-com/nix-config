@@ -36,13 +36,13 @@
     };
   };
   # Install addition packages via home manager
-  home.packages = with pkgs.unstable; [
-    # Some fun 
+  home.packages = with pkgs; [
+    # Some fun
     lnav
     #lunarvim
     openssl
     sshs
-    mattermost-desktop
+    code-cursor
   ];
 
   # home = {

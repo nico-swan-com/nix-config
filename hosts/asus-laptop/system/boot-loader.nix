@@ -1,24 +1,22 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   # Bootloader
   boot.plymouth.enable = true;
   boot.loader = {
     efi.canTouchEfiVariables = true;
     systemd-boot = {
       enable = false;
-      configurationLimit = 3;
+      configurationLimit = 1;
     };
     grub = {
       enable = true;
       device = "nodev";
       useOSProber = true;
       efiSupport = true;
-      configurationLimit = 3;
+      configurationLimit = 1;
       copyKernels = false;
       fsIdentifier = "label";
       #splashImage = ./backgrounds/grub-nixos-3.png;
       #splashMode = "stretch";
-
 
       theme = pkgs.stdenv.mkDerivation {
         pname = "distro-grub-themes";
