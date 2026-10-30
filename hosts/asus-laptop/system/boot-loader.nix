@@ -1,8 +1,19 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+let
+  efiUuid = "E4AA-3787";
+  windowsUuid = "0A313D8E90543F1F";
+in
+{
   # Bootloader
   boot.plymouth.enable = true;
+  boot.supportedFilesystems = [ "ntfs" ];
+
   boot.loader = {
-    efi.canTouchEfiVariables = true;
+    timeout = 5;
+    efi = {
+      canTouchEfiVariables = true;
+      efiSysMountPoint = "/boot";
+    };
     systemd-boot = {
       enable = false;
       configurationLimit = 1;
@@ -14,9 +25,36 @@
       efiSupport = true;
       configurationLimit = 1;
       copyKernels = false;
-      fsIdentifier = "label";
-      #splashImage = ./backgrounds/grub-nixos-3.png;
-      #splashMode = "stretch";
+      fsIdentifier = "uuid";
+
+      # Restore Windows Boot Manager onto the shared ESP before GRUB scans
+      # for other operating systems. os-prober only detects Windows when
+      # /EFI/Microsoft/Boot/bootmgfw.efi exists.
+      extraPrepareConfig = ''
+        if [ ! -e /boot/EFI/Microsoft/Boot/bootmgfw.efi ]; then
+          mkdir -p /run/win-esp-restore
+          if ${pkgs.util-linux}/bin/mount -t ntfs3 -o ro /dev/disk/by-uuid/${windowsUuid} /run/win-esp-restore 2>/dev/null \
+            || ${pkgs.ntfs3g}/bin/ntfs-3g -o ro /dev/disk/by-uuid/${windowsUuid} /run/win-esp-restore 2>/dev/null; then
+            if [ -f /run/win-esp-restore/Windows/Boot/EFI/bootmgfw.efi ]; then
+              mkdir -p /boot/EFI/Microsoft/Boot
+              cp -n /run/win-esp-restore/Windows/Boot/EFI/*.efi /boot/EFI/Microsoft/Boot/ || true
+            fi
+            ${pkgs.util-linux}/bin/umount /run/win-esp-restore || true
+          fi
+          rmdir /run/win-esp-restore 2>/dev/null || true
+        fi
+      '';
+
+      extraEntries = ''
+        menuentry "Windows" --class windows --class os {
+          insmod part_gpt
+          insmod fat
+          insmod chain
+          insmod search_fs_uuid
+          search --fs-uuid --set=root ${efiUuid}
+          chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+        }
+      '';
 
       theme = pkgs.stdenv.mkDerivation {
         pname = "distro-grub-themes";
