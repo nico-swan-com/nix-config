@@ -165,16 +165,18 @@ let
 
   paperclipServer = pkgs.writeShellApplication {
     name = "paperclip-server";
-    runtimeInputs =
-      agentPackages
-      ++ [
-        paperclipCli
-        pkgs.iproute2
-        pkgs.gawk
-      ];
+    runtimeInputs = agentPackages ++ [
+      paperclipCli
+      pkgs.iproute2
+      pkgs.gawk
+    ];
     text = ''
       DATA_DIR="''${PAPERCLIP_HOME:-${cfg.paperclip.dataDir}}"
-      mkdir -p "$DATA_DIR"
+      WORKSPACES_DIR="$DATA_DIR/workspaces"
+      mkdir -p "$DATA_DIR" "$WORKSPACES_DIR"
+      # Avoid running Paperclip with cwd=$HOME so local coding agents (e.g. cursor-agent --workspace <cwd>)
+      # do not try to index the entire home directory during environment probes or default runs.
+      cd "$WORKSPACES_DIR"
 
       ${optionalString cfg.exposeOnLan ''
         lan_ips="$(ip -4 -o addr show scope global 2>/dev/null | awk '{split($4, a, "/"); print a[1]}' | paste -sd, - || true)"
@@ -257,36 +259,36 @@ let
     name = "paperclip-t3-bridge";
     runtimeInputs = [ pkgs.curl ];
     text = ''
-      T3_URL="''${T3CODE_URL:-${t3codeUrl}}"
+            T3_URL="''${T3CODE_URL:-${t3codeUrl}}"
 
-      if [ "$#" -lt 2 ]; then
-        cat <<EOF
-Usage:
-  paperclip-t3-bridge <taskId> <token> [json-payload]
+            if [ "$#" -lt 2 ]; then
+              cat <<EOF
+      Usage:
+        paperclip-t3-bridge <taskId> <token> [json-payload]
 
-Trigger a T3 Code webhook task manually, or paste this URL into a Paperclip
-agent using Paperclip's built-in "http" adapter:
+      Trigger a T3 Code webhook task manually, or paste this URL into a Paperclip
+      agent using Paperclip's built-in "http" adapter:
 
-  $T3_URL/api/hooks/<taskId>/<token>
+        $T3_URL/api/hooks/<taskId>/<token>
 
-Example:
-  paperclip-t3-bridge my-task-id my-secret-token '{"prompt":"Review latest PR"}'
-EOF
-        exit 0
-      fi
+      Example:
+        paperclip-t3-bridge my-task-id my-secret-token '{"prompt":"Review latest PR"}'
+      EOF
+              exit 0
+            fi
 
-      TASK_ID="$1"
-      TOKEN="$2"
-      if [ "$#" -ge 3 ]; then
-        PAYLOAD="$3"
-      else
-        PAYLOAD="{}"
-      fi
+            TASK_ID="$1"
+            TOKEN="$2"
+            if [ "$#" -ge 3 ]; then
+              PAYLOAD="$3"
+            else
+              PAYLOAD="{}"
+            fi
 
-      exec curl -fsS -X POST \
-        -H "Content-Type: application/json" \
-        -d "$PAYLOAD" \
-        "$T3_URL/api/hooks/$TASK_ID/$TOKEN"
+            exec curl -fsS -X POST \
+              -H "Content-Type: application/json" \
+              -d "$PAYLOAD" \
+              "$T3_URL/api/hooks/$TASK_ID/$TOKEN"
     '';
   };
 
