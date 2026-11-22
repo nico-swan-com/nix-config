@@ -106,6 +106,21 @@ let
     '';
   };
 
+  t3codeServer = pkgs.writeShellApplication {
+    name = "t3code-server";
+    runtimeInputs = agentPackages;
+    text = ''
+      HOST_ADDR="${cfg.t3code.host}"
+      PORT_NUM="${toString cfg.t3code.port}"
+
+      if t3code serve --help >/dev/null 2>&1; then
+        exec t3code serve --host "$HOST_ADDR" --port "$PORT_NUM" --no-browser
+      else
+        exec t3code --host "$HOST_ADDR" --port "$PORT_NUM" --no-browser
+      fi
+    '';
+  };
+
   paperclipT3Bridge = pkgs.writeShellApplication {
     name = "paperclip-t3-bridge";
     runtimeInputs = [ pkgs.curl ];
@@ -246,7 +261,7 @@ in
       environmentFile = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = "Optional systemd EnvironmentFile passed to programs.t3code.server.environmentFile.";
+        description = "Optional systemd EnvironmentFile loaded by t3code.service.";
       };
     };
   };
@@ -290,22 +305,41 @@ in
       # GITLAB_HOST=gitlab.com
     '';
 
-    # T3 Code (control surface + background server on :3773)
+    # T3 Code package + settings (Home Manager release-26.05 does not include a server submodule)
     programs.t3code = mkIf cfg.t3code.enable {
       enable = true;
       package = pkgs.t3code;
       mutableUserSettings = true;
-      server = {
-        enable = true;
-        extraArgs = [
-          "--host"
-          cfg.t3code.host
-          "--port"
-          (toString cfg.t3code.port)
-        ];
-      }
-      // optionalAttrs (cfg.t3code.environmentFile != null) {
-        environmentFile = cfg.t3code.environmentFile;
+    };
+
+    # T3 Code background server on :3773
+    systemd.user.services.t3code = mkIf cfg.t3code.enable {
+      Unit = {
+        Description = "T3 Code Agent Control Surface Server";
+        After = [ "network-online.target" ];
+        Wants = [ "network-online.target" ];
+      };
+
+      Service =
+        {
+          Type = "simple";
+          ExecStart = "${t3codeServer}/bin/t3code-server";
+          WorkingDirectory = homeDir;
+          Environment = [
+            "T3CODE_HOST=${cfg.t3code.host}"
+            "T3CODE_PORT=${toString cfg.t3code.port}"
+            "PAPERCLIP_URL=http://${cfg.paperclip.host}:${toString cfg.paperclip.port}"
+            "PATH=${agentServicePath}"
+          ];
+          Restart = "on-failure";
+          RestartSec = 5;
+        }
+        // optionalAttrs (cfg.t3code.environmentFile != null) {
+          EnvironmentFile = "-${cfg.t3code.environmentFile}";
+        };
+
+      Install = {
+        WantedBy = [ "default.target" ];
       };
     };
 
