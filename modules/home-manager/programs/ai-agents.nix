@@ -11,11 +11,15 @@ let
   homeDir = config.home.homeDirectory;
   username = config.home.username;
   cliPrefix = "${config.xdg.dataHome}/paperclip-cli";
+  t3CliPrefix = "${config.xdg.dataHome}/t3code-cli";
   yamlFormat = pkgs.formats.yaml { };
 
   litellmUrl = "http://${cfg.litellm.host}:${toString cfg.litellm.port}";
-  paperclipUrl = "http://${cfg.paperclip.host}:${toString cfg.paperclip.port}";
-  t3codeUrl = "http://${cfg.t3code.host}:${toString cfg.t3code.port}";
+  localClientHost = host: if host == "0.0.0.0" || host == "::" then "127.0.0.1" else host;
+  paperclipBindHost = if cfg.exposeOnLan then "0.0.0.0" else cfg.paperclip.host;
+  t3codeBindHost = if cfg.exposeOnLan then "0.0.0.0" else cfg.t3code.host;
+  paperclipUrl = "http://${localClientHost paperclipBindHost}:${toString cfg.paperclip.port}";
+  t3codeUrl = "http://${localClientHost t3codeBindHost}:${toString cfg.t3code.port}";
 
   litellmConfigFile = yamlFormat.generate "litellm-config.yaml" {
     model_list = [
@@ -89,7 +93,6 @@ let
     pkgs.curl
     pkgs.coreutils
     pkgs.bash
-    pkgs.t3code
     pkgs.unstable.opencode
     pkgs.unstable.cursor-cli
   ]
@@ -103,6 +106,7 @@ let
       "${homeDir}/.gemini/bin"
       "${homeDir}/.local/bin"
       "${cliPrefix}/node_modules/.bin"
+      "${t3CliPrefix}/node_modules/.bin"
       "/etc/profiles/per-user/${username}/bin"
       "/run/current-system/sw/bin"
     ]
@@ -161,31 +165,90 @@ let
 
   paperclipServer = pkgs.writeShellApplication {
     name = "paperclip-server";
-    runtimeInputs = agentPackages ++ [ paperclipCli ];
+    runtimeInputs =
+      agentPackages
+      ++ [
+        paperclipCli
+        pkgs.iproute2
+        pkgs.gawk
+      ];
     text = ''
       DATA_DIR="''${PAPERCLIP_HOME:-${cfg.paperclip.dataDir}}"
       mkdir -p "$DATA_DIR"
 
+      ${optionalString cfg.exposeOnLan ''
+        lan_ips="$(ip -4 -o addr show scope global 2>/dev/null | awk '{split($4, a, "/"); print a[1]}' | paste -sd, - || true)"
+        base_hosts="${concatStringsSep "," cfg.paperclip.allowedHostnames}"
+        if [ -n "$lan_ips" ] && [ -n "$base_hosts" ]; then
+          export PAPERCLIP_ALLOWED_HOSTNAMES="$base_hosts,$lan_ips"
+        elif [ -n "$lan_ips" ]; then
+          export PAPERCLIP_ALLOWED_HOSTNAMES="$lan_ips"
+        elif [ -n "$base_hosts" ]; then
+          export PAPERCLIP_ALLOWED_HOSTNAMES="$base_hosts"
+        fi
+      ''}
+
       # Bootstrap ~/.paperclip with embedded PostgreSQL on first start.
       if [ ! -f "$DATA_DIR/instances/default/config.json" ]; then
-        paperclipai onboard --yes --data-dir "$DATA_DIR"
+        paperclipai onboard --yes ${optionalString cfg.exposeOnLan "--bind lan "}--data-dir "$DATA_DIR"
       fi
 
       exec paperclipai run --data-dir "$DATA_DIR"
     '';
   };
 
+  t3Cli = pkgs.writeShellApplication {
+    name = "t3";
+    runtimeInputs = [
+      pkgs.nodejs_24
+      pkgs.coreutils
+    ];
+    text = ''
+      T3_PREFIX="${t3CliPrefix}"
+      BIN="$T3_PREFIX/node_modules/.bin/t3"
+
+      if [ ! -x "$BIN" ]; then
+        mkdir -p "$T3_PREFIX"
+        echo "Installing t3 (T3 Code) into $T3_PREFIX ..." >&2
+        npm install --prefix "$T3_PREFIX" --no-audit --no-fund t3@latest
+      fi
+
+      exec "$BIN" "$@"
+    '';
+  };
+
+  t3Update = pkgs.writeShellApplication {
+    name = "t3-update";
+    runtimeInputs = [
+      pkgs.nodejs_24
+      pkgs.coreutils
+      pkgs.systemd
+    ];
+    text = ''
+      T3_PREFIX="${t3CliPrefix}"
+      mkdir -p "$T3_PREFIX"
+
+      echo "Installing/updating t3@latest in $T3_PREFIX ..."
+      npm install --prefix "$T3_PREFIX" --no-audit --no-fund t3@latest
+
+      if systemctl --user is-active --quiet t3code.service; then
+        echo "Restarting t3code.service ..."
+        systemctl --user restart t3code.service
+      fi
+    '';
+  };
+
   t3codeServer = pkgs.writeShellApplication {
     name = "t3code-server";
-    runtimeInputs = agentPackages;
+    runtimeInputs = agentPackages ++ [ t3Cli ];
     text = ''
-      HOST_ADDR="${cfg.t3code.host}"
+      HOST_ADDR="${t3codeBindHost}"
       PORT_NUM="${toString cfg.t3code.port}"
 
-      if t3code serve --help >/dev/null 2>&1; then
-        exec t3code serve --host "$HOST_ADDR" --port "$PORT_NUM" --no-browser
+      if t3 serve --help >/dev/null 2>&1; then
+        exec t3 serve --host "$HOST_ADDR" --port "$PORT_NUM" --no-browser
       else
-        exec t3code --host "$HOST_ADDR" --port "$PORT_NUM" --no-browser
+        exec t3 --host "$HOST_ADDR" --port "$PORT_NUM" --no-browser
       fi
     '';
   };
@@ -232,6 +295,9 @@ EOF
     runtimeInputs = [
       pkgs.curl
       pkgs.systemd
+      pkgs.iproute2
+      pkgs.gawk
+      pkgs.coreutils
     ];
     text = ''
       export PATH="${agentServicePath}:''${PATH:-}"
@@ -246,9 +312,9 @@ EOF
       done
 
       echo ""
-      echo "=== Endpoints ==="
+      echo "=== Local Endpoints ==="
       if curl -fsS --max-time 2 "${litellmUrl}/health/liveliness" >/dev/null 2>&1; then
-        echo "  LiteLLM   : ${litellmUrl}/v1 (reachable)"
+        echo "  LiteLLM   : ${litellmUrl}/v1 (reachable, loopback-only)"
       else
         echo "  LiteLLM   : ${litellmUrl}/v1 (not responding)"
       fi
@@ -263,9 +329,25 @@ EOF
         echo "  T3 Code   : ${t3codeUrl} (not responding)"
       fi
 
+      ${optionalString cfg.exposeOnLan ''
+        echo ""
+        echo "=== LAN URLs (from other devices on your network) ==="
+        host_raw="$(uname -n 2>/dev/null || true)"
+        host_short="''${host_raw%%.*}"
+        if [ -n "$host_short" ]; then
+          echo "  Paperclip : http://$host_short.local:${toString cfg.paperclip.port}"
+          echo "  T3 Code   : http://$host_short.local:${toString cfg.t3code.port}"
+        fi
+        while IFS= read -r ip_addr; do
+          [ -z "$ip_addr" ] && continue
+          echo "  Paperclip : http://$ip_addr:${toString cfg.paperclip.port}"
+          echo "  T3 Code   : http://$ip_addr:${toString cfg.t3code.port}"
+        done < <(ip -4 -o addr show scope global 2>/dev/null | awk '{split($4, a, "/"); print a[1]}')
+      ''}
+
       echo ""
       echo "=== Coding Agent CLIs on service PATH ==="
-      for bin in opencode cursor-agent agent agy t3code litellm paperclipai node git gh glab rg; do
+      for bin in opencode cursor-agent agent agy t3 litellm paperclipai node git gh glab rg; do
         if loc="$(command -v "$bin" 2>/dev/null)"; then
           printf "  %-14s %s\n" "$bin" "$loc"
         else
@@ -278,6 +360,12 @@ in
 {
   options.programs.nicoswan.ai-agents = {
     enable = mkEnableOption "Native Paperclip control plane + T3 Code + LiteLLM + local coding agents stack";
+
+    exposeOnLan = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Bind Paperclip (:3100) and T3 Code (:3773) to 0.0.0.0 for LAN access while keeping LiteLLM loopback-only.";
+    };
 
     environmentFile = mkOption {
       type = types.str;
@@ -341,6 +429,15 @@ in
         default = null;
         description = "Optional extra systemd EnvironmentFile loaded by paperclip.service.";
       };
+
+      allowedHostnames = mkOption {
+        type = types.listOf types.str;
+        default = [
+          "localhost"
+          "127.0.0.1"
+        ];
+        description = "Extra hostnames added to PAPERCLIP_ALLOWED_HOSTNAMES when exposeOnLan is enabled (LAN IPv4 addresses are added automatically).";
+      };
     };
 
     t3code = {
@@ -376,6 +473,8 @@ in
       pkgs.ripgrep
       pkgs.unstable.antigravity-ide
       pkgs.unstable.cursor-cli
+      t3Cli
+      t3Update
       paperclipCli
       paperclipUpdate
       paperclipT3Bridge
@@ -522,10 +621,11 @@ in
       };
     };
 
-    # T3 Code package + settings (Home Manager release-26.05 does not include a server submodule)
+    # T3 Code settings (package = null avoids nixpkgs's broken bun/vite source build of t3code-0.0.24;
+    # T3 Code is installed via npm `t3@latest` in ~/.local/share/t3code-cli by the `t3` wrapper).
     programs.t3code = mkIf cfg.t3code.enable {
       enable = true;
-      package = pkgs.t3code;
+      package = null;
       mutableUserSettings = true;
     };
 
@@ -542,7 +642,7 @@ in
         ExecStart = "${t3codeServer}/bin/t3code-server";
         WorkingDirectory = homeDir;
         Environment = [
-          "T3CODE_HOST=${cfg.t3code.host}"
+          "T3CODE_HOST=${t3codeBindHost}"
           "T3CODE_PORT=${toString cfg.t3code.port}"
           "LITELLM_URL=${litellmUrl}"
           "PAPERCLIP_URL=${paperclipUrl}"
@@ -554,6 +654,7 @@ in
         ++ optional (cfg.t3code.environmentFile != null) "-${cfg.t3code.environmentFile}";
         Restart = "on-failure";
         RestartSec = 5;
+        TimeoutStartSec = 180;
       };
 
       Install = {
@@ -575,12 +676,13 @@ in
         WorkingDirectory = homeDir;
         Environment = [
           "PAPERCLIP_HOME=${cfg.paperclip.dataDir}"
-          "HOST=${cfg.paperclip.host}"
+          "HOST=${paperclipBindHost}"
           "PORT=${toString cfg.paperclip.port}"
           "LITELLM_URL=${litellmUrl}"
           "T3CODE_URL=${t3codeUrl}"
           "PATH=${agentServicePath}"
-        ];
+        ]
+        ++ optional cfg.exposeOnLan "PAPERCLIP_BIND=lan";
         EnvironmentFile = [
           "-${cfg.environmentFile}"
         ]

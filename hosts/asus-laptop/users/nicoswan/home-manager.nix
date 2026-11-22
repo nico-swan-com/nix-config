@@ -28,7 +28,17 @@
   ];
 
   programs.nicoswan = {
-    ai-agents.enable = true;
+    ai-agents = {
+      enable = true;
+      exposeOnLan = true;
+      paperclip.allowedHostnames = [
+        "localhost"
+        "127.0.0.1"
+        "asus-laptop"
+        "asus-laptop.local"
+        "asus-laptop.nicoswan.com"
+      ];
+    };
     utils.google-cloud-sdk.enable = false;
     utils.kubernetes = {
       enable = false;
