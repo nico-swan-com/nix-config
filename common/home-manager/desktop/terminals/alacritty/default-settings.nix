@@ -36,17 +36,18 @@
     multiplier = 40;
   };
 
+  # Use the Mono cut so Nerd Font icons are monospaced (matches kitty).
   font = {
     size = 12.0;
     normal = {
-      family = "FiraCode Nerd Font";
+      family = "FiraCode Nerd Font Mono";
       style = "Light";
     };
     bold = {
-      family = "FiraCode Nerd Font";
+      family = "FiraCode Nerd Font Mono";
       style = "Semibold";
     };
-    italic.family = "FiraCode Nerd Font";
+    italic.family = "FiraCode Nerd Font Mono";
   };
 
   cursor.style = "Beam";

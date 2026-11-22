@@ -1,37 +1,44 @@
 { pkgs, ... }: {
 
   # Gnome default application
-  environment.systemPackages = with pkgs;
-    [ gtop libgtop gparted gnome-extension-manager ]
-    ++ (with pkgs.unstable.gnomeExtensions; [
+  # Use pkgs.gnomeExtensions (same channel as the DE), not pkgs.unstable —
+  # unstable tracks GNOME 51 while 26.05 ships GNOME 50.
+  environment.systemPackages =
+    with pkgs;
+    [
+      gtop
+      libgtop
+      gparted
+      gnome-extension-manager
+    ]
+    ++ (with pkgs.gnomeExtensions; [
       clipboard-history
       compiz-windows-effect
       desktop-cube
     ]);
 
-  # Exclde packages installed by default
-  environment.gnome.excludePackages = (with pkgs.unstable; [
-    gnome-photos
-    gnome-tour
-    gedit # text editor
-  ]) ++ (with pkgs.gnomeExtensions; [ system-monitor ]) ++ (with pkgs; [
-    cheese # webcam tool
-    gnome-music
-    gnome-terminal
-    epiphany # web browser
-    geary # email reader
-    #evince # document viewer
-    gnome-characters
-    #totem # video player
-    tali # poker game
-    iagno # go game
-    hitori # sudoku game
-    atomix # puzzle game
-  ]);
+  # Exclude packages installed by default
+  environment.gnome.excludePackages =
+    (with pkgs.gnomeExtensions; [ system-monitor ])
+    ++ (with pkgs; [
+      #cheese # webcam tool
+      #gnome-music
+      gedit
+      gnome-terminal
+      #epiphany # web browser
+      #geary # email reader
+      #evince # document viewer
+      gnome-characters
+      #totem # video player
+      #tali # poker game
+      #iagno # go game
+      #hitori # sudoku game
+      #atomix # puzzle game
+    ]);
 
-  environment.variables = {
-    GI_TYPELIB_PATH = "/run/current-system/sw/lib/girepository-1.0";
-  };
+  #environment.variables = {
+  #  GI_TYPELIB_PATH = "/run/current-system/sw/lib/girepository-1.0";
+  #};
   services.udev.packages = with pkgs; [ gnome-settings-daemon ];
 
   # Auto login configurations
@@ -42,7 +49,6 @@
 
   services.displayManager.gdm = {
     enable = true;
-    #  wayland = true;
   };
 
   services.desktopManager.gnome = {
@@ -51,11 +57,11 @@
       [org/gnome/desktop/interface]
       color-scheme='prefer-dark'
 
-      [org.gnome.desktop.background]
+      [org/gnome/desktop/background]
       picture-uri='file://${pkgs.nixos-artwork.wallpapers.mosaic-blue.gnomeFilePath}'
 
       # Favorite apps in gnome-shell
-      #[org.gnome.shell]
+      #[org/gnome/shell]
       #favorite-apps=['org.gnome.Console.desktop', 'org.gnome.Nautilus.desktop']
     '';
 

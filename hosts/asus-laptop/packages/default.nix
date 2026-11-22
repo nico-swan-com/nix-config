@@ -11,6 +11,10 @@
     #model-voice = "/home/nicoswan/Downloads/en_GB-alan-medium.onnx";
   };
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-40.10.5"
+  ];
+
   environment.systemPackages = with pkgs; [
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
@@ -18,7 +22,6 @@
     xclip
     xsel
     piper-tts
-
 
     # Kubernetes tools
     kubectl

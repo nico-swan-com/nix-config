@@ -1,20 +1,19 @@
 { cfg, inputs, ... }:
 {
-  imports =
-    [
-      ../../core/nixos
-      ./sops.nix
+  imports = [
+    ../../core/nixos
+    ./sops.nix
 
-      # Include the results of the hardware scan.
-      ./system
+    # Include the results of the hardware scan.
+    ./system
 
-      # Services 
-      ./services
+    # Services
+    ./services
 
-      # Programs and Applications
-      ./packages
+    # Programs and Applications
+    ./packages
 
-    ];
+  ];
 
   virtualisation.vmVariant = {
     # following configuration is added only when building VM with build-vm

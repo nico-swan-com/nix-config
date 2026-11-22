@@ -7,32 +7,25 @@
     hardware.url = "github:nixos/nixos-hardware";
 
     # NixOS
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/release-24.11";
-    nixpkgs-unstable.url =
-      "github:NixOS/nixpkgs/nixos-unstable"; # also see 'unstable-packages' overlay at 'overlays/default.nix"
-
-    # MacOS packages
-    nix-darwin = {
-      url = "github:lnl7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-    };
+    nixpkgs.url = "github:NixOS/nixpkgs/release-26.05";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/release-26.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable"; # also see 'unstable-packages' overlay at 'overlays/default.nix"
 
     # User packages
     home-manager = {
-      #url = "github:nix-community/home-manager/release-24.11";
-      url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
+      url = "github:nix-community/home-manager/release-26.05";
+      #url = "github:nix-community/home-manager/master";
+      #inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
     # Nix User Repository
-    nur.url = "github:nix-community/NUR";
+    #nur.url = "github:nix-community/NUR";
     #firefox-addons = {
     #  url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     #  inputs.nixpkgs.follows = "nixpkgs";
     #};
 
-    # Add nicoswan packages and modules 
+    # Add nicoswan packages and modules
     # nicoswan = {
     #   url = "github:nico-swan-com/nixpkgs/main";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -42,13 +35,12 @@
     # Secrets management
     sops-nix = {
       url = "github:mic92/sops-nix";
-      #inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     # Secrets
     nix-secrets = {
-      url =
-        "git+ssh://git@github.com/nico-swan-com/nix-secrets.git?ref=main&shallow=1";
+      url = "git+ssh://git@github.com/nico-swan-com/nix-secrets.git?ref=main&shallow=1";
       flake = false;
     };
 
@@ -59,7 +51,7 @@
     #};
 
     # Declarative partitioning and formatting
-    disko.url = "github:nix-community/disko";
+    #disko.url = "github:nix-community/disko";
 
     #neovim
     # Neve.url = "github:redyf/Neve";
@@ -75,36 +67,56 @@
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
-    git-project-updater = {
-      url = "github:/nico-swan-com/git-project-updater";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    #git-project-updater = {
+    #  url = "github:/nico-swan-com/git-project-updater";
+    #  inputs.nixpkgs.follows = "nixpkgs";
+    #};
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nixpkgs-stable, hardware
-    , nix-darwin, home-manager, distro-grub-themes, disko
-    #, nixvim
-    , ... }@inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      nixpkgs-unstable,
+      nixpkgs-stable,
+      hardware,
+      home-manager,
+      distro-grub-themes,
+      #, nixvim
+      ...
+    }@inputs:
     let
       inherit (self) outputs;
       inherit (nixpkgs) lib;
 
       # Systems that can run tests:
-      supportedSystems = [ "x86_64-linux" "aarch64-darwin" "aarch64-linux" ];
+      supportedSystems = [
+        "x86_64-linux"
+        "aarch64-darwin"
+        "aarch64-linux"
+      ];
 
       # Function to generate a set based on supported systems:
       forAllSystems = inputs.nixpkgs.lib.genAttrs supportedSystems;
 
       # Attribute set of nixpkgs for each system:
-      nixpkgsFor =
-        forAllSystems (system: import inputs.nixpkgs { inherit system; });
+      nixpkgsFor = forAllSystems (system: import inputs.nixpkgs { inherit system; });
 
       mkSystem = import ./lib/mkSystem.nix {
-        inherit nixpkgs nixpkgs-unstable nixpkgs-stable outputs inputs lib
-          nix-darwin home-manager hardware distro-grub-themes;
+        inherit
+          nixpkgs
+          nixpkgs-unstable
+          nixpkgs-stable
+          outputs
+          inputs
+          lib
+          home-manager
+          hardware
+          distro-grub-themes
+          ;
       };
 
-      # Common Configuration 
+      # Common Configuration
       commonConfig = {
         username = "nicoswan";
         fullname = "Nico Swan";
@@ -118,23 +130,31 @@
         # sharedHMModules = [
         #   nixvim.homeManagerModules.nixvim
         # ];
-        extraModules = [ inputs.nur.modules.nixos.default ];
+        extraModules = [ ];
       };
 
-    in {
-      packages = forAllSystems (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
-        in import ./packages/default.nix { inherit pkgs; });
+    in
+    {
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        import ./packages/default.nix { inherit pkgs; }
+      );
 
       # TODO change this to something that has better looking output rules
       # Nix formatter available through 'nix fmt' https://nix-community.github.io/nixpkgs-fmt
-      formatter =
-        forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixpkgs-fmt);
 
       # Shell configured with packages that are typically only needed when working on or with nix-config.
-      devShells = forAllSystems (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
-        in import ./shell.nix { inherit pkgs; });
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        import ./shell.nix { inherit pkgs; }
+      );
 
       # darwinConfigurations.darwin = mkSystem "darwin" {
       #   system = "aarch64-darwin";
@@ -149,20 +169,12 @@
       # };
 
       nixosConfigurations = {
-        vm = mkSystem "vm" x86_64-config;
 
-        asus-laptop = mkSystem "asus-laptop"
-          (lib.recursiveUpdate x86_64-config {
-            extraModules =
-              [ inputs.distro-grub-themes.nixosModules.x86_64-linux.default ];
-          });
-
-        media = mkSystem "media" (lib.recursiveUpdate x86_64-config {
-          extraModules = [
-            disko.nixosModules.disko
-            inputs.distro-grub-themes.nixosModules.x86_64-linux.default
-          ];
-        });
+        asus-laptop = mkSystem "asus-laptop" (
+          lib.recursiveUpdate x86_64-config {
+            extraModules = [ inputs.distro-grub-themes.nixosModules.x86_64-linux.default ];
+          }
+        );
       };
     };
 }

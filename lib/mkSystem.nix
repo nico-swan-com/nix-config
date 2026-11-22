@@ -1,8 +1,27 @@
-{ nixpkgs, nixpkgs-unstable, inputs, outputs, lib, home-manager, nix-darwin
-, hardware, ... }:
+{
+  nixpkgs,
+  nixpkgs-unstable,
+  inputs,
+  outputs,
+  lib,
+  home-manager,
+  hardware,
+  ...
+}:
 name:
-{ system, username, fullname, email, locale, timezone, extraModules
-, useStable ? [ ], sharedHMModules ? [ ], darwin ? false, isMinimal ? false }:
+{
+  system,
+  username,
+  fullname,
+  email,
+  locale,
+  timezone,
+  extraModules,
+  useStable ? [ ],
+  sharedHMModules ? [ ],
+  darwin ? false,
+  isMinimal ? false,
+}:
 
 let
   inherit (nixpkgs) lib;
@@ -29,24 +48,27 @@ let
   homeManagerConfig = ../hosts/${name}/home-manager.nix;
 
   # NixOS vs nix-darwin functions
-  systemFunc = if darwin then
-    inputs.nix-darwin.lib.darwinSystem
-  else
-    nixpkgs.lib.nixosSystem;
-  homeManagerModules = if darwin then
-    inputs.home-manager.darwinModules
-  else
-    inputs.home-manager.nixosModules;
-  userHomeDirectory =
-    if darwin then "/Users/${username}" else "/home/${username}";
+  systemFunc =
+    if darwin then inputs.nix-darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
+  homeManagerModules =
+    if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
+  userHomeDirectory = if darwin then "/Users/${username}" else "/home/${username}";
 
   specialArgs = {
-    inherit nixpkgs inputs outputs cfg configLib nixpkgs-unstable hardware
-      nix-darwin;
+    inherit
+      nixpkgs
+      inputs
+      outputs
+      cfg
+      configLib
+      nixpkgs-unstable
+      hardware
+      ;
     pkgs-stable = inputs.nixpkgs-stable;
   };
 
-in systemFunc rec {
+in
+systemFunc rec {
   inherit specialArgs;
   inherit system;
   modules = [
@@ -62,18 +84,27 @@ in systemFunc rec {
       ];
     }
 
-    (if !darwin then {
-      i18n.defaultLocale = lib.mkDefault locale;
-      time.timeZone = lib.mkDefault timezone;
-    } else
-      { })
+    (
+      if !darwin then
+        {
+          i18n.defaultLocale = lib.mkDefault locale;
+          time.timeZone = lib.mkDefault timezone;
+        }
+      else
+        { }
+    )
     {
       nixpkgs.config.allowUnfree = true;
       nix = {
         settings = {
-          experimental-features = "nix-command flakes";
+          experimental-features = [
+            "nix-command flakes"
+          ];
           auto-optimise-store = true;
-          trusted-users = [ "root" "${cfg.username}" ];
+          trusted-users = [
+            "root"
+            "${cfg.username}"
+          ];
           trusted-substituters = [ "https://devenv.cachix.org" ];
           trusted-public-keys = [
             "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
@@ -106,5 +137,6 @@ in systemFunc rec {
     # We expose some extra arguments so that our modules can parameterize
     # better based on these values.
     { config._module.args = specialArgs; }
-  ] ++ extraModules;
+  ]
+  ++ extraModules;
 }

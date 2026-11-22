@@ -1,4 +1,6 @@
-{ pkgs ? import <nixpkgs> { } }:
+{
+  pkgs ? import <nixpkgs> { },
+}:
 
 pkgs.appimageTools.wrapType2 rec {
   pname = "grok-bot";
@@ -11,7 +13,7 @@ pkgs.appimageTools.wrapType2 rec {
 
   extraInstallCommands =
     let
-      appimageContents = pkgs.appimageTools.extractType2 { inherit pname version src; };
+      appimageContents = pkgs.appimageTools.extract { inherit pname version src; };
     in
     ''
       install -m 444 -D ${appimageContents}/grok-bot.desktop $out/share/applications/grok-bot.desktop

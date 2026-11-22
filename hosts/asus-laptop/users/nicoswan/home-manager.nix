@@ -13,7 +13,7 @@
     # Software Development
     ../../../../common/home-manager/development/github.nix
     #../../../../common/home-manager/desktop/applications/vscode/vscode.nix
-    ../../../../common/home-manager/development/node/node_22.nix
+    ../../../../common/home-manager/development/node/nodejs.nix
 
     # Desktop application
     #../../../../common/home-manager/desktop/applications/lens.nix
@@ -36,15 +36,25 @@
     };
   };
   # Install addition packages via home manager
-  home.packages = with pkgs; [
-    # Some fun
-    lnav
-    #lunarvim
-    openssl
-    sshs
-    code-cursor
-    grok-bot # Grok Bot desktop agent
-  ];
+  home.packages =
+    with pkgs;
+    [
+      systemctl-tui
+      # Some fun
+      lnav
+      #lunarvim
+      openssl
+      sshs
+      # Local overlay package (not on nixpkgs-unstable)
+      grok-bot
+      #t3code
+    ]
+    ++ (with pkgs.unstable; [
+      code-cursor
+      antigravity-ide
+      cursor-cli
+      opencode
+    ]);
 
   # home = {
   #   file.".kube/cygnus-labs-kubernetes-ca.pem".source = "${config.sops.secrets."ca.pem".path}";
