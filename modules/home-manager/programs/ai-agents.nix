@@ -11,6 +11,74 @@ let
   homeDir = config.home.homeDirectory;
   username = config.home.username;
   cliPrefix = "${config.xdg.dataHome}/paperclip-cli";
+  yamlFormat = pkgs.formats.yaml { };
+
+  litellmUrl = "http://${cfg.litellm.host}:${toString cfg.litellm.port}";
+  paperclipUrl = "http://${cfg.paperclip.host}:${toString cfg.paperclip.port}";
+  t3codeUrl = "http://${cfg.t3code.host}:${toString cfg.t3code.port}";
+
+  litellmConfigFile = yamlFormat.generate "litellm-config.yaml" {
+    model_list = [
+      {
+        model_name = "openrouter-smart";
+        litellm_params = {
+          model = "openrouter/openrouter/free";
+          api_key = "os.environ/OPENROUTER_API_KEY";
+          api_base = "https://openrouter.ai/api/v1";
+          drop_params = true;
+        };
+      }
+      {
+        model_name = "openrouter-free";
+        litellm_params = {
+          model = "openrouter/openrouter/free";
+          api_key = "os.environ/OPENROUTER_API_KEY";
+          api_base = "https://openrouter.ai/api/v1";
+          drop_params = true;
+        };
+      }
+      {
+        model_name = "openrouter-auto";
+        litellm_params = {
+          model = "openrouter/openrouter/auto";
+          api_key = "os.environ/OPENROUTER_API_KEY";
+          api_base = "https://openrouter.ai/api/v1";
+          drop_params = true;
+        };
+      }
+      {
+        model_name = "openrouter-auto-code";
+        litellm_params = {
+          model = "openrouter/openrouter/auto-code";
+          api_key = "os.environ/OPENROUTER_API_KEY";
+          api_base = "https://openrouter.ai/api/v1";
+          drop_params = true;
+        };
+      }
+    ];
+
+    router_settings = {
+      num_retries = 2;
+      retry_after = 2;
+      allowed_fails = 2;
+      cooldown_time = 15;
+      fallbacks = [
+        {
+          openrouter-smart = [ "openrouter-auto" ];
+        }
+      ];
+      context_window_fallbacks = [
+        {
+          openrouter-smart = [ "openrouter-auto" ];
+        }
+      ];
+    };
+
+    litellm_settings = {
+      drop_params = true;
+      request_timeout = 120;
+    };
+  };
 
   agentPackages = [
     pkgs.nodejs_24
@@ -24,11 +92,12 @@ let
     pkgs.t3code
     pkgs.unstable.opencode
     pkgs.unstable.cursor-cli
-  ];
+  ]
+  ++ optional cfg.litellm.enable cfg.litellm.package;
 
   # PATH shared by systemd user services (Paperclip & T3 Code) so both can find
   # host-installed coding agents (opencode, cursor-agent/agent, ~/.gemini/bin/agy)
-  # plus git, gh, node, and Nix profiles.
+  # plus git, gh, glab, node, litellm, and Nix profiles.
   agentServicePath = concatStringsSep ":" (
     [
       "${homeDir}/.gemini/bin"
@@ -125,36 +194,36 @@ let
     name = "paperclip-t3-bridge";
     runtimeInputs = [ pkgs.curl ];
     text = ''
-            T3_URL="''${T3CODE_URL:-http://${cfg.t3code.host}:${toString cfg.t3code.port}}"
+      T3_URL="''${T3CODE_URL:-${t3codeUrl}}"
 
-            if [ "$#" -lt 2 ]; then
-              cat <<EOF
-      Usage:
-        paperclip-t3-bridge <taskId> <token> [json-payload]
+      if [ "$#" -lt 2 ]; then
+        cat <<EOF
+Usage:
+  paperclip-t3-bridge <taskId> <token> [json-payload]
 
-      Trigger a T3 Code webhook task manually, or paste this URL into a Paperclip
-      agent using Paperclip's built-in "http" adapter:
+Trigger a T3 Code webhook task manually, or paste this URL into a Paperclip
+agent using Paperclip's built-in "http" adapter:
 
-        $T3_URL/api/hooks/<taskId>/<token>
+  $T3_URL/api/hooks/<taskId>/<token>
 
-      Example:
-        paperclip-t3-bridge my-task-id my-secret-token '{"prompt":"Review latest PR"}'
-      EOF
-              exit 0
-            fi
+Example:
+  paperclip-t3-bridge my-task-id my-secret-token '{"prompt":"Review latest PR"}'
+EOF
+        exit 0
+      fi
 
-            TASK_ID="$1"
-            TOKEN="$2"
-            if [ "$#" -ge 3 ]; then
-              PAYLOAD="$3"
-            else
-              PAYLOAD="{}"
-            fi
+      TASK_ID="$1"
+      TOKEN="$2"
+      if [ "$#" -ge 3 ]; then
+        PAYLOAD="$3"
+      else
+        PAYLOAD="{}"
+      fi
 
-            exec curl -fsS -X POST \
-              -H "Content-Type: application/json" \
-              -d "$PAYLOAD" \
-              "$T3_URL/api/hooks/$TASK_ID/$TOKEN"
+      exec curl -fsS -X POST \
+        -H "Content-Type: application/json" \
+        -d "$PAYLOAD" \
+        "$T3_URL/api/hooks/$TASK_ID/$TOKEN"
     '';
   };
 
@@ -168,7 +237,7 @@ let
       export PATH="${agentServicePath}:''${PATH:-}"
 
       echo "=== Services ==="
-      for unit in paperclip.service t3code.service t3code-server.service; do
+      for unit in litellm.service paperclip.service t3code.service; do
         load_state="$(systemctl --user show -p LoadState --value "$unit" 2>/dev/null || true)"
         if [ "$load_state" = "loaded" ]; then
           state="$(systemctl --user is-active "$unit" || true)"
@@ -178,22 +247,25 @@ let
 
       echo ""
       echo "=== Endpoints ==="
-      paperclip_url="http://${cfg.paperclip.host}:${toString cfg.paperclip.port}"
-      t3_url="http://${cfg.t3code.host}:${toString cfg.t3code.port}"
-      if curl -fsS --max-time 2 "$paperclip_url" >/dev/null 2>&1; then
-        echo "  Paperclip : $paperclip_url (reachable)"
+      if curl -fsS --max-time 2 "${litellmUrl}/health/liveliness" >/dev/null 2>&1; then
+        echo "  LiteLLM   : ${litellmUrl}/v1 (reachable)"
       else
-        echo "  Paperclip : $paperclip_url (not responding)"
+        echo "  LiteLLM   : ${litellmUrl}/v1 (not responding)"
       fi
-      if curl -fsS --max-time 2 "$t3_url" >/dev/null 2>&1; then
-        echo "  T3 Code   : $t3_url (reachable)"
+      if curl -fsS --max-time 2 "${paperclipUrl}" >/dev/null 2>&1; then
+        echo "  Paperclip : ${paperclipUrl} (reachable)"
       else
-        echo "  T3 Code   : $t3_url (not responding)"
+        echo "  Paperclip : ${paperclipUrl} (not responding)"
+      fi
+      if curl -fsS --max-time 2 "${t3codeUrl}" >/dev/null 2>&1; then
+        echo "  T3 Code   : ${t3codeUrl} (reachable)"
+      else
+        echo "  T3 Code   : ${t3codeUrl} (not responding)"
       fi
 
       echo ""
       echo "=== Coding Agent CLIs on service PATH ==="
-      for bin in opencode cursor-agent agent agy t3 t3code paperclipai node git gh glab rg; do
+      for bin in opencode cursor-agent agent agy t3code litellm paperclipai node git gh glab rg; do
         if loc="$(command -v "$bin" 2>/dev/null)"; then
           printf "  %-14s %s\n" "$bin" "$loc"
         else
@@ -205,7 +277,39 @@ let
 in
 {
   options.programs.nicoswan.ai-agents = {
-    enable = mkEnableOption "Native Paperclip control plane + T3 Code + local coding agents stack";
+    enable = mkEnableOption "Native Paperclip control plane + T3 Code + LiteLLM + local coding agents stack";
+
+    environmentFile = mkOption {
+      type = types.str;
+      default = "${config.xdg.configHome}/ai-agents/env";
+      description = "Shared optional systemd EnvironmentFile (OPENROUTER_API_KEY, etc.) loaded by litellm, paperclip, and t3code.";
+    };
+
+    litellm = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Enable the local LiteLLM proxy systemd user service for OpenRouter free->auto routing.";
+      };
+
+      package = mkOption {
+        type = types.package;
+        default = pkgs.litellm;
+        description = "LiteLLM package to run as the local proxy.";
+      };
+
+      host = mkOption {
+        type = types.str;
+        default = "127.0.0.1";
+        description = "Host interface LiteLLM binds to.";
+      };
+
+      port = mkOption {
+        type = types.port;
+        default = 4000;
+        description = "TCP port LiteLLM listens on.";
+      };
+    };
 
     paperclip = {
       enable = mkOption {
@@ -233,9 +337,9 @@ in
       };
 
       environmentFile = mkOption {
-        type = types.str;
-        default = "${config.xdg.configHome}/paperclip/env";
-        description = "Optional systemd EnvironmentFile for API keys and Paperclip overrides.";
+        type = types.nullOr types.str;
+        default = null;
+        description = "Optional extra systemd EnvironmentFile loaded by paperclip.service.";
       };
     };
 
@@ -261,7 +365,7 @@ in
       environmentFile = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = "Optional systemd EnvironmentFile loaded by t3code.service.";
+        description = "Optional extra systemd EnvironmentFile loaded by t3code.service.";
       };
     };
   };
@@ -272,12 +376,12 @@ in
       pkgs.ripgrep
       pkgs.unstable.antigravity-ide
       pkgs.unstable.cursor-cli
-      pkgs.unstable.opencode
       paperclipCli
       paperclipUpdate
       paperclipT3Bridge
       aiStackStatus
-    ];
+    ]
+    ++ optional cfg.litellm.enable cfg.litellm.package;
 
     # Ensure ~/.gemini/bin (Antigravity `agy` binary) and ~/.local/bin are on shell PATH.
     home.sessionPath = [
@@ -285,18 +389,36 @@ in
       "${homeDir}/.local/bin"
     ];
 
-    # Export agent CLIs to systemd user services (covers both t3code and paperclip).
-    xdg.configFile."environment.d/20-ai-agents.conf".text = ''
-      PATH=${agentServicePath}:''${PATH}
-      T3CODE_URL=http://${cfg.t3code.host}:${toString cfg.t3code.port}
-      PAPERCLIP_URL=http://${cfg.paperclip.host}:${toString cfg.paperclip.port}
+    # Source shared ~/.config/ai-agents/env in interactive zsh sessions if present.
+    programs.zsh.initContent = lib.mkAfter ''
+      if [ -f "${cfg.environmentFile}" ]; then
+        set -a
+        # shellcheck disable=SC1090
+        source "${cfg.environmentFile}"
+        set +a
+      fi
     '';
 
-    # Example env file for optional provider API keys (copy to ~/.config/paperclip/env).
-    xdg.configFile."paperclip/env.example".text = ''
-      # Copy this file to ${cfg.paperclip.environmentFile} and chmod 600 if you want
-      # Paperclip agents to use API keys in addition to local subscription OAuth.
+    # Export agent CLIs and service URLs to systemd user services.
+    xdg.configFile."environment.d/20-ai-agents.conf".text = ''
+      PATH=${agentServicePath}:''${PATH}
+      LITELLM_URL=${litellmUrl}
+      T3CODE_URL=${t3codeUrl}
+      PAPERCLIP_URL=${paperclipUrl}
+    '';
+
+    # Shared env file template (copy to ~/.config/ai-agents/env and chmod 600).
+    xdg.configFile."ai-agents/env.example".text = ''
+      # Copy this file to ${cfg.environmentFile} and chmod 600:
+      #   cp ${config.xdg.configHome}/ai-agents/env.example ${cfg.environmentFile}
+      #   chmod 600 ${cfg.environmentFile}
+      # Then restart services:
+      #   systemctl --user restart litellm.service paperclip.service t3code.service
       #
+      # Required for OpenRouter (used by LiteLLM free->auto routing & OpenCode):
+      # OPENROUTER_API_KEY=sk-or-v1-...
+      #
+      # Optional additional provider / GitLab tokens:
       # ANTHROPIC_API_KEY=
       # OPENAI_API_KEY=
       # GEMINI_API_KEY=
@@ -304,6 +426,101 @@ in
       # GITLAB_TOKEN=
       # GITLAB_HOST=gitlab.com
     '';
+
+    xdg.configFile."litellm/config.yaml" = mkIf cfg.litellm.enable {
+      source = litellmConfigFile;
+    };
+
+    # OpenCode configured with both local LiteLLM (free->auto failover) and direct OpenRouter.
+    # Used by both Paperclip (opencode_local) and T3 Code (opencode provider).
+    programs.opencode = {
+      enable = true;
+      package = pkgs.unstable.opencode;
+      settings = {
+        autoupdate = false;
+        model = if cfg.litellm.enable then "litellm/openrouter-smart" else "openrouter/openrouter/free";
+        provider = {
+          openrouter = {
+            options = {
+              apiKey = "{env:OPENROUTER_API_KEY}";
+            };
+            models = {
+              "openrouter/free" = {
+                name = "OpenRouter Free (Direct)";
+              };
+              "openrouter/auto" = {
+                name = "OpenRouter Auto (Direct)";
+              };
+              "openrouter/auto-code" = {
+                name = "OpenRouter Auto Code (Direct)";
+              };
+            };
+          };
+        }
+        // optionalAttrs cfg.litellm.enable {
+          litellm = {
+            npm = "@ai-sdk/openai-compatible";
+            name = "LiteLLM (OpenRouter Router)";
+            options = {
+              baseURL = "${litellmUrl}/v1";
+              apiKey = "local-litellm";
+            };
+            models = {
+              "openrouter-smart" = {
+                name = "OpenRouter Free -> Auto Fallback (LiteLLM)";
+                limit = {
+                  context = 128000;
+                  output = 16384;
+                };
+              };
+              "openrouter-free" = {
+                name = "OpenRouter Free Only (LiteLLM)";
+                limit = {
+                  context = 128000;
+                  output = 16384;
+                };
+              };
+              "openrouter-auto" = {
+                name = "OpenRouter Auto (LiteLLM)";
+                limit = {
+                  context = 200000;
+                  output = 16384;
+                };
+              };
+              "openrouter-auto-code" = {
+                name = "OpenRouter Auto Code (LiteLLM)";
+                limit = {
+                  context = 200000;
+                  output = 16384;
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    # Local LiteLLM proxy on :4000 (openrouter/free with automatic fallback to openrouter/auto)
+    systemd.user.services.litellm = mkIf cfg.litellm.enable {
+      Unit = {
+        Description = "LiteLLM OpenAI-Compatible Proxy (OpenRouter free -> auto)";
+        After = [ "network-online.target" ];
+        Wants = [ "network-online.target" ];
+      };
+
+      Service = {
+        Type = "simple";
+        ExecStart = "${cfg.litellm.package}/bin/litellm --config ${litellmConfigFile} --host ${cfg.litellm.host} --port ${toString cfg.litellm.port}";
+        WorkingDirectory = homeDir;
+        EnvironmentFile = "-${cfg.environmentFile}";
+        Restart = "on-failure";
+        RestartSec = 5;
+      };
+
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
+    };
 
     # T3 Code package + settings (Home Manager release-26.05 does not include a server submodule)
     programs.t3code = mkIf cfg.t3code.enable {
@@ -316,27 +533,28 @@ in
     systemd.user.services.t3code = mkIf cfg.t3code.enable {
       Unit = {
         Description = "T3 Code Agent Control Surface Server";
-        After = [ "network-online.target" ];
-        Wants = [ "network-online.target" ];
+        After = [ "network-online.target" ] ++ optional cfg.litellm.enable "litellm.service";
+        Wants = [ "network-online.target" ] ++ optional cfg.litellm.enable "litellm.service";
       };
 
-      Service =
-        {
-          Type = "simple";
-          ExecStart = "${t3codeServer}/bin/t3code-server";
-          WorkingDirectory = homeDir;
-          Environment = [
-            "T3CODE_HOST=${cfg.t3code.host}"
-            "T3CODE_PORT=${toString cfg.t3code.port}"
-            "PAPERCLIP_URL=http://${cfg.paperclip.host}:${toString cfg.paperclip.port}"
-            "PATH=${agentServicePath}"
-          ];
-          Restart = "on-failure";
-          RestartSec = 5;
-        }
-        // optionalAttrs (cfg.t3code.environmentFile != null) {
-          EnvironmentFile = "-${cfg.t3code.environmentFile}";
-        };
+      Service = {
+        Type = "simple";
+        ExecStart = "${t3codeServer}/bin/t3code-server";
+        WorkingDirectory = homeDir;
+        Environment = [
+          "T3CODE_HOST=${cfg.t3code.host}"
+          "T3CODE_PORT=${toString cfg.t3code.port}"
+          "LITELLM_URL=${litellmUrl}"
+          "PAPERCLIP_URL=${paperclipUrl}"
+          "PATH=${agentServicePath}"
+        ];
+        EnvironmentFile = [
+          "-${cfg.environmentFile}"
+        ]
+        ++ optional (cfg.t3code.environmentFile != null) "-${cfg.t3code.environmentFile}";
+        Restart = "on-failure";
+        RestartSec = 5;
+      };
 
       Install = {
         WantedBy = [ "default.target" ];
@@ -347,8 +565,8 @@ in
     systemd.user.services.paperclip = mkIf cfg.paperclip.enable {
       Unit = {
         Description = "Paperclip AI Agent Control Plane";
-        After = [ "network-online.target" ];
-        Wants = [ "network-online.target" ];
+        After = [ "network-online.target" ] ++ optional cfg.litellm.enable "litellm.service";
+        Wants = [ "network-online.target" ] ++ optional cfg.litellm.enable "litellm.service";
       };
 
       Service = {
@@ -359,10 +577,14 @@ in
           "PAPERCLIP_HOME=${cfg.paperclip.dataDir}"
           "HOST=${cfg.paperclip.host}"
           "PORT=${toString cfg.paperclip.port}"
-          "T3CODE_URL=http://${cfg.t3code.host}:${toString cfg.t3code.port}"
+          "LITELLM_URL=${litellmUrl}"
+          "T3CODE_URL=${t3codeUrl}"
           "PATH=${agentServicePath}"
         ];
-        EnvironmentFile = "-${cfg.paperclip.environmentFile}";
+        EnvironmentFile = [
+          "-${cfg.environmentFile}"
+        ]
+        ++ optional (cfg.paperclip.environmentFile != null) "-${cfg.paperclip.environmentFile}";
         Restart = "on-failure";
         RestartSec = 5;
         TimeoutStartSec = 180;
