@@ -28,6 +28,7 @@
   ];
 
   programs.nicoswan = {
+    ai-agents.enable = true;
     utils.google-cloud-sdk.enable = false;
     utils.kubernetes = {
       enable = false;
@@ -47,13 +48,9 @@
       sshs
       # Local overlay package (not on nixpkgs-unstable)
       grok-bot
-      #t3code
     ]
     ++ (with pkgs.unstable; [
       code-cursor
-      antigravity-ide
-      cursor-cli
-      opencode
     ]);
 
   # home = {
